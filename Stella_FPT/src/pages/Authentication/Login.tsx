@@ -66,11 +66,19 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Đăng nhập
-        </h2>
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+      style={{
+        backgroundImage:
+          "url('https://daihoc.fpt.edu.vn/wp-content/uploads/2023/08/nhung-tien-ich-tai-dh-fpt-hcm.jpeg')",
+      }}
+    >
+      {/* Lớp phủ màu cam trong suốt */}
+      <div className="absolute inset-0 bg-[rgba(235,98,35,0.88)] opacity-80"></div>
+
+      {/* Nội dung đăng nhập */}
+      <div className="relative  p-8 w-1/3 bg-white opacity-90 rounded-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center ">Đăng nhập</h2>
 
         {error && (
           <div className="mb-4 text-red-500 text-sm text-center">{error}</div>
@@ -79,22 +87,22 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-white text-sm font-bold mb-2"
               htmlFor="email"
             >
               Email
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <FaUserAlt className="text-gray-400" />
+                <FaUserAlt className="text-gray-400 ml-2" />
               </span>
               <input
                 type="text"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Nhập email của bạn"
+                className="w-full pl-10 pr-4 px-6 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder=" Nhập email của bạn"
                 required
               />
             </div>
@@ -102,22 +110,22 @@ function Login() {
 
           <div className="mb-6">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-white text-sm font-bold mb-2"
               htmlFor="password"
             >
               Mật khẩu
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <FaLock className="text-gray-400" />
+                <FaLock className="text-gray-400 ml-2" />
               </span>
               <input
                 type="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Nhập mật khẩu của bạn"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder=" Nhập mật khẩu của bạn"
                 required
               />
             </div>
@@ -131,7 +139,7 @@ function Login() {
           </button>
 
           <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">Hoặc đăng nhập bằng</p>
+            <p className="text-sm text-white">__Hoặc đăng nhập__</p>
             <button
               type="button"
               onClick={handleGoogleLogin}
