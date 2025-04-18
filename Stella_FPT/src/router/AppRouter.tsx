@@ -9,8 +9,7 @@ import PrivateRoute from "./PriveRouter";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import LayoutStudent from "../layouts/LayoutStudent";
 import Login from "../pages/Authentication/Login";
-import ManageGPA from "../pages/students/ManageGPA";
-import Profile from "../pages/students/Profile";
+import HomePage from "../pages/students/HomePage";
 import Dashboard from "../pages/admin/Dashboard";
 function AppRouter() {
   return (
@@ -24,15 +23,9 @@ function AppRouter() {
           {/* STUDENT */}
           <Route element={<LayoutStudent />}>
             <Route
-              path="/profile"
+              path="/home"
               element={
-                <PrivateRoute element={Profile} allowedRoles={["STUDENT"]} />
-              }
-            />
-            <Route
-              path="/manageGPA"
-              element={
-                <PrivateRoute element={ManageGPA} allowedRoles={["STUDENT"]} />
+                <PrivateRoute element={HomePage} allowedRoles={["Student"]} />
               }
             />
           </Route>
@@ -43,7 +36,7 @@ function AppRouter() {
             <Route
               path="/dashboard"
               element={
-                <PrivateRoute element={Dashboard} allowedRoles={["ADMIN"]} />
+                <PrivateRoute element={Dashboard} allowedRoles={["Admin"]} />
               }
             />
           </Route>

@@ -5,16 +5,16 @@ import { FaUserAlt, FaLock, FaGoogle } from "react-icons/fa";
 // Simulated login function
 const login = (email: string, password: string) => {
   const users = [
-    { email: "admin", password: "123", role: "ADMIN" },
-    { email: "user1", password: "123", role: "STUDENT", major: "SE" },
-    { email: "user2", password: "123", role: "STUDENT", major: null },
+    { email: "admin", password: "123", role: "Admin" },
+    { email: "user1", password: "123", role: "Student" },
+    { email: "user2", password: "123", role: "Student" },
   ];
 
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
     return {
-      userDatas: { roleName: user.role, email: user.email, major: user.major },
+      userDatas: { roleName: user.role, email: user.email },
     };
   } else {
     throw new Error("Invalid credentials");
@@ -40,18 +40,14 @@ function Login() {
 
         // Navigate based on role
         switch (userDatas.roleName) {
-          case "STUDENT":
-            if (userDatas.major === null) {
-              navigate("/profile");
-            } else {
-              navigate("/manageGPA");
-            }
+          case "Student":
+            navigate("/home");
             break;
-          case "ADMIN":
+          case "admin":
             navigate("/dashboard");
             break;
           default:
-            navigate("/unknown-role");
+            navigate("/login");
             break;
         }
       }
@@ -74,7 +70,7 @@ function Login() {
       }}
     >
       {/* Lớp phủ màu cam trong suốt */}
-      <div className="absolute inset-0 bg-[rgba(235,98,35,0.88)] opacity-80"></div>
+      {/* <div className="absolute inset-0 bg-[rgba(235,98,35,0.73)] opacity-80"></div> */}
 
       {/* Nội dung đăng nhập */}
       <div className="relative  p-8 w-1/3 bg-white opacity-90 rounded-lg">
