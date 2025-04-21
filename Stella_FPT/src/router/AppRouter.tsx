@@ -11,6 +11,8 @@ import LayoutStudent from "../layouts/LayoutStudent";
 import Login from "../pages/Authentication/Login";
 import HomePage from "../pages/students/HomePage";
 import Dashboard from "../pages/admin/Dashboard";
+import ManageUser from "../pages/admin/ManageUser";
+import ManageCurriculum from "../pages/admin/ManageCurriculum";
 function AppRouter() {
   return (
     <div>
@@ -37,6 +39,21 @@ function AppRouter() {
               path="/dashboard"
               element={
                 <PrivateRoute element={Dashboard} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
+              path="/manageStudent"
+              element={
+                <PrivateRoute element={ManageUser} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
+              path="/manageCurriculum"
+              element={
+                <PrivateRoute
+                  element={ManageCurriculum}
+                  allowedRoles={["Admin"]}
+                />
               }
             />
           </Route>

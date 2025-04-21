@@ -1,17 +1,25 @@
 import { Layout } from "antd";
-
+import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
-const { Content } = Layout;
+import HeaderAdmin from "../components/HeaderAdmin";
+
 const LayoutAdmin: React.FC = () => {
   return (
-    <Layout className="overflow-hidden h-screen flex flex-col bg-white">
-      <Content className={` overflow-auto `}>
-        <div className="flex flex-col min-h-screen">
-          <div className="flex-1 overflow-auto">
-            <Outlet />
-          </div>
+    <Layout className="h-screen flex flex-col bg-white">
+      {/* Header */}
+      <div className="h-14 flex items-center justify-between bg-white shadow-md">
+        <HeaderAdmin />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <Sidebar />
+        {/* Nội dung chính */}
+        <div className="flex-1 h-full overflow-auto bg-[#F4F7FB]">
+          <Outlet />
         </div>
-      </Content>
+      </div>
     </Layout>
   );
 };

@@ -43,7 +43,7 @@ function Login() {
           case "Student":
             navigate("/home");
             break;
-          case "admin":
+          case "Admin":
             navigate("/dashboard");
             break;
           default:
@@ -62,13 +62,7 @@ function Login() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
-      style={{
-        backgroundImage:
-          "url('https://daihoc.fpt.edu.vn/wp-content/uploads/2023/08/nhung-tien-ich-tai-dh-fpt-hcm.jpeg')",
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center relative">
       {/* Lớp phủ màu cam trong suốt */}
       {/* <div className="absolute inset-0 bg-[rgba(235,98,35,0.73)] opacity-80"></div> */}
 
