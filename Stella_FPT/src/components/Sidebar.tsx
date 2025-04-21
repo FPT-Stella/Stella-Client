@@ -3,6 +3,7 @@ import { FaChartBar, FaUsers } from "react-icons/fa";
 import { FaBookOpenReader } from "react-icons/fa6";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { PiStudentFill } from "react-icons/pi";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -20,6 +21,11 @@ const SidebarData: SidebarDataType[] = [
     icon: FaUsers,
     heading: "Student Management",
     href: "/manageStudent",
+  },
+  {
+    icon: PiStudentFill,
+    heading: "Major",
+    href: "/manageMajor",
   },
   {
     icon: FaBookOpenReader,

@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCurriculum } from "../../services/Curriculum";
 import { Curriculum } from "../../models/Curriculum";
-import { Table } from "antd";
+import { Table, Input, Select } from "antd";
+
+const { Option } = Select;
 
 function ManageCurriculum() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const headerBg = "#f0f5ff"; // màu nền header
-  const headerColor = "#1d39c4"; // màu chữ header
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchField, setSearchField] = useState<string>("curriculumCode");
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchCurriculums = async () => {
       try {
         const data = await getCurriculum();
         setCurriculums(data);
-      } catch (err) {
-        setError("Failed to fetch curriculums.");
+      } catch (error) {
+        console.error("Fail to fetching curriculum:", error);
       } finally {
         setLoading(false);
       }
@@ -24,6 +27,22 @@ function ManageCurriculum() {
 
     fetchCurriculums();
   }, []);
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleFieldChange = (value: string) => {
+    setSearchField(value);
+    setSearchText("");
+  };
+
+  const filteredData = curriculums.filter((item) =>
+    item[searchField as keyof Curriculum]
+      ?.toString()
+      .toLowerCase()
+      .includes(searchText.toLowerCase())
+  );
 
   const columns = [
     {
@@ -102,14 +121,6 @@ function ManageCurriculum() {
     },
   ];
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
   return (
     <div className="h-full flex flex-col px-10 py-5">
       <div className="text-lg font-semibold text-[#2A384D] h-8">
@@ -117,11 +128,40 @@ function ManageCurriculum() {
       </div>
 
       <div className="flex-1 bg-white shadow-md rounded-md p-5">
+        {/* Search and Dropdown */}
+        <div className="flex items-center gap-4 mb-4">
+          <Select
+            defaultValue="curriculumCode"
+            style={{ width: 150 }}
+            onChange={handleFieldChange}
+          >
+            <Option value="curriculumCode">Search by Code</Option>
+            <Option value="curriculumName">Search by Name</Option>
+          </Select>
+          <Input
+            placeholder={`Search ${
+              searchField === "curriculumCode" ? "Code" : "Name"
+            }`}
+            value={searchText}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 300 }}
+          />
+        </div>
+
+        {/* Table */}
         <Table
-          dataSource={curriculums}
+          dataSource={filteredData}
           columns={columns}
           rowKey="id"
           pagination={{ pageSize: 3 }}
+          loading={loading}
+          onHeaderRow={() => ({
+            style: {
+              backgroundColor: "#f0f5ff", // Màu nền cho toàn bộ hàng tiêu đề
+              color: "#1d39c4", // Màu chữ cho toàn bộ hàng tiêu đề
+              fontWeight: "bold", // Chữ đậm
+            },
+          })}
         />
       </div>
     </div>
