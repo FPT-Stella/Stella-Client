@@ -1,19 +1,29 @@
 import { Major } from "../../models/Major";
-import { getMajor, addMajor } from "../../services/Major";
+import {
+  getMajor,
+  addMajor,
+  updateMajor,
+  deleteMajor,
+} from "../../services/Major";
 import { useEffect, useState } from "react";
-import { Table, Input, Button, Modal, Form, Dropdown, Menu } from "antd";
+import { Table, Input, Button, Modal, Form, Dropdown } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
+import type { MenuProps } from "antd";
 import "react-toastify/dist/ReactToastify.css";
+
 function ManageMajor() {
   const [majors, setMajors] = useState<Major[]>([]);
   const [filteredMajors, setFilteredMajors] = useState<Major[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] =
+    useState<boolean>(false);
+  const [selectedMajorId, setSelectedMajorId] = useState<string | null>(null);
   const [form] = Form.useForm();
 
   const headerBg = "#f0f5ff";
@@ -52,15 +62,38 @@ function ManageMajor() {
       const newMajor = await addMajor(values);
       setMajors((prev) => [...prev, newMajor]);
       setFilteredMajors((prev) => [...prev, newMajor]);
-      toast.success("Major added successfully!"); // Hiển thị thông báo thành công
+      toast.success("Major added successfully!");
       setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
       console.error("Failed to add major:", error);
-      toast.error("Failed to add major."); // Hiển thị thông báo lỗi
+      toast.error("Failed to add major.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedMajorId) return;
+    try {
+      setLoading(true);
+      await deleteMajor(selectedMajorId);
+      const data = await getMajor();
+      setMajors(data);
+      setFilteredMajors(data);
+      toast.success("Delete Major successfully!");
+      setIsDeleteModalVisible(false);
+    } catch (error) {
+      console.error("Failed to delete major:", error);
+      toast.error("Xóa ngành học thất bại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showDeleteModal = (id: string) => {
+    setSelectedMajorId(id);
+    setIsDeleteModalVisible(true);
   };
 
   const columns = [
@@ -103,24 +136,30 @@ function ManageMajor() {
     {
       title: "Action",
       key: "action",
-      render: () => {
-        const menu = (
-          <Menu>
-            <Menu.Item key="edit">
+      render: (record: Major) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "edit",
+            label: (
               <Button className="border-none w-full text-blue-700 flex justify-start">
                 <FiEdit /> Edit
               </Button>
-            </Menu.Item>
-            <Menu.Item key="delete">
-              <Button className="border-none w-full text-red-600 ">
+            ),
+          },
+          {
+            key: "delete",
+            label: (
+              <Button
+                className="border-none w-full text-red-600"
+                onClick={() => showDeleteModal(record.id)}
+              >
                 <RiDeleteBin7Fill /> Delete
               </Button>
-            </Menu.Item>
-          </Menu>
-        );
-
+            ),
+          },
+        ];
         return (
-          <Dropdown overlay={menu} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={["click"]}>
             <Button type="text" icon={<MdOutlineMoreVert size={25} />} />
           </Dropdown>
         );
@@ -161,18 +200,19 @@ function ManageMajor() {
           </div>
         </div>
         <Table
+          size="small"
           dataSource={filteredMajors}
           columns={columns}
           rowKey="id"
           loading={loading}
-          pagination={{ pageSize: 5 }}
+          pagination={{ pageSize: 8 }}
         />
       </div>
 
       {/* Modal for Adding Major */}
       <Modal
         title="Add Major"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
@@ -201,6 +241,19 @@ function ManageMajor() {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Modal for Confirming Delete */}
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onOk={handleDelete}
+        okText="Delete"
+        okType="danger"
+        cancelText="Cancel"
+      >
+        <p>Bạn có chắc chắn muốn xóa ngành học này không?</p>
       </Modal>
     </div>
   );

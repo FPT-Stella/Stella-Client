@@ -150,6 +150,7 @@ function ManageCurriculum() {
 
         {/* Table */}
         <Table
+          size="small"
           dataSource={filteredData}
           columns={columns}
           rowKey="id"
@@ -157,9 +158,9 @@ function ManageCurriculum() {
           loading={loading}
           onHeaderRow={() => ({
             style: {
-              backgroundColor: "#f0f5ff", // Màu nền cho toàn bộ hàng tiêu đề
-              color: "#1d39c4", // Màu chữ cho toàn bộ hàng tiêu đề
-              fontWeight: "bold", // Chữ đậm
+              backgroundColor: "#f0f5ff",
+              color: "#1d39c4",
+              fontWeight: "bold",
             },
           })}
         />
