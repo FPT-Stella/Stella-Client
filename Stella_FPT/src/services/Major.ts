@@ -9,7 +9,15 @@ export const getMajor = async () => {
     throw error;
   }
 };
-
+export const getMajorByID = async (id: string) => {
+  try {
+    const response = await rootApi.get(`/Major/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching Major with ID ${id}:`, error);
+    throw error;
+  }
+};
 export const addMajor = async (major: { majorName: string; description: string }) => {
   try {
     const response = await rootApi.post("/Major", major);

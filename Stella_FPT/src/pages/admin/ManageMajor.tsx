@@ -6,7 +6,7 @@ import {
   deleteMajor,
 } from "../../services/Major";
 import { useEffect, useState } from "react";
-import { Table, Input, Button, Modal, Form, Dropdown } from "antd";
+import { Table, Input, Button, Modal, Dropdown, Form } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin7Fill } from "react-icons/ri";
@@ -14,6 +14,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
 import "react-toastify/dist/ReactToastify.css";
+import MajorForm from "../../components/Admin/MajorForm";
 
 function ManageMajor() {
   const [majors, setMajors] = useState<Major[]>([]);
@@ -21,11 +22,13 @@ function ManageMajor() {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selectedMajorId, setSelectedMajorId] = useState<string | null>(null);
+  const [editingMajor, setEditingMajor] = useState<Major | null>(null);
   const [form] = Form.useForm();
-
+  const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
@@ -73,6 +76,29 @@ function ManageMajor() {
     }
   };
 
+  const handleEditMajor = async (values: {
+    majorName: string;
+    description: string;
+  }) => {
+    if (!editingMajor) return;
+    try {
+      setLoading(true);
+      await updateMajor(editingMajor.id, values);
+      const data = await getMajor();
+      setMajors(data);
+      setFilteredMajors(data);
+      toast.success("Major updated successfully!");
+      setIsEditModalVisible(false);
+      setEditingMajor(null);
+      editForm.resetFields();
+    } catch (error) {
+      console.error("Failed to update major:", error);
+      toast.error("Failed to update major.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!selectedMajorId) return;
     try {
@@ -81,14 +107,20 @@ function ManageMajor() {
       const data = await getMajor();
       setMajors(data);
       setFilteredMajors(data);
-      toast.success("Delete Major successfully!");
+
+      toast.success("Major deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
       console.error("Failed to delete major:", error);
-      toast.error("Xóa ngành học thất bại.");
+      toast.error("Failed to delete major.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const showEditModal = (major: Major) => {
+    setEditingMajor(major);
+    setIsEditModalVisible(true);
   };
 
   const showDeleteModal = (id: string) => {
@@ -141,7 +173,10 @@ function ManageMajor() {
           {
             key: "edit",
             label: (
-              <Button className="border-none w-full text-blue-700 flex justify-start">
+              <Button
+                className="border-none w-full text-blue-700 flex justify-start"
+                onClick={() => showEditModal(record)}
+              >
                 <FiEdit /> Edit
               </Button>
             ),
@@ -216,31 +251,26 @@ function ManageMajor() {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleAddMajor}>
-          <Form.Item
-            label="Major Name"
-            name="majorName"
-            rules={[
-              { required: true, message: "Please enter the major name!" },
-            ]}
-          >
-            <Input placeholder="Enter major name" />
-          </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[
-              { required: true, message: "Please enter the description!" },
-            ]}
-          >
-            <Input.TextArea placeholder="Enter description" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="w-full">
-              Add Major
-            </Button>
-          </Form.Item>
-        </Form>
+        <MajorForm form={form} onFinish={handleAddMajor} isEditMode={false} />
+      </Modal>
+
+      {/* Modal for Editing Major */}
+      <Modal
+        title="Edit Major"
+        open={isEditModalVisible}
+        onCancel={() => {
+          setIsEditModalVisible(false);
+          setEditingMajor(null);
+          editForm.resetFields();
+        }}
+        footer={null}
+      >
+        <MajorForm
+          form={editForm}
+          onFinish={handleEditMajor}
+          isEditMode={true}
+          initialValues={editingMajor || undefined}
+        />
       </Modal>
 
       {/* Modal for Confirming Delete */}
@@ -253,7 +283,7 @@ function ManageMajor() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Bạn có chắc chắn muốn xóa ngành học này không?</p>
+        <p>Are you sure you want to delete the major?</p>
       </Modal>
     </div>
   );
