@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { getCurriculum } from "../../services/Curriculum";
 import { Curriculum } from "../../models/Curriculum";
-import { Table, Input, Select } from "antd";
-
+import { Table, Input, Button, Dropdown, Select } from "antd";
+import type { MenuProps } from "antd";
+import { RiDeleteBin7Fill } from "react-icons/ri";
+import { MdOutlineMoreVert } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { getProgram } from "../../services/Program";
+import { Program } from "../../models/Program";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 function ManageCurriculum() {
+  const navigate = useNavigate();
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const [program, setProgram] = useState<Program[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [searchField, setSearchField] = useState<string>("curriculumCode");
@@ -18,6 +28,8 @@ function ManageCurriculum() {
       try {
         const data = await getCurriculum();
         setCurriculums(data);
+        const dataProgram = await getProgram();
+        setProgram(dataProgram);
       } catch (error) {
         console.error("Fail to fetching curriculum:", error);
       } finally {
@@ -27,7 +39,9 @@ function ManageCurriculum() {
 
     fetchCurriculums();
   }, []);
-
+  const handleViewDetail = (curriculumId: string) => {
+    navigate(`/manageCurriculum/${curriculumId}`);
+  };
   const handleSearch = (value: string) => {
     setSearchText(value);
   };
@@ -49,6 +63,7 @@ function ManageCurriculum() {
       title: "Code",
       dataIndex: "curriculumCode",
       key: "curriculumCode",
+      width: 120,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -62,6 +77,24 @@ function ManageCurriculum() {
       dataIndex: "curriculumName",
       key: "curriculumName",
       render: (text: string) => <div className="line-clamp-3">{text}</div>,
+      width: 180,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Program",
+      dataIndex: "programId",
+      key: "programId",
+      render: (programId: string) => {
+        const Program = program.find((p) => p.id === programId);
+        return Program ? Program.programCode : "Unknown";
+      },
+      width: 120,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -87,6 +120,7 @@ function ManageCurriculum() {
       title: "Total Credit",
       dataIndex: "totalCredit",
       key: "totalCredit",
+      width: 100,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -99,6 +133,7 @@ function ManageCurriculum() {
       title: "Start Year",
       dataIndex: "startYear",
       key: "startYear",
+      width: 80,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -111,6 +146,54 @@ function ManageCurriculum() {
       title: "End Year",
       dataIndex: "endYear",
       key: "endYear",
+      width: 80,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (record: Curriculum) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "detail",
+            label: (
+              <Button
+                className="border-none w-full text-green-700"
+                onClick={() => handleViewDetail(record.id)}
+              >
+                <MdOutlineRemoveRedEye /> View Detail
+              </Button>
+            ),
+          },
+          {
+            key: "edit",
+            label: (
+              <Button className="border-none w-full text-blue-700 flex justify-start">
+                <FiEdit /> Edit
+              </Button>
+            ),
+          },
+          {
+            key: "delete",
+            label: (
+              <Button className="border-none w-full text-red-600 flex justify-start">
+                <RiDeleteBin7Fill /> Delete
+              </Button>
+            ),
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <Button type="text" icon={<MdOutlineMoreVert size={25} />} />
+          </Dropdown>
+        );
+      },
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,

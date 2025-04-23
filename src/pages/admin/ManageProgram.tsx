@@ -127,6 +127,7 @@ function ManageProgram() {
   };
   const showDeleteModal = (id: string) => {
     setSelectedProgramId(id);
+
     setIsDeleteModalVisible(true);
   };
   const showEditModal = (program: Program) => {
@@ -314,8 +315,7 @@ function ManageProgram() {
         open={isEditModalVisible}
         onCancel={() => {
           setEditModalVisible(false);
-
-          editForm.resetFields();
+          setSelectedProgram(null);
         }}
         footer={null}
       >

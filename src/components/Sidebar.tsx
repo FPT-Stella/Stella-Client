@@ -72,7 +72,7 @@ const Sidebar = () => {
               <div
                 onClick={() => handleNavigation(item.href)}
                 className={`flex items-center text-sm font-medium rounded-lg px-4 py-2 cursor-pointer ${
-                  active === item.href
+                  active.startsWith(item.href)
                     ? "bg-[#635BFF] text-white"
                     : "text-[#2A384D] hover:text-[#635BFF] hover:bg-gray-100"
                 }`}

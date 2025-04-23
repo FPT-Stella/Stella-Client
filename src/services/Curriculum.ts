@@ -10,3 +10,12 @@ export const getCurriculum = async () => {
     throw error;
   }
 };
+export const getCurriculumById = async (id: string) => {
+  try {
+    const response = await rootApi.get<Curriculum>(`/Curriculum/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching curriculum by ID:", error);
+    throw error;
+  }
+};

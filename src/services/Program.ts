@@ -11,6 +11,15 @@ export const getProgram = async()=>{
         throw error;
     }
 }
+export const getProgramById = async(id: string)=>{
+  try{
+      const response = await rootApi.get(`/Program/${id}`);
+      return response.data;
+  } catch(error){
+      console.error("Error fetching Program", error);
+      throw error;
+  }
+}
 export const getProgramsByMajor = async (majorId: string) => {
     try {
       const response = await rootApi.get(`/Program/major/${majorId}`);
