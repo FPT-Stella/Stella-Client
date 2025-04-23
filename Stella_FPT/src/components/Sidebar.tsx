@@ -4,6 +4,7 @@ import { FaBookOpenReader } from "react-icons/fa6";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { PiStudentFill } from "react-icons/pi";
+import { MdOutlineViewTimeline } from "react-icons/md";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -31,6 +32,11 @@ const SidebarData: SidebarDataType[] = [
     icon: FaBookOpenReader,
     heading: "Curriculum",
     href: "/manageCurriculum",
+  },
+  {
+    icon: MdOutlineViewTimeline,
+    heading: "Program",
+    href: "/manageProgram",
   },
 ];
 
