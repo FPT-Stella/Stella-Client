@@ -1,6 +1,6 @@
 
 import rootApi from "./rootApi";
-import { Program ,AddProgram} from './../models/Program';
+import { AddProgram, Program } from './../models/Program';
 
 export const getProgram = async()=>{
     try{
@@ -38,3 +38,12 @@ export const getProgramsByMajor = async (majorId: string) => {
       throw error;
     }
   };
+  export const updateProgram = async (id: string, program: Partial<Program>) => {
+      try {
+        const response = await rootApi.put(`/Program/${id}`, program);
+        return response.data;
+      } catch (error) {
+        console.error(`Error updating program with ID ${id}:`, error);
+        throw error;
+      }
+    };

@@ -1,4 +1,9 @@
-import { getProgram, deleteProgram, addProgram } from "../../services/Program";
+import {
+  getProgram,
+  deleteProgram,
+  addProgram,
+  updateProgram,
+} from "../../services/Program";
 import { AddProgram, Program } from "../../models/Program";
 import { useEffect, useState } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
@@ -7,12 +12,12 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import type { MenuProps } from "antd";
 import { Table, Input, Button, Modal, Dropdown, Form, Select } from "antd";
 import ProgramForm from "../../components/Admin/ProgramForm";
+import EditProgram from "../../components/Admin/EditProgram";
 import { Major } from "../../models/Major";
 import { getMajor } from "../../services/Major";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 function ManageProgram() {
   const [loading, setLoading] = useState<boolean>(true);
   const [program, setProgram] = useState<Program[]>([]);
@@ -22,12 +27,15 @@ function ManageProgram() {
   const [selectedProgramId, setSelectedProgramId] = useState<string | null>(
     null
   );
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+
   const [selectedMajor, setSelectedMajor] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
+  const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
 
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
@@ -79,6 +87,26 @@ function ManageProgram() {
       setLoading(false);
     }
   };
+  const handleEditProgram = async (values: Partial<Program>) => {
+    if (!selectedProgram) return;
+    try {
+      setLoading(true);
+      await updateProgram(selectedProgram.id, values);
+      const data = await getProgram();
+      setProgram(data);
+      setFilteredProgram(data);
+      toast.success("Program updated successfully!");
+      setEditModalVisible(false);
+      setSelectedProgram(null);
+      editForm.resetFields();
+    } catch (error) {
+      console.error("Failed to update program:", error);
+      toast.error("Failed to update program.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!selectedProgramId) return;
     try {
@@ -100,6 +128,10 @@ function ManageProgram() {
   const showDeleteModal = (id: string) => {
     setSelectedProgramId(id);
     setIsDeleteModalVisible(true);
+  };
+  const showEditModal = (program: Program) => {
+    setSelectedProgram(program);
+    setEditModalVisible(true);
   };
   const handleFilterByMajor = (value: string) => {
     setSelectedMajor(value);
@@ -184,7 +216,10 @@ function ManageProgram() {
           {
             key: "edit",
             label: (
-              <Button className="border-none w-full text-blue-700 flex justify-start">
+              <Button
+                className="border-none w-full text-blue-700 flex justify-start"
+                onClick={() => showEditModal(record)}
+              >
                 <FiEdit /> Edit
               </Button>
             ),
@@ -273,6 +308,22 @@ function ManageProgram() {
         footer={null}
       >
         <ProgramForm form={form} onFinish={handleAddProgram} />
+      </Modal>
+      <Modal
+        title="Edit Major"
+        open={isEditModalVisible}
+        onCancel={() => {
+          setEditModalVisible(false);
+
+          editForm.resetFields();
+        }}
+        footer={null}
+      >
+        <EditProgram
+          form={editForm}
+          onFinish={handleEditProgram}
+          initialValues={selectedProgram!}
+        />
       </Modal>
       <Modal
         title="Confirm Delete"
