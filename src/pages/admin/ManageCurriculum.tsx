@@ -288,7 +288,7 @@ function ManageCurriculum() {
           dataSource={filteredData}
           columns={columns}
           rowKey="id"
-          pagination={{ pageSize: 3 }}
+          pagination={{ pageSize: 6 }}
           loading={loading}
           onHeaderRow={() => ({
             style: {
