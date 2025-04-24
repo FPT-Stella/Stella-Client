@@ -9,7 +9,9 @@ import PrivateRoute from "./PriveRouter";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import LayoutStudent from "../layouts/LayoutStudent";
 import Login from "../pages/Authentication/Login";
-import HomePage from "../pages/students/HomePage";
+import Curriculum from "../pages/students/Curriculum";
+import Syllabus from "../pages/students/Syllabus";
+import Profile from "../pages/students/Profile";
 import Dashboard from "../pages/admin/Dashboard";
 import ManageUser from "../pages/admin/ManageUser";
 import ManageMajor from "../pages/admin/ManageMajor";
@@ -30,9 +32,21 @@ function AppRouter() {
           {/* STUDENT */}
           <Route element={<LayoutStudent />}>
             <Route
-              path="/home"
+              path="/profile"
               element={
-                <PrivateRoute element={HomePage} allowedRoles={["Student"]} />
+                <PrivateRoute element={Profile} allowedRoles={["Student"]} />
+              }
+            />
+            <Route
+              path="/curriculum"
+              element={
+                <PrivateRoute element={Curriculum} allowedRoles={["Student"]} />
+              }
+            />
+            <Route
+              path="/Syllabus"
+              element={
+                <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
               }
             />
           </Route>

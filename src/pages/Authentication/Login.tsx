@@ -2,19 +2,30 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserAlt, FaLock, FaGoogle } from "react-icons/fa";
 
-// Simulated login function
+// Modify the login function to include majorId in return data
 const login = (email: string, password: string) => {
   const users = [
     { email: "admin", password: "123", role: "Admin" },
-    { email: "user1", password: "123", role: "Student" },
-    { email: "user2", password: "123", role: "Student" },
+    { email: "user1", password: "123", role: "Student", StudentId: "1", id: 1 },
+    {
+      email: "user2",
+      password: "123",
+      role: "Student",
+      StudentId: null,
+      id: 2,
+    },
   ];
 
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
     return {
-      userDatas: { roleName: user.role, email: user.email },
+      userDatas: {
+        roleName: user.role,
+        email: user.email,
+        id: user.id,
+        StudentId: user.StudentId,
+      },
     };
   } else {
     throw new Error("Invalid credentials");
@@ -27,6 +38,7 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  // Update the handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -35,13 +47,15 @@ function Login() {
       const userDatas = response?.userDatas;
 
       if (userDatas) {
-        // Store user data in localStorage
         localStorage.setItem("userData", JSON.stringify(userDatas));
 
-        // Navigate based on role
         switch (userDatas.roleName) {
           case "Student":
-            navigate("/home");
+            if (userDatas.StudentId) {
+              navigate(`/curriculum`);
+            } else {
+              navigate("/profile");
+            }
             break;
           case "Admin":
             navigate("/dashboard");
