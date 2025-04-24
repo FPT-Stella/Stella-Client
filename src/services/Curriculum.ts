@@ -1,5 +1,7 @@
+
+
 import rootApi from "./rootApi";
-import { Curriculum } from "../models/Curriculum";
+import { Curriculum,CreateCurriculum } from "../models/Curriculum";
 
 export const getCurriculum = async () => {
   try {
@@ -16,6 +18,33 @@ export const getCurriculumById = async (id: string) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching curriculum by ID:", error);
+    throw error;
+  }
+};
+export const AddCurriculum = async (curriculum: CreateCurriculum) => {
+  try {
+    const response = await rootApi.post("/Curriculum",curriculum);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching add curriculum:", error);
+    throw error;
+  }
+};
+export const updateCurriculum = async (id: string, curriculum: Partial<Curriculum>) => {
+  try {
+    const response = await rootApi.put(`/Curriculum/${id}`, curriculum);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating Curriculum with ID ${id}:`, error);
+    throw error;
+  }
+};
+export const deleteCurriculum = async (id: string) => {
+  try {
+    const response = await rootApi.delete(`/Curriculum/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting Curriculum:", error);
     throw error;
   }
 };

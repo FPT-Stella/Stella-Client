@@ -1,44 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button, Form, Select } from "antd";
-import { useNavigate } from "react-router";
-import { AddCurriculum } from "../../services/Curriculum";
-import { CreateCurriculum } from "../../models/Curriculum";
-import { getProgram } from "../../services/Program";
-import { Program } from "../../models/Program";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Form, Input, Select, Button, Spin } from "antd";
+import { getProgram } from "../../services/Program";
+import { Program } from "../../models/Program";
+import { updateCurriculum, getCurriculumById } from "../../services/Curriculum";
+import { Curriculum } from "../../models/Curriculum";
 
-function AddNewCurriculum() {
+function EditCurriculum() {
+  const { curriculumId } = useParams<{ curriculumId: string }>();
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPrograms = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getProgram();
-        setPrograms(data);
+        if (!curriculumId) return;
+        const curriculumData = await getCurriculumById(curriculumId);
+        setCurriculum(curriculumData);
+        const programsData = await getProgram();
+        setPrograms(programsData);
+        form.setFieldsValue({
+          curriculumCode: curriculumData.curriculumCode,
+          curriculumName: curriculumData.curriculumName,
+          programId: curriculumData.programId,
+          description: curriculumData.description,
+          totalCredit: curriculumData.totalCredit,
+          startYear: curriculumData.startYear,
+          endYear: curriculumData.endYear,
+        });
       } catch (error) {
-        console.error("Failed to fetch programs:", error);
-        toast.error("Failed to load programs");
+        console.error("Failed to fetch data:", error);
+        toast.error("Failed to load curriculum data");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchPrograms();
-  }, []);
 
-  const handleSubmit = async (values: CreateCurriculum) => {
-    console.log("Value", values);
+    fetchData();
+  }, [curriculumId, form]);
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Spin size="large" tip="Loading curriculum details..." />
+      </div>
+    );
+  }
+  const handleSubmit = async (values: Partial<Curriculum>) => {
     try {
+      if (!curriculumId) return;
       setLoading(true);
-      await AddCurriculum(values);
-      toast.success("Curriculum added successfully!");
+      await updateCurriculum(curriculumId, values);
+      toast.success("Curriculum updated successfully!");
       navigate("/manageCurriculum");
     } catch (error) {
-      console.error("Failed to add curriculum:", error);
-      toast.error(
-        `Failed to add curriculum. Please try again! ${String(error)}`
-      );
+      console.error("Failed to update curriculum:", error);
+      toast.error("Failed to update curriculum");
     } finally {
       setLoading(false);
     }
@@ -54,11 +75,11 @@ function AddNewCurriculum() {
         >
           Curriculum Management /
         </span>
-        <span className="text-[#2A384D]"> Add Curriculum</span>
+        <span className="text-[#2A384D]"> Edit Curriculum</span>
       </div>
       <div className="flex-1 bg-white shadow-md rounded-md py-5 px-20">
         <h2 className="text-lg w-fit mx-auto font-bold text-gray-600 my-4 border-b-2 border-gray-600">
-          Add New Curriculum
+          Edit Curriculum: {curriculum?.curriculumCode}
         </h2>
 
         <Form
@@ -80,6 +101,7 @@ function AddNewCurriculum() {
               ))}
             </Select>
           </Form.Item>
+
           <Form.Item
             label="Curriculum Name"
             name="curriculumName"
@@ -89,6 +111,7 @@ function AddNewCurriculum() {
           >
             <Input placeholder="Enter curriculum name" />
           </Form.Item>
+
           <div className="grid grid-cols-2 gap-5">
             <Form.Item
               label="Curriculum Code"
@@ -99,6 +122,7 @@ function AddNewCurriculum() {
             >
               <Input placeholder="Enter curriculum code" />
             </Form.Item>
+
             <Form.Item
               label="Total Credit"
               name="totalCredit"
@@ -109,17 +133,12 @@ function AddNewCurriculum() {
               <Input type="number" placeholder="Enter total credit" />
             </Form.Item>
           </div>
+
           <div className="grid grid-cols-2 gap-5">
             <Form.Item
               label="Start Year"
               name="startYear"
-              rules={[
-                {
-                  required: true,
-
-                  message: "Please input a valid start year!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input start year!" }]}
             >
               <Input type="number" placeholder="Enter start year" />
             </Form.Item>
@@ -132,29 +151,31 @@ function AddNewCurriculum() {
               <Input type="number" placeholder="Enter end year" />
             </Form.Item>
           </div>
+
           <Form.Item
             label="Description"
             name="description"
             rules={[{ required: true, message: "Please input description!" }]}
           >
-            <Input.TextArea rows={4} placeholder="Enter description" />
+            <Input.TextArea
+              rows={4}
+              placeholder="Enter description"
+              autoSize={{ minRows: 4, maxRows: 20 }}
+            />
           </Form.Item>
 
-          <Form.Item className="flex justify-end ">
-            <Button
-              onClick={() => navigate("/manageCurriculum")}
-              className="mr-5"
-            >
+          <div className="flex justify-end gap-4">
+            <Button onClick={() => navigate("/manageCurriculum")}>
               Cancel
             </Button>
             <Button type="primary" htmlType="submit" loading={loading}>
-              Submit
+              Update
             </Button>
-          </Form.Item>
+          </div>
         </Form>
       </div>
     </div>
   );
 }
 
-export default AddNewCurriculum;
+export default EditCurriculum;

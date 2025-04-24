@@ -17,6 +17,7 @@ import ManageProgram from "../pages/admin/ManageProgram";
 import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
 import AddCurriculum from "../pages/admin/AddCurriculum";
+import EditCurriculum from "../pages/admin/EditCurriculum";
 function AppRouter() {
   return (
     <div>
@@ -74,6 +75,15 @@ function AppRouter() {
               element={
                 <PrivateRoute
                   element={AddCurriculum}
+                  allowedRoles={["Admin"]}
+                />
+              }
+            />
+            <Route
+              path="/manageCurriculum/UpdateCurriculum/:curriculumId/"
+              element={
+                <PrivateRoute
+                  element={EditCurriculum}
                   allowedRoles={["Admin"]}
                 />
               }

@@ -5,6 +5,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { PiStudentFill } from "react-icons/pi";
 import { MdOutlineViewTimeline } from "react-icons/md";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -57,6 +58,11 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+  const handleLogout = () => {
+    localStorage.clear();
+
+    navigate(`/`);
+  };
 
   return (
     <div
@@ -89,6 +95,13 @@ const Sidebar = () => {
 
       {/* Toggle Button */}
       <div className="px-4 py-3">
+        <button
+          className="w-full flex items-center font-semibold justify-center bg-[#635BFF] text-white rounded-lg py-2 hover:bg-[#8b85f6] mb-4 gap-2"
+          onClick={handleLogout}
+        >
+          <RiLogoutCircleRLine className="text-xl font-semibold " />
+          {!isCollapsed && <span>Log out</span>}
+        </button>
         <button
           onClick={toggleSidebar}
           className="w-full flex items-center text-xl justify-center text-[#635BFF] bg-gray-100 rounded-lg py-2 hover:bg-gray-200"

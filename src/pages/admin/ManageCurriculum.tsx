@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { getCurriculum } from "../../services/Curriculum";
+import { getCurriculum, deleteCurriculum } from "../../services/Curriculum";
 import { Curriculum } from "../../models/Curriculum";
-import { Table, Input, Button, Dropdown, Select } from "antd";
+import { Table, Input, Button, Dropdown, Select, Modal } from "antd";
 import type { MenuProps } from "antd";
+import { IoAddCircleOutline } from "react-icons/io5";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
@@ -16,10 +19,14 @@ function ManageCurriculum() {
   const navigate = useNavigate();
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [program, setProgram] = useState<Program[]>([]);
-
+  const [selectedCurrriculumId, setSelectedCurriculumId] = useState<
+    string | null
+  >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [searchField, setSearchField] = useState<string>("curriculumCode");
+  const [isDeleteModalVisible, setIsDeleteModalVisible] =
+    useState<boolean>(false);
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
@@ -42,6 +49,12 @@ function ManageCurriculum() {
   const handleViewDetail = (curriculumId: string) => {
     navigate(`/manageCurriculum/${curriculumId}`);
   };
+  const handleAddProgram = () => {
+    navigate(`/manageCurriculum/AddCurriculum`);
+  };
+  const handleUpdateProgram = (curriculumId: string) => {
+    navigate(`/manageCurriculum/UpdateCurriculum/${curriculumId}`);
+  };
   const handleSearch = (value: string) => {
     setSearchText(value);
   };
@@ -57,7 +70,28 @@ function ManageCurriculum() {
       .toLowerCase()
       .includes(searchText.toLowerCase())
   );
+  const handleDelete = async () => {
+    if (!selectedCurrriculumId) return;
+    try {
+      setLoading(true);
+      await deleteCurriculum(selectedCurrriculumId);
+      const data = await getCurriculum();
+      setCurriculums(data);
 
+      toast.success("Major deleted successfully!");
+      setIsDeleteModalVisible(false);
+    } catch (error) {
+      console.error("Failed to delete major:", error);
+      toast.error("Failed to delete major.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const showDeleteModal = (id: string) => {
+    setSelectedCurriculumId(id);
+
+    setIsDeleteModalVisible(true);
+  };
   const columns = [
     {
       title: "Code",
@@ -174,7 +208,10 @@ function ManageCurriculum() {
           {
             key: "edit",
             label: (
-              <Button className="border-none w-full text-blue-700 flex justify-start">
+              <Button
+                className="border-none w-full text-blue-700 flex justify-start"
+                onClick={() => handleUpdateProgram(record.id)}
+              >
                 <FiEdit /> Edit
               </Button>
             ),
@@ -182,7 +219,10 @@ function ManageCurriculum() {
           {
             key: "delete",
             label: (
-              <Button className="border-none w-full text-red-600 flex justify-start">
+              <Button
+                className="border-none w-full text-red-600 flex justify-start"
+                onClick={() => showDeleteModal(record.id)}
+              >
                 <RiDeleteBin7Fill /> Delete
               </Button>
             ),
@@ -206,29 +246,40 @@ function ManageCurriculum() {
 
   return (
     <div className="h-full flex flex-col px-10 py-5">
+      <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
         Curriculum Management
       </div>
 
       <div className="flex-1 bg-white shadow-md rounded-md p-5">
         {/* Search and Dropdown */}
-        <div className="flex items-center gap-4 mb-4">
-          <Select
-            defaultValue="curriculumCode"
-            style={{ width: 150 }}
-            onChange={handleFieldChange}
-          >
-            <Option value="curriculumCode">Search by Code</Option>
-            <Option value="curriculumName">Search by Name</Option>
-          </Select>
-          <Input
-            placeholder={`Search ${
-              searchField === "curriculumCode" ? "Code" : "Name"
-            }`}
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{ width: 300 }}
-          />
+        <div className="flex items-center gap-4 mb-4 justify-between">
+          <div className="flex gap-4">
+            <Select
+              defaultValue="curriculumCode"
+              style={{ width: 150 }}
+              onChange={handleFieldChange}
+            >
+              <Option value="curriculumCode">Search by Code</Option>
+              <Option value="curriculumName">Search by Name</Option>
+            </Select>
+            <Input
+              placeholder={`Search ${
+                searchField === "curriculumCode" ? "Code" : "Name"
+              }`}
+              value={searchText}
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
+            />
+          </div>
+          <div>
+            <Button
+              className="bg-[#635BFF] text-white font-medium"
+              onClick={handleAddProgram}
+            >
+              <IoAddCircleOutline /> Add Curriculum
+            </Button>
+          </div>
         </div>
 
         {/* Table */}
@@ -248,6 +299,17 @@ function ManageCurriculum() {
           })}
         />
       </div>
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onOk={handleDelete}
+        okText="Delete"
+        okType="danger"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete the Program?</p>
+      </Modal>
     </div>
   );
 }
