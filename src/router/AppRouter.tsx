@@ -20,6 +20,8 @@ import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
+import PLO from "../pages/admin/PLO";
+import PO from "../pages/admin/PO";
 function AppRouter() {
   return (
     <div>
@@ -116,6 +118,14 @@ function AppRouter() {
                   allowedRoles={["Admin"]}
                 />
               }
+            />
+            <Route
+              path="/ProgramLearningOutcomes"
+              element={<PrivateRoute element={PLO} allowedRoles={["Admin"]} />}
+            />
+            <Route
+              path="/ProgramOutcomes"
+              element={<PrivateRoute element={PO} allowedRoles={["Admin"]} />}
             />
           </Route>
         </Routes>

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { PiStudentFill } from "react-icons/pi";
 import { MdOutlineViewTimeline } from "react-icons/md";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { RiListCheck2 } from "react-icons/ri";
+import { RiListCheck3 } from "react-icons/ri";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -38,6 +40,16 @@ const SidebarData: SidebarDataType[] = [
     icon: MdOutlineViewTimeline,
     heading: "Program",
     href: "/manageProgram",
+  },
+  {
+    icon: RiListCheck2,
+    heading: "Program Learning Outcomes",
+    href: "/ProgramLearningOutcomes",
+  },
+  {
+    icon: RiListCheck3,
+    heading: "Program  Outcomes",
+    href: "/ProgramOutcomes",
   },
 ];
 

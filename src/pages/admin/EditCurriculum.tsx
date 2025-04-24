@@ -128,6 +128,16 @@ function EditCurriculum() {
               name="totalCredit"
               rules={[
                 { required: true, message: "Please input total credit!" },
+                {
+                  validator: (_, value) => {
+                    if (!value || value > 100) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("End year must be greater than 99")
+                    );
+                  },
+                },
               ]}
             >
               <Input type="number" placeholder="Enter total credit" />
@@ -138,7 +148,21 @@ function EditCurriculum() {
             <Form.Item
               label="Start Year"
               name="startYear"
-              rules={[{ required: true, message: "Please input start year!" }]}
+              rules={[
+                { required: true, message: "Please input start year!" },
+                {
+                  validator: (_, value) => {
+                    if (!value || (value > 2000 && value < 2100)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        "Start year must be greater than 2000 and less than 2100"
+                      )
+                    );
+                  },
+                },
+              ]}
             >
               <Input type="number" placeholder="Enter start year" />
             </Form.Item>
@@ -146,7 +170,21 @@ function EditCurriculum() {
             <Form.Item
               label="End Year"
               name="endYear"
-              rules={[{ required: true, message: "Please input end year!" }]}
+              rules={[
+                { required: true, message: "Please input end year!" },
+                {
+                  validator: (_, value) => {
+                    if (!value || (value > 2000 && value < 2100)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        "End year must be greater than 2000 and less than 2100"
+                      )
+                    );
+                  },
+                },
+              ]}
             >
               <Input type="number" placeholder="Enter end year" />
             </Form.Item>
