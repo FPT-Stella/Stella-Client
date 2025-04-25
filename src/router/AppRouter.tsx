@@ -20,6 +20,7 @@ import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
+import GoogleCallback from "../pages/Authentication/GoogleCallback";
 function AppRouter() {
   return (
     <div>
@@ -28,6 +29,7 @@ function AppRouter() {
           {/* không có layoutlayout */}
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/oauth/google/callback" element={<GoogleCallback />} />
 
           {/* STUDENT */}
           <Route element={<LayoutStudent />}>

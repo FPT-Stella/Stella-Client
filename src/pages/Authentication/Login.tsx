@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Links, useNavigate } from "react-router-dom";
 import { FaUserAlt, FaLock, FaGoogle } from "react-icons/fa";
 
 // Modify the login function to include majorId in return data
@@ -31,6 +31,25 @@ const login = (email: string, password: string) => {
     throw new Error("Invalid credentials");
   }
 };
+
+const createGoogleURL = () => {
+  const baseUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
+
+  const params = {
+    client_id: import.meta.env.VITE_GCP_CLIENT_ID,
+    redirect_uri: import.meta.env.VITE_GCP_REDIRECT_URI,
+    response_type: 'code',
+    scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'].join(
+      ' '
+    ),
+    prompt: 'consent',
+    access_type: 'offline'
+  }
+
+  return `${baseUrl}?${new URLSearchParams(params)}`
+}
+
+const googleURL = createGoogleURL()
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -71,91 +90,11 @@ function Login() {
   };
 
   const handleGoogleLogin = () => {
-    // Handle Google login here
-    console.log("Đăng nhập bằng Google");
+    navigate(googleURL)
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center relative">
-      {/* Lớp phủ màu cam trong suốt */}
-      {/* <div className="absolute inset-0 bg-[rgba(235,98,35,0.73)] opacity-80"></div> */}
-
-      {/* Nội dung đăng nhập */}
-      <div className="relative  p-8 w-1/3 bg-white opacity-90 rounded-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center ">Đăng nhập</h2>
-
-        {error && (
-          <div className="mb-4 text-red-500 text-sm text-center">{error}</div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <FaUserAlt className="text-gray-400 ml-2" />
-              </span>
-              <input
-                type="text"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 px-6 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder=" Nhập email của bạn"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Mật khẩu
-            </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <FaLock className="text-gray-400 ml-2" />
-              </span>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder=" Nhập mật khẩu của bạn"
-                required
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Đăng nhập
-          </button>
-
-          <div className="mt-4 text-center">
-            <p className="text-sm text-white">__Hoặc đăng nhập__</p>
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="mt-2 w-full flex items-center justify-center gap-2 bg-white border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-50"
-            >
-              <FaGoogle className="text-red-500" />
-              <span>Google</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <div className="flex w-full h-screen items-center justify-center"><Link to={googleURL}>Login with Google</Link></div>
   );
 }
 
