@@ -36,3 +36,26 @@ export const loginGoogle = async (token: string) => {
     }
 }
 
+export const loginAdmin = async (email: string, password: string) => {
+    try {
+      const response = await rootApi.post("/Auth/admin-login", { email, password });
+      const data = response.data;
+  
+      if (data.token && data.user) {
+       
+        localStorage.setItem("userData", JSON.stringify({
+          accessToken: data.token,
+          role: data.user.role,
+          email: data.user.email,
+          username: data.user.username,
+          userId: data.user.id
+        }));
+      }
+  
+      return data;
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập:", error);
+      throw error;
+    }
+  };
+  
