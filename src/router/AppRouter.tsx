@@ -22,6 +22,7 @@ import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
 import PLO from "../pages/admin/PLO";
 import PO from "../pages/admin/PO";
+import DetailPO from "../pages/admin/DetailPO";
 function AppRouter() {
   return (
     <div>
@@ -126,6 +127,12 @@ function AppRouter() {
             <Route
               path="/ProgramOutcomes"
               element={<PrivateRoute element={PO} allowedRoles={["Admin"]} />}
+            />
+            <Route
+              path="/ProgramOutcomes/DetailPO/:poId"
+              element={
+                <PrivateRoute element={DetailPO} allowedRoles={["Admin"]} />
+              }
             />
           </Route>
         </Routes>

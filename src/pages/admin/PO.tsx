@@ -13,6 +13,9 @@ import { Program } from "../../models/Program";
 import { getProgram } from "../../services/Program";
 import "react-toastify/dist/ReactToastify.css";
 import POForm from "../../components/Admin/POForm";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 function ManagePO() {
   const [POS, setPOS] = useState<PO[]>([]);
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -29,7 +32,7 @@ function ManagePO() {
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchPO = async () => {
       try {
@@ -115,6 +118,9 @@ function ManagePO() {
     }
   };
 
+  const handleViewDetail = (poId: string) => {
+    navigate(`/ProgramOutcomes/DetailPO/${poId}`);
+  };
   const showEditModal = (po: PO) => {
     setEditing(po);
     setIsEditModalVisible(true);
@@ -177,6 +183,17 @@ function ManagePO() {
       key: "action",
       render: (record: PO) => {
         const items: MenuProps["items"] = [
+          {
+            key: "detail",
+            label: (
+              <Button
+                className="border-none w-full text-green-700"
+                onClick={() => handleViewDetail(record.id)}
+              >
+                <MdOutlineRemoveRedEye /> View Detail
+              </Button>
+            ),
+          },
           {
             key: "edit",
             label: (
