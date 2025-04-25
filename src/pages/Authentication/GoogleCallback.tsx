@@ -13,7 +13,6 @@ const GoogleCallback = () => {
         if (!code) {
             navigate('/login', { replace: true })
         }
-        // Nguyen Huu Danh
         const exchangeCode = async () => {
             try {
                 const { data } = await axios.post<{ accessToken: string, refreshToken: string, username: string, email: string, role: string }>('https://stella.dacoban.studio/api/Auth/oauth/google', {
