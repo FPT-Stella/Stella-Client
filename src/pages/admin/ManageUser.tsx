@@ -96,6 +96,7 @@ function ManageUser() {
       dataIndex: "studentCode",
       key: "studentCode",
       width: 120,
+      render: (studentCode: string) => studentCode || "N/A",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -111,7 +112,7 @@ function ManageUser() {
       width: 180,
       render: (userId: string) => {
         const user = accounts.find((u) => u.id === userId);
-        return user ? user.fullName : "Unknown";
+        return user?.fullName || "N/A";
       },
       onHeaderCell: () => ({
         style: {
@@ -128,7 +129,7 @@ function ManageUser() {
       width: 150,
       render: (majorId: string) => {
         const major = majors.find((m) => m.id === majorId);
-        return major ? major.majorName : "Unknown";
+        return major?.majorName || "N/A";
       },
       onHeaderCell: () => ({
         style: {
@@ -145,7 +146,7 @@ function ManageUser() {
       width: 200,
       render: (userId: string) => {
         const user = accounts.find((u) => u.id === userId);
-        return user ? user.email : "Unknown";
+        return user?.email || "N/A";
       },
       onHeaderCell: () => ({
         style: {
@@ -160,6 +161,7 @@ function ManageUser() {
       dataIndex: "phone",
       key: "phone",
       width: 120,
+      render: (phone: string) => phone || "N/A",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -173,6 +175,7 @@ function ManageUser() {
       dataIndex: "address",
       key: "address",
       width: 200,
+      render: (address: string) => address || "N/A",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -187,14 +190,6 @@ function ManageUser() {
       width: 70,
       render: (record: Student) => {
         const items: MenuProps["items"] = [
-          // {
-          //   key: "edit",
-          //   label: (
-          //     <Button className="border-none w-full text-blue-700 flex justify-start">
-          //       <FiEdit /> Edit
-          //     </Button>
-          //   ),
-          // },
           {
             key: "delete",
             label: (
