@@ -65,9 +65,17 @@ function ManagePLO() {
       toast.success("PLO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error) {
-      console.error("Failed to add PLO:", error);
-      toast.error("Failed to add PLO.");
+    } catch (error: any) {
+      console.error("Failed to add program:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.details);
+      } else {
+        toast.error("Failed to add program.");
+      }
     } finally {
       setLoading(false);
     }

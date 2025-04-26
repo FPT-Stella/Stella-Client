@@ -68,9 +68,17 @@ function ManagePO() {
       toast.success("PO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error) {
-      console.error("Failed to add PO:", error);
-      toast.error("Failed to add PO.");
+    } catch (error: any) {
+      console.error("Failed to add program:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.details);
+      } else {
+        toast.error("Failed to add program.");
+      }
     } finally {
       setLoading(false);
     }
@@ -253,7 +261,7 @@ function ManagePO() {
               className="bg-[#635BFF] text-white font-medium"
               onClick={() => setIsModalVisible(true)}
             >
-              <IoAddCircleOutline /> Add Program Learning Outcomes
+              <IoAddCircleOutline /> Add Program Outcomes
             </Button>
           </div>
         </div>
@@ -294,7 +302,7 @@ function ManagePO() {
             rules={[
               { required: true, message: "Please enter the PO name!" },
               {
-                pattern: /^PO.{1,}$/, // Bắt đầu bằng "PO" và ít nhất thêm 1 ký tự nữa
+                pattern: /^PO.{1,}$/,
                 message:
                   "PO name must start with 'PO' and be at least 3 characters.",
               },

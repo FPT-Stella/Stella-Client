@@ -80,13 +80,22 @@ function ManageProgram() {
       toast.success("Program added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to add program:", error);
-      toast.error("Failed to add program.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.details);
+      } else {
+        toast.error("Failed to add program.");
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const handleEditProgram = async (values: Partial<Program>) => {
     if (!selectedProgram) return;
     try {

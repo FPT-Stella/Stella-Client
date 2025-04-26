@@ -308,7 +308,7 @@ function ManageCurriculum() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the Program?</p>
+        <p>Are you sure you want to delete the Curriculum?</p>
       </Modal>
     </div>
   );

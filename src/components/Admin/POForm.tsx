@@ -33,7 +33,14 @@ const POForm: React.FC<POFormProps> = ({ form, onFinish }) => {
       <Form.Item
         label="PO Name"
         name="poName"
-        rules={[{ required: true, message: "Please enter the PO name!" }]}
+        rules={[
+          { required: true, message: "Please enter the PO name!" },
+          {
+            pattern: /^PO.{1,}$/,
+            message:
+              "PO name must start with 'PO' and be at least 3 characters.",
+          },
+        ]}
       >
         <Input placeholder="Enter PO name" />
       </Form.Item>

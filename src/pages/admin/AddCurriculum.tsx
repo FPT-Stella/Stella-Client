@@ -116,8 +116,18 @@ function AddNewCurriculum() {
               rules={[
                 {
                   required: true,
-
                   message: "Please input a valid start year!",
+                },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    if (value <= 2000) {
+                      return Promise.reject(
+                        new Error("Start year must be greater than 2000!")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
                 },
               ]}
             >
@@ -127,7 +137,24 @@ function AddNewCurriculum() {
             <Form.Item
               label="End Year"
               name="endYear"
-              rules={[{ required: true, message: "Please input end year!" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input end year!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    const startYear = getFieldValue("startYear");
+                    if (!value) return Promise.resolve();
+                    if (startYear && value <= startYear) {
+                      return Promise.reject(
+                        new Error("End year must be greater than Start year!")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                }),
+              ]}
             >
               <Input type="number" placeholder="Enter end year" />
             </Form.Item>
