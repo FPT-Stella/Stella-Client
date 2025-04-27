@@ -20,11 +20,11 @@ import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
-
+import Subject from "../pages/admin/Subject";
 import PLO from "../pages/admin/PLO";
 import PO from "../pages/admin/PO";
 import DetailPO from "../pages/admin/DetailPO";
-
+import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
 
 function AppRouter() {
@@ -69,6 +69,12 @@ function AppRouter() {
               }
             />
             <Route
+              path="/manageSubject"
+              element={
+                <PrivateRoute element={Subject} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
               path="/manageStudent"
               element={
                 <PrivateRoute element={ManageUser} allowedRoles={["Admin"]} />
@@ -88,6 +94,15 @@ function AppRouter() {
               element={
                 <PrivateRoute
                   element={CurriculumDetail}
+                  allowedRoles={["Admin"]}
+                />
+              }
+            />
+            <Route
+              path="/manageSubject/:subjectId/"
+              element={
+                <PrivateRoute
+                  element={SubjectDetail}
                   allowedRoles={["Admin"]}
                 />
               }

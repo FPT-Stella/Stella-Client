@@ -8,6 +8,7 @@ import { MdOutlineViewTimeline } from "react-icons/md";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { RiListCheck2 } from "react-icons/ri";
 import { RiListCheck3 } from "react-icons/ri";
+import { MdOutlineMenuBook } from "react-icons/md";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -50,6 +51,11 @@ const SidebarData: SidebarDataType[] = [
     icon: RiListCheck3,
     heading: "Program  Outcomes",
     href: "/ProgramOutcomes",
+  },
+  {
+    icon: MdOutlineMenuBook,
+    heading: "Subject",
+    href: "/manageSubject",
   },
 ];
 

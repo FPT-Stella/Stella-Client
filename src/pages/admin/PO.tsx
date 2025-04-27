@@ -68,12 +68,19 @@ function ManagePO() {
       toast.success("PO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to add program:", error);
       if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
         error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response &&
         error.response.data &&
-        error.response.data.message
+        typeof error.response.data === "object" &&
+        "details" in error.response.data &&
+        typeof error.response.data.details === "string"
       ) {
         toast.error(error.response.data.details);
       } else {
