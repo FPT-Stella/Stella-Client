@@ -5,29 +5,9 @@ import { getAccountByUsername, getStudentByUserId } from "../../services/user";
 import { getMajor } from "../../services/Major";
 import { getProgramsByMajor } from "../../services/Program";
 import { updateStudentById } from "../../services/user";
-
-interface Student {
-  id: string;
-  userId: string;
-  majorId: string;
-  studentCode: string;
-  phone: string;
-  address: string;
-}
-
-interface Major {
-  id: string;
-  majorName: string;
-  description: string;
-}
-
-interface Program {
-  id: string;
-  majorId: string;
-  description: string;
-  programCode: string;
-  programName: string;
-}
+import { Student } from "../../models/User";
+import { Major } from "../../models/Major";
+import { Program } from "../../models/Program";
 
 function Profile() {
   const [form] = Form.useForm();
