@@ -160,7 +160,7 @@ function CurriculumPage() {
               `${range[0]}-${range[1]} of ${total} curriculums`, */
           }}
           className="border border-gray-200"
-          onRow={(record) => ({
+          onRow={() => ({
             className: "hover:bg-gray-50 transition-colors cursor-pointer",
           })}
           scroll={{ x: 1000 }}
