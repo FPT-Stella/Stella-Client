@@ -44,9 +44,8 @@ function CurriculumDetail() {
       toast.success("Curiculum deleted successfully!");
       await deleteCurriculum(curriculumId);
       setIsDeleteModalVisible(false);
-      setTimeout(() => {
-        navigate(`/manageCurriculum`);
-      }, 1800);
+
+      navigate(`/manageCurriculum`);
     } catch (error) {
       console.error("Failed to delete curriculum:", error);
       toast.error("Failed to delete curriculumcurriculum.");

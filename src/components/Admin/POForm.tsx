@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Select, Button, FormInstance } from "antd";
-import { getProgram } from "../../services/Program";
-import { Program } from "../../models/Program";
+import React, { useEffect } from "react";
+import { Form, Input, Button, FormInstance } from "antd";
+import { useParams } from "react-router-dom";
 
 interface POFormProps {
   form: FormInstance;
@@ -13,21 +12,12 @@ interface POFormProps {
 }
 
 const POForm: React.FC<POFormProps> = ({ form, onFinish }) => {
-  const [programs, setPrograms] = useState<Program[]>([]);
-
+  const { programId } = useParams<{ programId: string }>();
   useEffect(() => {
-    const fetchCurriculums = async () => {
-      try {
-        const data = await getProgram();
-        setPrograms(data);
-      } catch (error) {
-        console.error("Failed to fetch ptogram:", error);
-      }
-    };
-
-    fetchCurriculums();
-  }, []);
-
+    if (programId) {
+      form.setFieldsValue({ programId });
+    }
+  }, [programId, form]);
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item
@@ -36,7 +26,9 @@ const POForm: React.FC<POFormProps> = ({ form, onFinish }) => {
         rules={[
           { required: true, message: "Please enter the PO name!" },
           {
-            pattern: /^PO.{1,}$/,
+            // pattern: /^PO.{1,}$/,
+            pattern: /^PO\d+$/,
+
             message:
               "PO name must start with 'PO' and be at least 3 characters.",
           },
@@ -45,18 +37,8 @@ const POForm: React.FC<POFormProps> = ({ form, onFinish }) => {
         <Input placeholder="Enter PO name" />
       </Form.Item>
 
-      <Form.Item
-        label="Program"
-        name="programId"
-        rules={[{ required: true, message: "Please select a program!" }]}
-      >
-        <Select placeholder="Select curriculum">
-          {programs.map((p) => (
-            <Select.Option key={p.id} value={p.id}>
-              {p.programCode}
-            </Select.Option>
-          ))}
-        </Select>
+      <Form.Item hidden name="programId">
+        <Input hidden />
       </Form.Item>
 
       <Form.Item

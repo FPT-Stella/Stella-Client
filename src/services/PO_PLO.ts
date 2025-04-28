@@ -132,3 +132,27 @@ export const updatePO = async (id: string, data: Partial<CreatePO>) => {
   }
 };
 
+export const getMappingByPLO = async (ploId: string) => {
+  try {
+    const response = await rootApi.get(`/PO_PLO_Mapping/plo/${ploId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching PLO mapping:", error);
+    throw error;
+  }
+};
+
+interface MappingData {
+  poId: string;
+  ploId: string;
+}
+
+export const addMapping = async (data: MappingData) => {
+  try {
+    const response = await rootApi.post("/PO_PLO_Mapping", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding mapping:", error);
+    throw error;
+  }
+};

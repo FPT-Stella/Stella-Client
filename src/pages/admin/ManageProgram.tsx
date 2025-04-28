@@ -17,8 +17,14 @@ import { Major } from "../../models/Major";
 import { getMajor } from "../../services/Major";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+
 import "react-toastify/dist/ReactToastify.css";
 function ManageProgram() {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [program, setProgram] = useState<Program[]>([]);
   const [filteredProgram, setFilteredProgram] = useState<Program[]>([]);
@@ -71,6 +77,9 @@ function ManageProgram() {
 
     setFilteredProgram(filteredData);
   };
+  const handleViewDetail = (programId: string) => {
+    navigate(`/manageProgram/${programId}`);
+  };
   const handleAddProgram = async (values: AddProgram) => {
     try {
       setLoading(true);
@@ -80,16 +89,26 @@ function ManageProgram() {
       toast.success("Program added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error: any) {
-      console.error("Failed to add program:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.details);
+
+      if (newMajor && newMajor.id) {
+        navigate(`/manageProgram/${newMajor.id}`);
+      }
+    } catch (error) {
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
       } else {
-        toast.error("Failed to add program.");
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
       }
     } finally {
       setLoading(false);
@@ -223,6 +242,17 @@ function ManageProgram() {
       key: "action",
       render: (record: Program) => {
         const items: MenuProps["items"] = [
+          {
+            key: "detail",
+            label: (
+              <Button
+                className="border-none w-full text-green-700"
+                onClick={() => handleViewDetail(record.id)}
+              >
+                <MdOutlineRemoveRedEye /> View Detail
+              </Button>
+            ),
+          },
           {
             key: "edit",
             label: (

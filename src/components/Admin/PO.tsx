@@ -7,16 +7,23 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
-import { getAllPO, deletePO, addPO, updatePO } from "../../services/PO_PLO";
+import { useParams } from "react-router-dom";
+
+import {
+  getPOByProgramId,
+  deletePO,
+  addPO,
+  updatePO,
+} from "../../services/PO_PLO";
 import { CreatePO, PO } from "../../models/PO_PLO";
 import { Program } from "../../models/Program";
 import { getProgram } from "../../services/Program";
 import "react-toastify/dist/ReactToastify.css";
-import POForm from "../../components/Admin/POForm";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import POForm from "./POForm";
 
 function ManagePO() {
+  const { programId } = useParams<{ programId: string }>();
+
   const [POS, setPOS] = useState<PO[]>([]);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [filteredPOS, setFilteredPOS] = useState<PO[]>([]);
@@ -32,11 +39,11 @@ function ManagePO() {
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
-  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchPO = async () => {
       try {
-        const data = await getAllPO();
+        const data = await getPOByProgramId(programId!);
         setPOS(data);
         setFilteredPOS(data);
         const dataPro = await getProgram();
@@ -49,7 +56,7 @@ function ManagePO() {
     };
 
     fetchPO();
-  }, []);
+  }, [programId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
@@ -63,6 +70,7 @@ function ManagePO() {
     try {
       setLoading(true);
       const newPO = await addPO(values);
+
       setPOS((prev) => [...prev, newPO]);
       setFilteredPOS((prev) => [...prev, newPO]);
       toast.success("PO added successfully!");
@@ -99,7 +107,7 @@ function ManagePO() {
     try {
       setLoading(true);
       await updatePO(editing.id, values);
-      const data = await getAllPO();
+      const data = await getPOByProgramId(programId!);
       setPOS(data);
       setFilteredPOS(data);
       toast.success("PO updated successfully!");
@@ -119,7 +127,7 @@ function ManagePO() {
     try {
       setLoading(true);
       await deletePO(selecteditem);
-      const data = await getAllPO();
+      const data = await getPOByProgramId(programId!);
       setPOS(data);
       setFilteredPOS(data);
 
@@ -133,9 +141,6 @@ function ManagePO() {
     }
   };
 
-  const handleViewDetail = (poId: string) => {
-    navigate(`/ProgramOutcomes/DetailPO/${poId}`);
-  };
   const showEditModal = (po: PO) => {
     setEditing(po);
     setIsEditModalVisible(true);
@@ -196,19 +201,9 @@ function ManagePO() {
     {
       title: "Action",
       key: "action",
+      width: 80,
       render: (record: PO) => {
         const items: MenuProps["items"] = [
-          {
-            key: "detail",
-            label: (
-              <Button
-                className="border-none w-full text-green-700"
-                onClick={() => handleViewDetail(record.id)}
-              >
-                <MdOutlineRemoveRedEye /> View Detail
-              </Button>
-            ),
-          },
           {
             key: "edit",
             label: (
@@ -249,38 +244,38 @@ function ManagePO() {
   ];
 
   return (
-    <div className="h-full flex flex-col px-10 py-5">
+    <div className="h-full flex flex-col py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
         Manage Program Outcomes
       </div>
       {/* Table */}
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
-        <div className="mb-4 flex justify-between">
-          <Input
-            placeholder="Search by Name"
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{ width: 300 }}
-          />
-          <div>
-            <Button
-              className="bg-[#635BFF] text-white font-medium"
-              onClick={() => setIsModalVisible(true)}
-            >
-              <IoAddCircleOutline /> Add Program Outcomes
-            </Button>
-          </div>
-        </div>
-        <Table
-          size="small"
-          dataSource={filteredPOS}
-          columns={columns}
-          rowKey="id"
-          loading={loading}
-          pagination={{ pageSize: 8 }}
+
+      <div className="mb-4 flex justify-between">
+        <Input
+          placeholder="Search by Name"
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value)}
+          style={{ width: 300 }}
         />
+        <div>
+          <Button
+            className="bg-[#635BFF] text-white font-medium"
+            onClick={() => setIsModalVisible(true)}
+          >
+            <IoAddCircleOutline /> Add Program Outcomes
+          </Button>
+        </div>
       </div>
+      <Table
+        size="small"
+        dataSource={filteredPOS}
+        columns={columns}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
+
       <Modal
         width="40%"
         title="Add PO"

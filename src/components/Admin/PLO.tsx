@@ -14,8 +14,6 @@ import {
   updatePLO,
 } from "../../services/PO_PLO";
 import { CreatePLO, PLO } from "../../models/PO_PLO";
-import { Curriculum } from "../../models/Curriculum";
-import { getCurriculum } from "../../services/Curriculum";
 import "react-toastify/dist/ReactToastify.css";
 import PLOForm from "./PLOForm";
 import { useParams } from "react-router-dom";
@@ -23,9 +21,7 @@ import { AxiosError } from "axios";
 
 function ManagePLO() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
-
   const [POLS, setPOLS] = useState<PLO[]>([]);
-  const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [filteredPOLS, setFilteredPOLS] = useState<PLO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
@@ -45,9 +41,8 @@ function ManagePLO() {
       try {
         const data = await getPLOByCurriculum(curriculumId!);
         setPOLS(data);
+
         setFilteredPOLS(data);
-        const dataCurri = await getCurriculum();
-        setCurriculums(dataCurri);
       } catch (error) {
         console.error("Fail to fetching POLS:", error);
       } finally {
@@ -180,23 +175,7 @@ function ManagePLO() {
         },
       }),
     },
-    {
-      title: "Curriculum",
-      dataIndex: "curriculumId",
-      key: "curriculumId",
-      width: 100,
-      onHeaderCell: () => ({
-        style: {
-          backgroundColor: headerBg,
-          color: headerColor,
-          fontWeight: "bold",
-        },
-      }),
-      render: (curriculumId: string) => {
-        const Curriculum = curriculums.find((p) => p.id === curriculumId);
-        return Curriculum ? Curriculum.curriculumCode : "Unknown";
-      },
-    },
+
     {
       title: "Description",
       dataIndex: "description",
@@ -208,6 +187,11 @@ function ManagePLO() {
           fontWeight: "bold",
         },
       }),
+    },
+    {
+      title: "PO",
+      dataIndex: "id",
+      key: "id",
     },
     {
       title: "Action",

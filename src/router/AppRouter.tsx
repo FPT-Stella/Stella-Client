@@ -21,8 +21,7 @@ import CurriculumDetailStudent from "../pages/students/CurriculumDetailStudent";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
 import Subject from "../pages/admin/Subject";
-import PLO from "../components/Admin/PLO";
-import PO from "../pages/admin/PO";
+import PO from "../components/Admin/PO";
 import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";
@@ -165,10 +164,7 @@ function AppRouter() {
                 />
               }
             />
-            <Route
-              path="/ProgramLearningOutcomes"
-              element={<PrivateRoute element={PLO} allowedRoles={["Admin"]} />}
-            />
+
             <Route
               path="/ProgramOutcomes"
               element={<PrivateRoute element={PO} allowedRoles={["Admin"]} />}
