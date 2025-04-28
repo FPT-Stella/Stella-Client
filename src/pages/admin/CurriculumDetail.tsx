@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Spin, Modal } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PLO from "../../components/Admin/PLO";
 function CurriculumDetail() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
@@ -86,6 +87,14 @@ function CurriculumDetail() {
             <tbody>
               <tr>
                 <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                  Curriculum ID :
+                </td>
+                <td className="py-3.5 border border-gray-200 px-4">
+                  {curriculum.id}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
                   Curriculum Code :
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
@@ -155,13 +164,19 @@ function CurriculumDetail() {
         </div>
         <div className="flex justify-end gap-5 mt-8">
           <Button
-            className="bg-blue-500 font-medium text-white"
+            className="bg-[#635BFF] font-medium text-white"
             onClick={() =>
               navigate(`/manageCurriculum/UpdateCurriculum/${curriculumId}`)
             }
           >
-            Edit
+            Edit Curriculum Management
           </Button>
+        </div>
+
+        <div>
+          <PLO />
+        </div>
+        <div className="flex justify-end gap-5 mt-8">
           <Button
             className="bg-red-500 font-medium text-white"
             onClick={showDeleteModal}
@@ -172,7 +187,7 @@ function CurriculumDetail() {
             className="bg-[#635BFF] font-medium text-white"
             onClick={handleBack}
           >
-            Back Curriculum Management{" "}
+            Back Curriculum Management
           </Button>
         </div>
       </div>

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Select, Button, FormInstance } from "antd";
-import { getCurriculum } from "../../services/Curriculum";
-import { Curriculum } from "../../models/Curriculum";
+import React from "react";
+import { Form, Input, Button, FormInstance } from "antd";
+import { useParams } from "react-router-dom";
 
 interface PLOFormProps {
   form: FormInstance;
@@ -13,20 +12,13 @@ interface PLOFormProps {
 }
 
 const PLOForm: React.FC<PLOFormProps> = ({ form, onFinish }) => {
-  const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const { curriculumId } = useParams<{ curriculumId: string }>();
 
-  useEffect(() => {
-    const fetchCurriculums = async () => {
-      try {
-        const data = await getCurriculum();
-        setCurriculums(data);
-      } catch (error) {
-        console.error("Failed to fetch curriculums:", error);
-      }
-    };
-
-    fetchCurriculums();
-  }, []);
+  React.useEffect(() => {
+    if (curriculumId) {
+      form.setFieldsValue({ curriculumId });
+    }
+  }, [curriculumId, form]);
 
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -39,25 +31,15 @@ const PLOForm: React.FC<PLOFormProps> = ({ form, onFinish }) => {
       </Form.Item>
 
       <Form.Item
-        label="Curriculum"
-        name="curriculumId"
-        rules={[{ required: true, message: "Please select a curriculum!" }]}
-      >
-        <Select placeholder="Select curriculum">
-          {curriculums.map((curriculum) => (
-            <Select.Option key={curriculum.id} value={curriculum.id}>
-              {curriculum.curriculumCode}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item
         label="Description"
         name="description"
         rules={[{ required: true, message: "Please enter the description!" }]}
       >
         <Input.TextArea placeholder="Enter description" rows={4} />
+      </Form.Item>
+
+      <Form.Item name="curriculumId" hidden>
+        <Input />
       </Form.Item>
 
       <Form.Item>

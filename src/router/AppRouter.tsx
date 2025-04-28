@@ -21,7 +21,7 @@ import CurriculumDetail from "../pages/admin/CurriculumDetail";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
 import Subject from "../pages/admin/Subject";
-import PLO from "../pages/admin/PLO";
+import PLO from "../components/Admin/PLO";
 import PO from "../pages/admin/PO";
 import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";

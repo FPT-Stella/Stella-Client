@@ -7,13 +7,23 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
-import { getAllPLO, deletePLO, addPLO, updatePLO } from "../../services/PO_PLO";
+import {
+  getPLOByCurriculum,
+  deletePLO,
+  addPLO,
+  updatePLO,
+} from "../../services/PO_PLO";
 import { CreatePLO, PLO } from "../../models/PO_PLO";
 import { Curriculum } from "../../models/Curriculum";
 import { getCurriculum } from "../../services/Curriculum";
 import "react-toastify/dist/ReactToastify.css";
-import PLOForm from "../../components/Admin/PLOForm";
+import PLOForm from "./PLOForm";
+import { useParams } from "react-router-dom";
+import { AxiosError } from "axios";
+
 function ManagePLO() {
+  const { curriculumId } = useParams<{ curriculumId: string }>();
+
   const [POLS, setPOLS] = useState<PLO[]>([]);
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [filteredPOLS, setFilteredPOLS] = useState<PLO[]>([]);
@@ -33,7 +43,7 @@ function ManagePLO() {
   useEffect(() => {
     const fetchPLO = async () => {
       try {
-        const data = await getAllPLO();
+        const data = await getPLOByCurriculum(curriculumId!);
         setPOLS(data);
         setFilteredPOLS(data);
         const dataCurri = await getCurriculum();
@@ -46,7 +56,7 @@ function ManagePLO() {
     };
 
     fetchPLO();
-  }, []);
+  }, [curriculumId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
@@ -65,16 +75,22 @@ function ManagePLO() {
       toast.success("PLO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error: any) {
-      console.error("Failed to add program:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.details);
+    } catch (error) {
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
       } else {
-        toast.error("Failed to add program.");
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
       }
     } finally {
       setLoading(false);
@@ -89,7 +105,7 @@ function ManagePLO() {
     try {
       setLoading(true);
       await updatePLO(editing.id, values);
-      const data = await getAllPLO();
+      const data = await getPLOByCurriculum(curriculumId!);
       setPOLS(data);
       setFilteredPOLS(data);
       toast.success("PLO updated successfully!");
@@ -97,19 +113,32 @@ function ManagePLO() {
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
-      console.error("Failed to update PLO:", error);
-      toast.error("Failed to update PLO.");
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
+      }
     } finally {
       setLoading(false);
     }
   };
-
   const handleDelete = async () => {
     if (!selecteditem) return;
     try {
       setLoading(true);
       await deletePLO(selecteditem);
-      const data = await getAllPLO();
+      const data = await getPLOByCurriculum(curriculumId!);
       setPOLS(data);
       setFilteredPOLS(data);
 
@@ -155,6 +184,7 @@ function ManagePLO() {
       title: "Curriculum",
       dataIndex: "curriculumId",
       key: "curriculumId",
+      width: 100,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -224,38 +254,38 @@ function ManagePLO() {
   ];
 
   return (
-    <div className="h-full flex flex-col px-10 py-5">
+    <div className="h-full flex flex-col  py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
         Manage Program Learning Outcomes
       </div>
       {/* Table */}
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
-        <div className="mb-4 flex justify-between">
-          <Input
-            placeholder="Search by Name"
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{ width: 300 }}
-          />
-          <div>
-            <Button
-              className="bg-[#635BFF] text-white font-medium"
-              onClick={() => setIsModalVisible(true)}
-            >
-              <IoAddCircleOutline /> Add Program Learning Outcomes
-            </Button>
-          </div>
-        </div>
-        <Table
-          size="small"
-          dataSource={filteredPOLS}
-          columns={columns}
-          rowKey="id"
-          loading={loading}
-          pagination={{ pageSize: 8 }}
+
+      <div className="mb-4 flex justify-between">
+        <Input
+          placeholder="Search by Name"
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value)}
+          style={{ width: 300 }}
         />
+        <div>
+          <Button
+            className="bg-[#635BFF] text-white font-medium"
+            onClick={() => setIsModalVisible(true)}
+          >
+            <IoAddCircleOutline /> Add Program Learning Outcomes
+          </Button>
+        </div>
       </div>
+      <Table
+        size="small"
+        dataSource={filteredPOLS}
+        columns={columns}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
+
       <Modal
         title="Add PLO"
         open={isModalVisible}
@@ -280,7 +310,14 @@ function ManagePLO() {
           <Form.Item
             label="PLO Name"
             name="ploName"
-            rules={[{ required: true, message: "Please enter the PLO name!" }]}
+            rules={[
+              { required: true, message: "Please enter the PLO name!" },
+              {
+                pattern: /^PLO\d+$/,
+                message:
+                  "PLO name must be in the format 'PLO+number' (e.g., PLO1, PLO25)",
+              },
+            ]}
           >
             <Input placeholder="Enter PLO name" />
           </Form.Item>

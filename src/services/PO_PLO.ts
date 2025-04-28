@@ -13,6 +13,16 @@ export const getAllPLO = async () => {
     }
 };
 
+export const getPLOByCurriculum = async (id: string) => {
+    try {
+        const response = await rootApi.get<PLO[]>(`PLO/curriculum/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching PLO by ID:", error);
+        throw error;
+    }
+};
+
 export const getPLOById = async (id: string) => {
     try {
         const response = await rootApi.get<PLO>(`/PLO/${id}`);
