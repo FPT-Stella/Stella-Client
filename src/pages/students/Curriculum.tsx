@@ -163,8 +163,8 @@ function CurriculumPage() {
           onRow={(record) => ({
             className: "hover:bg-gray-50 transition-colors cursor-pointer",
           })}
-          scroll={{ x: 1000 }} // Enable horizontal scrolling if needed
-          size="large" // Makes the table rows more spacious
+          scroll={{ x: 1000 }}
+          size="large"
         />
       </div>
     </div>
