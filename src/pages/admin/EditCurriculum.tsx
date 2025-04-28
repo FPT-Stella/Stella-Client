@@ -7,6 +7,7 @@ import { getProgram } from "../../services/Program";
 import { Program } from "../../models/Program";
 import { updateCurriculum, getCurriculumById } from "../../services/Curriculum";
 import { Curriculum } from "../../models/Curriculum";
+import { AxiosError } from "axios";
 
 function EditCurriculum() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
@@ -28,7 +29,7 @@ function EditCurriculum() {
           curriculumCode: curriculumData.curriculumCode,
           curriculumName: curriculumData.curriculumName,
           programId: curriculumData.programId,
-          description: curriculumData.description,
+          description: JSON.parse(curriculumData.description),
           totalCredit: curriculumData.totalCredit,
           startYear: curriculumData.startYear,
           endYear: curriculumData.endYear,
@@ -54,12 +55,25 @@ function EditCurriculum() {
     try {
       if (!curriculumId) return;
       setLoading(true);
-      await updateCurriculum(curriculumId, values);
+      const curriculumData = {
+        ...values,
+        description: JSON.stringify(values.description),
+      };
+      await updateCurriculum(curriculumId, curriculumData);
       toast.success("Curriculum updated successfully!");
       navigate("/manageCurriculum");
     } catch (error) {
-      console.error("Failed to update curriculum:", error);
-      toast.error("Failed to update curriculum");
+      if (error instanceof AxiosError) {
+        console.error("Failed to update:", error);
+        if (error.response?.data?.message) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to update.");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to update.");
+      }
     } finally {
       setLoading(false);
     }
@@ -198,7 +212,7 @@ function EditCurriculum() {
             <Input.TextArea
               rows={4}
               placeholder="Enter description"
-              autoSize={{ minRows: 4, maxRows: 20 }}
+              autoSize={{ minRows: 10, maxRows: 25 }}
             />
           </Form.Item>
 

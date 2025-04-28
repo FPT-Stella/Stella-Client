@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { getCurriculumById } from "../../services/Curriculum";
+import { getCurriculumById, deleteCurriculum } from "../../services/Curriculum";
 import { getProgramById } from "../../services/Program";
 import { Program } from "../../models/Program";
 import { Curriculum } from "../../models/Curriculum";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Spin } from "antd";
+import { Button, Spin, Modal } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function CurriculumDetail() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [program, setProgram] = useState<Program | null>(null);
-
+  const [isDeleteModalVisible, setIsDeleteModalVisible] =
+    useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,6 +36,26 @@ function CurriculumDetail() {
   const handleBack = () => {
     navigate(`/manageCurriculum`);
   };
+  const handleDelete = async () => {
+    if (!curriculumId) return;
+    try {
+      setLoading(true);
+      toast.success("Curiculum deleted successfully!");
+      await deleteCurriculum(curriculumId);
+      setIsDeleteModalVisible(false);
+      setTimeout(() => {
+        navigate(`/manageCurriculum`);
+      }, 1800);
+    } catch (error) {
+      console.error("Failed to delete curriculum:", error);
+      toast.error("Failed to delete curriculumcurriculum.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const showDeleteModal = () => {
+    setIsDeleteModalVisible(true);
+  };
   if (loading) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -47,6 +70,7 @@ function CurriculumDetail() {
 
   return (
     <div className=" flex flex-col px-10 py-5">
+      <ToastContainer />
       <div className="text-lg font-semibold h-8 flex gap-2 mb-3">
         <span className="text-gray-500 cursor-pointer " onClick={handleBack}>
           Curriculum Management /
@@ -89,7 +113,17 @@ function CurriculumDetail() {
                   Description:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {curriculum.description}
+                  {JSON.parse(curriculum.description)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(curriculum.description).split("\n")
+                            .length -
+                            1 && <br />}
+                      </React.Fragment>
+                    ))}
                 </td>
               </tr>
               <tr>
@@ -120,8 +154,20 @@ function CurriculumDetail() {
           </table>
         </div>
         <div className="flex justify-end gap-5 mt-8">
-          <Button>Edit</Button>
-          <Button>Delete</Button>
+          <Button
+            className="bg-blue-500 font-medium text-white"
+            onClick={() =>
+              navigate(`/manageCurriculum/UpdateCurriculum/${curriculumId}`)
+            }
+          >
+            Edit
+          </Button>
+          <Button
+            className="bg-red-500 font-medium text-white"
+            onClick={showDeleteModal}
+          >
+            Delete
+          </Button>
           <Button
             className="bg-[#635BFF] font-medium text-white"
             onClick={handleBack}
@@ -130,6 +176,17 @@ function CurriculumDetail() {
           </Button>
         </div>
       </div>
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onOk={handleDelete}
+        okText="Delete"
+        okType="danger"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete the Curriculum?</p>
+      </Modal>
     </div>
   );
 }

@@ -78,11 +78,11 @@ function ManageCurriculum() {
       const data = await getCurriculum();
       setCurriculums(data);
 
-      toast.success("Major deleted successfully!");
+      toast.success("Curriculum deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete major:", error);
-      toast.error("Failed to delete major.");
+      console.error("Failed to delete curriculum:", error);
+      toast.error("Failed to delete curriculum.");
     } finally {
       setLoading(false);
     }

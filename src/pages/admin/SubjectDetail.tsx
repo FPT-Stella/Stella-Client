@@ -86,13 +86,13 @@ function SubjectDetail() {
           className="text-gray-500 cursor-pointer hover:text-blue-500"
           onClick={handleBack}
         >
-          Curriculum Management /
+          Subject Management /
         </span>
         <span className="text-[#2A384D]">{subject.subjectCode}</span>
       </div>
       <div className="flex-1 bg-white shadow-md rounded-md py-5 px-10">
         <h2 className="text-lg w-fit mx-auto font-bold text-gray-600 my-4 border-b-2 border-gray-600">
-          View Curriculum: {subject.subjectCode}
+          View Subject: {subject.subjectCode}
         </h2>
 
         <div className="mt-5">

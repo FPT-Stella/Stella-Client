@@ -26,7 +26,7 @@ import PO from "../pages/admin/PO";
 import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
-
+import ProgramDetail from "../pages/admin/ProgramDetail";
 function AppRouter() {
   return (
     <div>
@@ -136,6 +136,15 @@ function AppRouter() {
               element={
                 <PrivateRoute
                   element={ManageProgram}
+                  allowedRoles={["Admin"]}
+                />
+              }
+            />
+            <Route
+              path="/manageProgram/:programId"
+              element={
+                <PrivateRoute
+                  element={ProgramDetail}
                   allowedRoles={["Admin"]}
                 />
               }
