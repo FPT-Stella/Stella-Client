@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -18,11 +17,13 @@ import ManageMajor from "../pages/admin/ManageMajor";
 import ManageProgram from "../pages/admin/ManageProgram";
 import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
+import CurriculumDetailStudent from "../pages/students/CurriculumDetailStudent";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
 import Subject from "../pages/admin/Subject";
 import PLO from "../components/Admin/PLO";
 import PO from "../pages/admin/PO";
+import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
@@ -51,11 +52,26 @@ function AppRouter() {
                 <PrivateRoute element={Curriculum} allowedRoles={["Student"]} />
               }
             />
+
+            <Route
+              path="/curriculum/:curriculumId/"
+              element={
+                <PrivateRoute
+                  element={CurriculumDetailStudent}
+                  allowedRoles={["Student"]}
+                />
+              }
+            />
             <Route
               path="/Syllabus"
               element={
                 <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
               }
+            />
+
+            <Route
+              path="/program/:programId/outcomes"
+              element={<POStudent />}
             />
           </Route>
 
