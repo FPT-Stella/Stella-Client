@@ -229,35 +229,35 @@ function ChatBox() {
 
             {/* Messages */}
             <div
-              className={`flex-1 overflow-y-auto p-4 ${darkMode ? "bg-gray-800" : "bg-gray-50"}`}
+              className={`flex-1 overflow-y-auto p-2 ${darkMode ? "bg-gray-800" : "bg-gray-50"}`}
             >
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`mb-6 ${
+                  className={`mb-2 ${
                     msg.sender === "user" ? "ml-auto" : "mr-auto"
                   }`}
                 >
                   <div
-                    className={`flex items-start gap-4 max-w-3xl ${
+                    className={`flex items-start gap-2 max-w-2xl ${
                       msg.sender === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
                     <div
-                      className={`p-2 rounded-full ${
+                      className={`p-1.5 rounded-full ${
                         msg.sender === "user"
                           ? "bg-blue-600 text-white"
                           : "bg-gray-200"
                       }`}
                     >
                       {msg.sender === "user" ? (
-                        <FaUser className="text-lg" />
+                        <FaUser className="text-base" />
                       ) : (
-                        <PiStarFourFill className="text-lg" />
+                        <PiStarFourFill className="text-base" />
                       )}
                     </div>
                     <div
-                      className={`prose max-w-none p-4 rounded-lg ${
+                      className={`prose prose-sm max-w-none py-2 px-3 rounded-lg ${
                         msg.sender === "user"
                           ? "bg-blue-600 text-white"
                           : darkMode
@@ -271,8 +271,8 @@ function ChatBox() {
                 </div>
               ))}
               {loading && (
-                <div className="flex items-center gap-2 text-gray-500">
-                  <PiStarFourFill className="animate-spin" />
+                <div className="flex items-center gap-2 text-gray-500 text-sm">
+                  <PiStarFourFill className="animate-spin text-base" />
                   <span>AI is thinking...</span>
                 </div>
               )}
@@ -280,7 +280,7 @@ function ChatBox() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t">
+            <div className="p-2 border-t">
               <div className="flex gap-2">
                 <input
                   value={input}
@@ -289,7 +289,7 @@ function ChatBox() {
                     e.key === "Enter" && !e.shiftKey && sendMessage()
                   }
                   placeholder="Type your message..."
-                  className={`flex-1 p-3 rounded-lg border ${
+                  className={`flex-1 py-2 px-3 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 text-white border-gray-600"
                       : "bg-white border-gray-300"
@@ -298,9 +298,9 @@ function ChatBox() {
                 <button
                   onClick={sendMessage}
                   disabled={loading}
-                  className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="py-2 px-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  <IoSend className="text-xl" />
+                  <IoSend className="text-lg" />
                 </button>
               </div>
             </div>
