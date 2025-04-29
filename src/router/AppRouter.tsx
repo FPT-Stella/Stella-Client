@@ -69,7 +69,7 @@ function AppRouter() {
             />
 
             <Route
-              path="/program/:programId/outcomes"
+              path="/program/:programId/curriculum/:curriculumId/outcomes"
               element={<POStudent />}
             />
           </Route>

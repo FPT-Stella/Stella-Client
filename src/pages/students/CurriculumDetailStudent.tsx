@@ -86,7 +86,7 @@ function CurriculumDetailStudent() {
 
   const handleViewPO = () => {
     if (program) {
-      navigate(`/program/${program.id}/outcomes`);
+      navigate(`/program/${program.id}/curriculum/${curriculumId}/outcomes`);
     }
   };
 
