@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { getProgramsByMajor } from "../../services/Program";
 import { Program } from "../../models/Program";
 import { Curriculum } from "../../models/Curriculum";
-import { Spin, Table } from "antd";
+import { Button, Input, Select, Spin, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { getCurriculumByProgram } from "../../services/Curriculum";
 import { Link } from "react-router-dom";
+import SearchOutlined from "@ant-design/icons/SearchOutlined";
 
 function CurriculumPage() {
   const studentInfo = {
@@ -20,21 +21,26 @@ function CurriculumPage() {
 
   const [program, setProgram] = useState<Program>({} as Program);
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const [filteredCurriculums, setFilteredCurriculums] = useState<Curriculum[]>(
+    [],
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchType, setSearchType] = useState<string>("curriculumCode");
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // First fetch program
         const programData = await getProgramsByMajor(studentInfo.majorId);
         setProgram(programData);
 
-        // Then fetch curriculums for this program
         if (programData.id) {
           const curriculumData = await getCurriculumByProgram(programData.id);
           setCurriculums(curriculumData);
+          // setFilteredCurriculums(curriculumData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,6 +52,37 @@ function CurriculumPage() {
 
     fetchData();
   }, [studentInfo.majorId]);
+
+  const handleSearch = () => {
+    setHasSearched(true);
+    if (searchText.trim() === "") {
+      // If search text is empty, show all curriculums
+      setFilteredCurriculums(curriculums);
+    } else {
+      // Filter based on search text and type
+      const filtered = curriculums.filter((curriculum) =>
+        curriculum[searchType as keyof Curriculum]
+          ?.toString()
+          .toLowerCase()
+          .includes(searchText.toLowerCase()),
+      );
+      setFilteredCurriculums(filtered);
+    }
+  };
+
+  const handleSearchTypeChange = (value: string) => {
+    setSearchType(value);
+    setSearchText(""); // Clear search text when changing search type
+    if (hasSearched) {
+      setFilteredCurriculums(curriculums); // Reset to show all if already searched
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   const columns: ColumnsType<Curriculum> = [
     {
@@ -108,7 +145,6 @@ function CurriculumPage() {
 
   return (
     <div className="my-12 mx-4 md:mx-8 lg:mx-16">
-      {" "}
       {/* Increased horizontal margins */}
       <div className="text-4xl font-semibold text-center mb-8">Curriculum</div>
       {/* Program Information Card */}
@@ -145,27 +181,58 @@ function CurriculumPage() {
           </tbody>
         </table>
       </div>
-      {/* Curriculums Table */}
+      {/* Curriculums Table with Search */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-semibold mb-6">Available Curriculums</h2>
-        <Table
-          columns={columns}
-          dataSource={curriculums}
-          rowKey="id"
-          pagination={{
-            pageSize: curriculums.length,
-            /* position: ["bottomCenter"],
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} curriculums`, */
-          }}
-          className="border border-gray-200"
-          onRow={(record) => ({
-            className: "hover:bg-gray-50 transition-colors cursor-pointer",
-          })}
-          scroll={{ x: 1000 }}
-          size="large"
-        />
+        <div className="flex items-center gap-4 mb-6">
+          <Select
+            defaultValue="curriculumCode"
+            style={{ width: 150 }}
+            onChange={handleSearchTypeChange}
+            options={[
+              { value: "curriculumCode", label: "Search by Code" },
+              { value: "curriculumName", label: "Search by Name" },
+            ]}
+          />
+          <Input
+            placeholder={`Search by ${searchType === "curriculumCode" ? "Code" : "Name"}`}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={handleKeyPress}
+            style={{ width: 300 }}
+          />
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleSearch}
+            className="bg-blue-500"
+          >
+            Search
+          </Button>
+        </div>
+
+        {hasSearched ? (
+          <Table
+            columns={columns}
+            dataSource={filteredCurriculums}
+            rowKey="id"
+            // pagination={{
+            //   pageSize: 10,
+            //   showSizeChanger: true,
+            //   showTotal: (total, range) =>
+            //     `${range[0]}-${range[1]} of ${total} curriculums`,
+            // }}
+            className="border border-gray-200"
+            onRow={() => ({
+              className: "hover:bg-gray-50 transition-colors cursor-pointer",
+            })}
+            scroll={{ x: 1000 }}
+            size="large"
+          />
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            Use the search above to find curriculums
+          </div>
+        )}
       </div>
     </div>
   );
