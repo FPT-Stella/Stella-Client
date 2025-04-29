@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PLOForm from "./PLOForm";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
-
+import POMappingList from "../../components/Admin/PO_POL";
 function ManagePLO() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
   const [POLS, setPOLS] = useState<PLO[]>([]);
@@ -100,17 +100,18 @@ function ManagePLO() {
     try {
       setLoading(true);
       await updatePLO(editing.id, values);
+      toast.success("PLO updated successfully!");
       const data = await getPLOByCurriculum(curriculumId!);
       setPOLS(data);
       setFilteredPOLS(data);
-      toast.success("PLO updated successfully!");
+
       setIsEditModalVisible(false);
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
       // Sử dụng AxiosError để xác định kiểu lỗi
       if (error instanceof AxiosError) {
-        console.error("Failed to add:", error);
+        console.error("Failed to update:", error);
         if (
           error.response &&
           error.response.data &&
@@ -118,7 +119,7 @@ function ManagePLO() {
         ) {
           toast.error(error.response.data.details);
         } else {
-          toast.error("Failed to add.");
+          toast.error("Failed to update.");
         }
       } else {
         console.error("Unexpected error:", error);
@@ -190,8 +191,18 @@ function ManagePLO() {
     },
     {
       title: "PO",
-      dataIndex: "id",
-      key: "id",
+      key: "po",
+      width: 200,
+      render: (record: PLO) => {
+        return <POMappingList ploId={record.id} />;
+      },
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Action",

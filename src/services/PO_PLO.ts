@@ -1,5 +1,5 @@
 import rootApi from "./rootApi";
-import { PLO, CreatePLO, PO, CreatePO } from "../models/PO_PLO";
+import { PLO, CreatePLO, PO, CreatePO,MappingPLO  } from "../models/PO_PLO";
 
 export const getAllPLO = async () => {
   try {
@@ -66,6 +66,7 @@ export const deletePLO = async (id: string) => {
 export const updatePLO = async (id: string, data: Partial<CreatePLO>) => {
   try {
     const response = await rootApi.put<PLO>(`/PLO/${id}`, data);
+
     return response.data;
   } catch (error) {
     console.error("Error updating PLO:", error);
@@ -153,6 +154,15 @@ export const addMapping = async (data: MappingData) => {
     return response.data;
   } catch (error) {
     console.error("Error adding mapping:", error);
+    throw error;
+  }
+};
+export const getMappingPLO = async (poId: string): Promise<MappingPLO[]> => {
+  try {
+    const response = await rootApi.get(`/PO_PLO_Mapping/po/${poId}`);
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching mapping PLO:", error);
     throw error;
   }
 };

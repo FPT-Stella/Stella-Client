@@ -24,3 +24,7 @@ export interface Mapping {
   poId: string;
   polId: string;
 }
+export interface MappingPLO {
+  id: string;
+  name: string;
+}
