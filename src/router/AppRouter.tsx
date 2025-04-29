@@ -27,6 +27,7 @@ import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
 import ProgramDetail from "../pages/admin/ProgramDetail";
+import AddSubject from "../pages/admin/AddSubject";
 function AppRouter() {
   return (
     <div>
@@ -87,6 +88,12 @@ function AppRouter() {
               path="/manageSubject"
               element={
                 <PrivateRoute element={Subject} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
+              path="/manageSubject/AddSubject"
+              element={
+                <PrivateRoute element={AddSubject} allowedRoles={["Admin"]} />
               }
             />
             <Route

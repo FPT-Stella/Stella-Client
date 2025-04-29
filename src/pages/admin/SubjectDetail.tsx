@@ -116,10 +116,20 @@ function SubjectDetail() {
               </tr>
               <tr>
                 <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
-                  Subject Name Description:
+                  Subject Description:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.subjectDescription}
+                  {JSON.parse(subject.subjectDescription)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(subject.subjectDescription).split("\n")
+                            .length -
+                            1 && <br />}
+                      </React.Fragment>
+                    ))}
                 </td>
               </tr>
               <tr>
@@ -170,20 +180,23 @@ function SubjectDetail() {
                   {subject.minAvgMarkToPass}
                 </td>
               </tr>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
-                  Description:
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.subjectDescription}
-                </td>
-              </tr>
+
               <tr>
                 <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
                   Syllabus Description:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.sysllabusDescription}
+                  {JSON.parse(subject.sysllabusDescription)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(subject.sysllabusDescription).split("\n")
+                            .length -
+                            1 && <br />}
+                      </React.Fragment>
+                    ))}
                 </td>
               </tr>
               <tr>
@@ -191,7 +204,16 @@ function SubjectDetail() {
                   Student Tasks:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.studentTask}
+                  {JSON.parse(subject.sysllabusDescription)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(subject.studentTask).split("\n").length -
+                            1 && <br />}
+                      </React.Fragment>
+                    ))}
                 </td>
               </tr>
               <tr>
@@ -199,7 +221,17 @@ function SubjectDetail() {
                   Topics:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.topic}
+                  {JSON.parse(subject.topic)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(subject.topic).split("\n").length - 1 && (
+                          <br />
+                        )}
+                      </React.Fragment>
+                    ))}
                 </td>
               </tr>
               <tr>
@@ -207,7 +239,25 @@ function SubjectDetail() {
                   Notes:
                 </td>
                 <td className="py-3.5 border border-gray-200 px-4">
-                  {subject.note}
+                  {JSON.parse(subject.note)
+                    .split("\n")
+                    .map((line: string, index: number) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index !==
+                          JSON.parse(subject.note).split("\n").length - 1 && (
+                          <br />
+                        )}
+                      </React.Fragment>
+                    ))}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                  TermNo:
+                </td>
+                <td className="py-3.5 border border-gray-200 px-4">
+                  {subject.termNo}
                 </td>
               </tr>
               <tr>

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { PiStudentFill } from "react-icons/pi";
 import { MdOutlineViewTimeline } from "react-icons/md";
 import { RiLogoutCircleRLine } from "react-icons/ri";
-import { RiListCheck3 } from "react-icons/ri";
 import { MdOutlineMenuBook } from "react-icons/md";
 
 interface SidebarDataType {
@@ -42,11 +41,6 @@ const SidebarData: SidebarDataType[] = [
     href: "/manageProgram",
   },
 
-  {
-    icon: RiListCheck3,
-    heading: "Program  Outcomes",
-    href: "/ProgramOutcomes",
-  },
   {
     icon: MdOutlineMenuBook,
     heading: "Subject",

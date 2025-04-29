@@ -187,7 +187,7 @@ function AddNewCurriculum() {
             <Input.TextArea
               rows={4}
               placeholder="Enter description"
-              autoSize={{ minRows: 10, maxRows: 25 }} // Tự động mở rộng với minRows là 4 và maxRows là 6
+              autoSize={{ minRows: 10, maxRows: 25 }}
             />
           </Form.Item>
 

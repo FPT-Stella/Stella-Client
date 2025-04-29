@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Dropdown, Select } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
-import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
@@ -150,19 +149,12 @@ function ManageSubjects() {
               </Button>
             ),
           },
-          {
-            key: "edit",
-            label: (
-              <Button className="border-none w-full text-blue-700 flex justify-start">
-                <FiEdit /> Edit
-              </Button>
-            ),
-          },
+
           {
             key: "delete",
             label: (
               <Button
-                className="border-none w-full text-red-600"
+                className="border-none w-full text-red-600 flex justify-start"
                 onClick={() => showDeleteModal(record.id)}
               >
                 <RiDeleteBin7Fill /> Delete
@@ -214,7 +206,10 @@ function ManageSubjects() {
             />
           </div>
           <div>
-            <Button className="bg-[#635BFF] text-white font-medium">
+            <Button
+              className="bg-[#635BFF] text-white font-medium"
+              onClick={() => navigate("/manageSubject/AddSubject")}
+            >
               <IoAddCircleOutline /> Add Subject
             </Button>
           </div>

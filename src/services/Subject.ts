@@ -1,5 +1,5 @@
 import rootApi from "./rootApi";
-
+import { CreateSubject } from "../models/Subject";
 
 export const getSubject = async () => {
     try {
@@ -43,6 +43,16 @@ export const getSubject = async () => {
       return response.data;
     } catch (error) {
       console.error("Error deleting Subject:", error);
+      throw error;
+    }
+  };
+
+  export const addSubject = async (subject:CreateSubject) => {
+    try {
+      const response = await rootApi.post("/Subject", subject);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding Subject:", error);
       throw error;
     }
   };
