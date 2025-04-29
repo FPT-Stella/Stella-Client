@@ -5,19 +5,12 @@ import { Curriculum } from "../../models/Curriculum";
 import { Spin, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { getCurriculumByProgram } from "../../services/Curriculum";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getAccountByUsername, getStudentByUserId } from "../../services/user";
 
 function CurriculumPage() {
-  const studentInfo = {
-    id: "929c9879-8f7d-4658-ba22-f63d4737945f",
-    userId: "2ac1c89b-1667-481c-b8ea-d69350e023b3",
-    majorId: "3e50ecf9-aa53-4ba8-8e2c-0ae0143145b4",
-    studentCode: "SE171117",
-    phone: "0902982731",
-    address:
-      "273 Nguyễn Văn Lượng, phường 21, Quận Gò Vấp, Thành phố Hồ Chí Minh",
-  };
-
+  const navigate = useNavigate();
   const [program, setProgram] = useState<Program>({} as Program);
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,8 +20,28 @@ function CurriculumPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+
+        // Get user data from localStorage
+        const userData = localStorage.getItem("userData");
+        if (!userData) {
+          toast.error("User data not found");
+          navigate("/login");
+          return;
+        }
+
+        const { username } = JSON.parse(userData);
+
+        // Get user ID and then student information
+        const accountResponse = await getAccountByUsername(username);
+        const studentData = await getStudentByUserId(accountResponse.id);
+
+        if (!studentData.majorId) {
+          toast.error("Major information not found");
+          navigate("/profile");
+          return;
+        }
         // First fetch program
-        const programData = await getProgramsByMajor(studentInfo.majorId);
+        const programData = await getProgramsByMajor(studentData.majorId);
         setProgram(programData);
 
         // Then fetch curriculums for this program
@@ -45,7 +58,7 @@ function CurriculumPage() {
     };
 
     fetchData();
-  }, [studentInfo.majorId]);
+  }, [navigate]);
 
   const columns: ColumnsType<Curriculum> = [
     {

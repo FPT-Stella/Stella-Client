@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Input, Select, Button } from "antd";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   getAccountByUsername,
   getStudentByUserId,
@@ -9,12 +10,16 @@ import {
 import { getMajor } from "../../services/Major";
 import { Student } from "../../models/User";
 import { Major } from "../../models/Major";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [student, setStudent] = useState<Student | null>(null);
   const [majors, setMajors] = useState<Major[]>([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isNewStudent, setIsNewStudent] = useState(false);
 
   useEffect(() => {
@@ -38,7 +43,12 @@ function Profile() {
         setStudent(studentData);
 
         // Check if this is a new student based on studentCode
-        setIsNewStudent(!studentData.studentCode);
+        const isNewStudent = !studentData.studentCode;
+        setIsNewStudent(isNewStudent);
+        localStorage.setItem(
+          "profileCompleted",
+          isNewStudent ? "false" : "true",
+        );
 
         // Set form values if student exists and has a studentCode
         if (studentData.studentCode) {
@@ -73,6 +83,7 @@ function Profile() {
   }, []);
 
   const handleUpdateProfile = async (values: any) => {
+    setSubmitting(true);
     try {
       if (!student?.id) {
         toast.error("Student ID not found");
@@ -80,25 +91,59 @@ function Profile() {
       }
 
       await updateStudentById(student.id, values);
+      localStorage.setItem("profileCompleted", "true");
       toast.success("Profile updated successfully");
 
       // Refresh the page to show updated profile
-      window.location.reload();
+      // window.location.reload();
+      setTimeout(() => {
+        navigate("/curriculum");
+      }, 1500);
     } catch (error) {
-      toast.error("Failed to update profile");
+      if (error instanceof AxiosError) {
+        // Handle API error responses
+        if (error.response?.data?.details === "StudentCode already exists") {
+          toast.error(
+            "Student code is already in use. Please use a different one.",
+          );
+          // Optionally clear the student code field
+          form.setFields([
+            {
+              name: "studentCode",
+              errors: ["This student code is already in use"],
+            },
+          ]);
+        } else if (error.response?.data?.details) {
+          // Handle other specific API error messages
+          toast.error(error.response.data.details);
+        } else {
+          // Handle generic API errors
+          toast.error("Failed to update profile. Please try again.");
+        }
+      } else {
+        // Handle non-API errors
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+      console.error("Profile update error:", error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+      <ToastContainer /> {/* Add ToastContainer at the top level */}
       <h1 className="text-2xl font-bold mb-6">
         {isNewStudent ? "Complete Your Profile" : "Update Profile"}
       </h1>
-
       <Form form={form} layout="vertical" onFinish={handleUpdateProfile}>
         <Form.Item
           label="Student Code"
@@ -151,7 +196,13 @@ function Profile() {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="bg-blue-500">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="bg-blue-500"
+            loading={submitting}
+            disabled={submitting}
+          >
             {isNewStudent ? "Complete Profile" : "Update Profile"}
           </Button>
         </Form.Item>
