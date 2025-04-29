@@ -54,7 +54,11 @@ function AppRouter() {
             <Route
               path="/curriculum"
               element={
-                <PrivateRoute element={Curriculum} allowedRoles={["Student"]} />
+                <PrivateRoute
+                  element={Curriculum}
+                  allowedRoles={["Student"]}
+                  requiresProfile={true}
+                />
               }
             />
 
@@ -64,13 +68,18 @@ function AppRouter() {
                 <PrivateRoute
                   element={CurriculumDetailStudent}
                   allowedRoles={["Student"]}
+                  requiresProfile={true}
                 />
               }
             />
             <Route
               path="/Syllabus"
               element={
-                <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
+                <PrivateRoute
+                  element={Syllabus}
+                  allowedRoles={["Student"]}
+                  requiresProfile={true}
+                />
               }
             />
             <Route
