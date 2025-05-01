@@ -46,7 +46,7 @@ const POForm: React.FC<POFormProps> = ({ form, onFinish }) => {
         name="description"
         rules={[{ required: true, message: "Please enter the description!" }]}
       >
-        <Input.TextArea placeholder="Enter description" rows={4} />
+        <Input.TextArea placeholder="Enter description" rows={6} />
       </Form.Item>
 
       <Form.Item>

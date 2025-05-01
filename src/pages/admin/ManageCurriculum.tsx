@@ -141,7 +141,15 @@ function ManageCurriculum() {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      render: (text: string) => <div className="line-clamp-3">{text}</div>,
+      render: (text: string) => {
+        const cleanText = text.replace(/^"(.*)"$/, "$1");
+        return (
+          <div className="line-clamp-3 whitespace-pre-line" title={cleanText}>
+            {cleanText}
+          </div>
+        );
+      },
+
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,

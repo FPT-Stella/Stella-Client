@@ -56,3 +56,12 @@ export const getSubject = async () => {
       throw error;
     }
   };
+  export const updateSubject = async (id: string, data: CreateSubject) => {
+    try {
+      const response = await rootApi.put(`/Subject/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating SubjectSubject with ID ${id}:`, error);
+      throw error;
+    }
+  };

@@ -60,11 +60,11 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
       const updatedMapping = await getMappingPLO(ploId);
       setMapping(updatedMapping);
 
-      toast.success(" Cập nhật PO thành công!");
+      toast.success(" Update PLO sucsses!");
       setIsModalOpen(false);
     } catch (error) {
-      console.error("Lỗi khi cập nhật PO mapping:", error);
-      toast.error(" Cập nhật thất bại!");
+      console.error("Fail update PLO:", error);
+      toast.error(" Fail update PLO!");
     }
   };
 

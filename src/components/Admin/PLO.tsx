@@ -283,6 +283,7 @@ function ManagePLO() {
 
       <Modal
         title="Add PLO"
+        width="50%"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
@@ -293,6 +294,7 @@ function ManagePLO() {
       {/* Modal for Editing */}
       <Modal
         title="Edit PLO"
+        width="50%"
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);

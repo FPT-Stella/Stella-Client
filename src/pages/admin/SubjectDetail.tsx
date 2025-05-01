@@ -290,7 +290,12 @@ function SubjectDetail() {
           </table>
         </div>
         <div className="flex justify-end gap-5 mt-8">
-          <Button className="bg-blue-500 font-medium text-white">Edit</Button>
+          <Button
+            className="bg-blue-500 font-medium text-white"
+            onClick={() => navigate(`/manageSubject/update/${subjectId}`)}
+          >
+            Edit
+          </Button>
           <Button
             className="bg-red-500 font-medium text-white"
             onClick={showDeleteModal}

@@ -277,7 +277,7 @@ function ManagePO() {
       />
 
       <Modal
-        width="40%"
+        width="50%"
         title="Add PO"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
@@ -289,6 +289,7 @@ function ManagePO() {
       {/* Modal for Editing */}
       <Modal
         title="Edit PLO"
+        width="50%"
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
