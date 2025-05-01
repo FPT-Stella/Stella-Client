@@ -27,8 +27,12 @@ import DetailPO from "../pages/admin/DetailPO";
 import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
 import ProgramDetail from "../pages/admin/ProgramDetail";
+
 import AddSubject from "../pages/admin/AddSubject";
 import EditSubject from "../pages/admin/EditSubject";
+
+import SyllabusDetails from "../pages/students/SyllabusDetails";
+
 function AppRouter() {
   return (
     <div>
@@ -67,6 +71,15 @@ function AppRouter() {
               path="/Syllabus"
               element={
                 <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
+              }
+            />
+            <Route
+              path="/Syllabus/:subjectId"
+              element={
+                <PrivateRoute
+                  element={SyllabusDetails}
+                  allowedRoles={["Student"]}
+                />
               }
             />
 
