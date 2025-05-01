@@ -5,34 +5,14 @@ import type { ColumnsType } from "antd/es/table";
 import { getCurriculumById } from "../../services/Curriculum";
 import { getProgramById } from "../../services/Program";
 import { getPloByCurriculum } from "../../services/PO_PLO";
+import { getSubjectInCurriculum } from "../../services/Subject";
+import { getSubjectByID } from "../../services/Subject";
 import { DescriptionFormatter } from "../../components/Student/DescriptionFormatter";
 import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
 import { PLO } from "../../models/PO_PLO";
-
-/* const formatDescription = (description: string) => {
-  // Split by common section delimiters like numbers followed by dot or parentheses
-  const sections = description.split(/(?:\r?\n|\r)|(?:\d+[\)\.]\s+)/g);
-  
-  return sections
-    .filter(section => section && section.trim()) // Remove empty sections
-    .map((section, index) => {
-      const trimmedSection = section.trim();
-      
-      // Check if the section looks like a header (ends with ':' or all caps)
-      const isHeader = trimmedSection.endsWith(':') || 
-                      (trimmedSection === trimmedSection.toUpperCase() && 
-                       trimmedSection.length > 3);
-      
-      return (
-        <div key={index} className={`
-          ${isHeader ? 'font-semibold text-gray-800 mt-3 mb-2' : 'text-gray-600 mb-2 pl-4'}
-        `}>
-          {trimmedSection}
-        </div>
-      );
-    });
-}; */
+import { Subject } from "../../models/Subject";
+import { Link } from "react-router-dom";
 
 function CurriculumDetailStudent() {
   const navigate = useNavigate();
@@ -40,7 +20,9 @@ function CurriculumDetailStudent() {
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [program, setProgram] = useState<Program | null>(null);
   const [plos, setPlos] = useState<PLO[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [subjectsLoading, setSubjectsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +50,34 @@ function CurriculumDetailStudent() {
     fetchData();
   }, [curriculumId]);
 
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        if (!curriculumId) return;
+
+        setSubjectsLoading(true);
+        // Get subject IDs in curriculum
+        const subjectIds = await getSubjectInCurriculum(curriculumId);
+
+        // Fetch each subject's details
+        const subjectPromises = subjectIds.map((item: any) =>
+          getSubjectByID(item.subjectId),
+        );
+
+        const subjectData = await Promise.all(subjectPromises);
+        setSubjects(subjectData);
+      } catch (error) {
+        console.error("Failed to fetch subjects:", error);
+      } finally {
+        setSubjectsLoading(false);
+      }
+    };
+
+    if (!loading && curriculum) {
+      fetchSubjects();
+    }
+  }, [curriculumId, loading, curriculum]);
+
   const ploColumns: ColumnsType<PLO> = [
     {
       title: "PLO Name",
@@ -81,6 +91,51 @@ function CurriculumDetailStudent() {
       dataIndex: "description",
       key: "description",
       width: "70%",
+    },
+  ];
+
+  const subjectColumns: ColumnsType<Subject> = [
+    {
+      title: "Subject Code",
+      dataIndex: "subjectCode",
+      key: "subjectCode",
+      width: "15%",
+      sorter: (a, b) => a.subjectCode.localeCompare(b.subjectCode),
+    },
+    {
+      title: "Subject Name",
+      dataIndex: "subjectName",
+      key: "subjectName",
+      width: "40%",
+      render: (text: string, record: Subject) => (
+        <Link
+          to={`/syllabus/${record.id}`}
+          className="text-blue-600 hover:text-blue-800 hover:underline"
+        >
+          {text}
+        </Link>
+      ),
+    },
+    {
+      title: "Term",
+      dataIndex: "termNo",
+      key: "termNo",
+      width: "10%",
+      align: "center",
+      sorter: (a, b) => a.termNo - b.termNo,
+    },
+    {
+      title: "Credits",
+      dataIndex: "credits",
+      key: "credits",
+      width: "10%",
+      align: "center",
+    },
+    {
+      title: "Prerequisite",
+      dataIndex: "prerequisiteName",
+      key: "prerequisiteName",
+      width: "25%",
     },
   ];
 
@@ -113,10 +168,6 @@ function CurriculumDetailStudent() {
 
       {/* Curriculum Information Card */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        {/* <h2 className="text-xl font-semibold mb-6 text-gray-700 border-b pb-2">
-          {curriculum.curriculumCode} - {curriculum.curriculumName}
-        </h2> */}
-
         <table className="min-w-full border border-gray-200">
           <tbody>
             <tr>
@@ -175,6 +226,23 @@ function CurriculumDetailStudent() {
         </div>
       </div>
 
+      {/* Subjects Table Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-xl font-semibold mb-6 text-gray-700">
+          Curriculum Subjects
+        </h2>
+
+        <Table
+          columns={subjectColumns}
+          dataSource={subjects}
+          rowKey="id"
+          loading={subjectsLoading}
+          pagination={{ pageSize: 10 }}
+          className="border border-gray-200"
+          size="middle"
+        />
+      </div>
+
       {/* PLO Table Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
@@ -187,10 +255,6 @@ function CurriculumDetailStudent() {
           rowKey="id"
           pagination={{
             pageSize: plos.length,
-            // position: ["bottomCenter"],
-            // showSizeChanger: true,
-            /* showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} PLOs`, */
           }}
           className="border border-gray-200"
           size="large"

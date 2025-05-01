@@ -2,57 +2,71 @@ import rootApi from "./rootApi";
 import { CreateSubject } from "../models/Subject";
 
 export const getSubject = async () => {
-    try {
-      const response = await rootApi.get("/Subject");
-      return response.data; 
-    } catch (error) {
-      console.error("Error fetching Subject:", error);
-      throw error;
-    }
-  };
-  export const getSubjectByID = async (id: string) => {
-    try {
-      const response = await rootApi.get(`/Subject/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching Subject with ID ${id}:`, error);
-      throw error;
-    }
-  };
-  export const getBySubjectCode = async (subjectCode:string) => {
-    try {
-      const response = await rootApi.get(`/Subject/subjectCode/${subjectCode}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching Subject subjectCode ${subjectCode}:`, error);
-      throw error;
-    }
-  };
-  export const getBySubjectName = async (subjectName:string) => {
-    try {
-      const response = await rootApi.get(`/Subject/subjectName/${subjectName}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching subjectName ${subjectName}:`, error);
-      throw error;
-    }
-  };
-  export const deleteSubject = async (id: string) => {
-    try {
-      const response = await rootApi.delete(`/Subject/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error deleting Subject:", error);
-      throw error;
-    }
-  };
+  try {
+    const response = await rootApi.get("/Subject");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Subject:", error);
+    throw error;
+  }
+};
+export const getSubjectByID = async (id: string) => {
+  try {
+    const response = await rootApi.get(`/Subject/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching Subject with ID ${id}:`, error);
+    throw error;
+  }
+};
+export const getBySubjectCode = async (subjectCode: string) => {
+  try {
+    const response = await rootApi.get(`/Subject/subjectCode/${subjectCode}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching Subject subjectCode ${subjectCode}:`, error);
+    throw error;
+  }
+};
+export const getBySubjectName = async (subjectName: string) => {
+  try {
+    const response = await rootApi.get(`/Subject/subjectName/${subjectName}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching subjectName ${subjectName}:`, error);
+    throw error;
+  }
+};
 
-  export const addSubject = async (subject:CreateSubject) => {
-    try {
-      const response = await rootApi.post("/Subject", subject);
-      return response.data;
-    } catch (error) {
-      console.error("Error adding Subject:", error);
-      throw error;
-    }
-  };
+export const getSubjectInCurriculum = async (curriculumId: string) => {
+  try {
+    const response = await rootApi.get(
+      `/SubjectInCurriculum/curriculum/${curriculumId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching subjects in curriculum:", error);
+    throw error;
+  }
+};
+
+export const deleteSubject = async (id: string) => {
+  try {
+    const response = await rootApi.delete(`/Subject/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting Subject:", error);
+    throw error;
+  }
+};
+
+export const addSubject = async (subject: CreateSubject) => {
+  try {
+    const response = await rootApi.post("/Subject", subject);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding Subject:", error);
+    throw error;
+  }
+};
+
