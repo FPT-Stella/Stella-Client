@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getMappingPLO } from "../../services/PO_PLO";
-import { MappingPLO, PO } from "../../models/PO_PLO";
+import { getMappingPLO, updateMappingPLO } from "../../services/PO_PLO";
+import { MappingPLO, PO, PoPloMapping } from "../../models/PO_PLO";
 import { RiEdit2Fill } from "react-icons/ri";
 import { getCurriculumById } from "../../services/Curriculum";
 import { useParams } from "react-router-dom";
 import { Curriculum } from "../../models/Curriculum";
 import { getPOByProgramId } from "../../services/PO_PLO";
 import { Modal, Checkbox } from "antd";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 interface POMappingListProps {
   ploId: string;
@@ -46,24 +49,35 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    console.log("Selected PO IDs:", selectedPOIds);
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    try {
+      const data: PoPloMapping = {
+        ploId: ploId,
+        poIds: selectedPOIds,
+      };
+
+      await updateMappingPLO(data);
+      const updatedMapping = await getMappingPLO(ploId);
+      setMapping(updatedMapping);
+
+      toast.success(" Cập nhật PO thành công!");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật PO mapping:", error);
+      toast.error(" Cập nhật thất bại!");
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (checkedValues: any) => {
-    setSelectedPOIds(checkedValues);
-  };
-
   return (
-    <div className="flex justify-between gap-5 items-center">
-      <span>
+    <div className="flex justify-between items-center">
+      <ToastContainer />
+      <div className="flex-1 mr-3.5">
         {mapping.length > 0 ? mapping.map((po) => po.name).join(", ") : "_ _"}
-      </span>
+      </div>
       <div>
         <button
           onClick={handleEditClick}
@@ -73,15 +87,34 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
         </button>
       </div>
 
-      {/* Modal hiện tất cả PO */}
       <Modal
         title="Edit PO Mapping"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
-        okText="Save"
-        cancelText="Cancel"
-        width={"60%"}
+        footer={[
+          <button
+            key="clear"
+            onClick={() => setSelectedPOIds([])}
+            className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1 rounded"
+          >
+            Clear
+          </button>,
+          <button
+            key="cancel"
+            onClick={handleCancel}
+            className="bg-white border border-gray-300 hover:bg-gray-100 text-black px-4 py-1 rounded"
+          >
+            Cancel
+          </button>,
+          <button
+            key="submit"
+            onClick={handleOk}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+          >
+            Save
+          </button>,
+        ]}
+        width={"68%"}
       >
         <table className="min-w-full border border-gray-200">
           <thead>

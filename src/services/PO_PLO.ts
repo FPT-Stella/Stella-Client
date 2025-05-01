@@ -1,5 +1,5 @@
 import rootApi from "./rootApi";
-import { PLO, CreatePLO, PO, CreatePO,MappingPLO  } from "../models/PO_PLO";
+import { PLO, CreatePLO, PO, CreatePO,MappingPLO  , PoPloMapping} from "../models/PO_PLO";
 
 export const getAllPLO = async () => {
   try {
@@ -163,6 +163,15 @@ export const getMappingPLO = async (poId: string): Promise<MappingPLO[]> => {
     return response.data; 
   } catch (error) {
     console.error("Error fetching mapping PLO:", error);
+    throw error;
+  }
+};
+export const updateMappingPLO = async (data: PoPloMapping) => {
+  try {
+    const response = await rootApi.patch('/PO_PLO_Mapping/api/po-plo-mapping', data);
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật Mapping PLO:", error);
     throw error;
   }
 };
