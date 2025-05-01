@@ -23,7 +23,8 @@ function ComboSubjectDetail() {
   const [editForm] = Form.useForm();
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [comboSubject, setComboSubject] = useState<ComboSubject | null>(null);
-
+  const [isDeleteModalVisible, setIsDeleteModalVisible] =
+    useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,6 +84,27 @@ function ComboSubjectDetail() {
     } finally {
       setLoading(false);
     }
+  };
+  const handleDelete = async () => {
+    if (!combosubjectId) return;
+    try {
+      setLoading(true);
+      toast.success("Combo Name delete successfully!");
+      await deleteComboSubject(combosubjectId);
+
+      setIsDeleteModalVisible(false);
+
+      navigate(`/manageProgram/${programId}`);
+    } catch (error) {
+      console.error("Failed to delete Combo Subject:", error);
+      toast.error("Failed to delete Combo Subject.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showDeleteModal = () => {
+    setIsDeleteModalVisible(true);
   };
   const handleBack = () => {
     navigate(`/manageProgram`);
@@ -168,6 +190,20 @@ function ComboSubjectDetail() {
             Edit Combo Subject
           </Button>
         </div>
+        <div className="flex justify-end gap-5 mt-8">
+          <Button
+            className="bg-red-500 font-medium text-white"
+            onClick={showDeleteModal}
+          >
+            Delete
+          </Button>
+          <Button
+            className="bg-[#635BFF] font-medium text-white"
+            onClick={handleBack2}
+          >
+            Back Program Management
+          </Button>
+        </div>
       </div>
       <Modal
         title="Edit Combo Subject "
@@ -221,6 +257,17 @@ function ComboSubjectDetail() {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onOk={handleDelete}
+        okText="Delete"
+        okType="danger"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete the ComboSubject?</p>
       </Modal>
     </div>
   );

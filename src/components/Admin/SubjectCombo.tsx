@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Table, Input, Button, Modal, Dropdown } from "antd";
+import { Table, Input, Button, Modal, Dropdown, Form } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -11,16 +11,13 @@ import { useNavigate } from "react-router-dom";
 import {
   getComboSubjectByProgram,
   deleteComboSubject,
-
-  //   addComboSubject,
+  addComboSubject,
 } from "../../services/Subject";
-
-import {
-  //   CreateComboSubject,
-  ComboSubject,
-} from "../../models/Subject";
+import ComboSubjectForm from "../../components/Admin/ComboSubjectForm";
+import { CreateComboSubject, ComboSubject } from "../../models/Subject";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
+import { AxiosError } from "axios";
 
 function SubjectCombo() {
   const { programId } = useParams<{ programId: string }>();
@@ -33,7 +30,7 @@ function SubjectCombo() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  //   const [form] = Form.useForm();
+  const [form] = Form.useForm();
 
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
@@ -73,36 +70,43 @@ function SubjectCombo() {
     }
   };
 
-  //   const handleAdd = async (values: CreateComboSubject) => {
-  //     try {
-  //       setLoading(true);
-  //       const newCombo = await addComboSubject(values);
-  //       setSubjects((prev) => [...prev, newCombo]);
-  //       setFilteredSubject((prev) => [...prev, newCombo]);
-  //       toast.success("Combo Name added successfully!");
-  //       setIsModalVisible(false);
-  //       form.resetFields();
-  //     } catch (error) {
-  //       // Sử dụng AxiosError để xác định kiểu lỗi
-  //       if (error instanceof AxiosError) {
-  //         console.error("Failed to add:", error);
-  //         if (
-  //           error.response &&
-  //           error.response.data &&
-  //           error.response.data.message
-  //         ) {
-  //           toast.error(error.response.data.details);
-  //         } else {
-  //           toast.error("Failed to add.");
-  //         }
-  //       } else {
-  //         console.error("Unexpected error:", error);
-  //         toast.error("Failed to add.");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleAdd = async (values: CreateComboSubject) => {
+    try {
+      setLoading(true);
+      const newCombo = await addComboSubject(values);
+      const newId = newCombo.id;
+      setSubjects((prev) => [...prev, newCombo]);
+      setFilteredSubject((prev) => [...prev, newCombo]);
+      setIsModalVisible(false);
+      form.resetFields();
+      toast.success("Combo Name added successfully!", {
+        autoClose: 1500,
+      });
+
+      setTimeout(() => {
+        navigate(`/manageProgram/${programId}/combo/${newId}`);
+      }, 2000);
+    } catch (error) {
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!selecteditem) return;
@@ -170,21 +174,7 @@ function SubjectCombo() {
         },
       }),
     },
-    // {
-    //   title: "PO",
-    //   key: "po",
-    //   width: 200,
-    //   render: (record: PLO) => {
-    //     return <POMappingList ploId={record.id} />;
-    //   },
-    //   onHeaderCell: () => ({
-    //     style: {
-    //       backgroundColor: headerBg,
-    //       color: headerColor,
-    //       fontWeight: "bold",
-    //     },
-    //   }),
-    // },
+
     {
       title: "Action",
       key: "action",
@@ -264,13 +254,13 @@ function SubjectCombo() {
       />
 
       <Modal
-        title="Add PLO"
-        width="50%"
+        title="Add Combo Subject"
+        width="60%"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        {/* <PLOForm form={form} onFinish={handleAdd} /> */}
+        <ComboSubjectForm form={form} onFinish={handleAdd} />
       </Modal>
 
       <Modal
