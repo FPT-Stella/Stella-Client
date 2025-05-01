@@ -199,39 +199,39 @@ function ChatBox() {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
+        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-3 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
       >
         {isOpen ? (
-          <IoCloseSharp className="text-2xl" />
+          <IoCloseSharp className="text-xl" />
         ) : (
-          <IoChatbubbles className="text-2xl" />
+          <IoChatbubbles className="text-xl" />
         )}
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-8 w-[80%] h-[80%] bg-white border rounded-lg shadow-lg z-50 flex">
+        <div className="fixed bottom-20 right-8 w-[60%] h-[70%] bg-white border rounded-lg shadow-lg z-50 flex">
           {/* Sidebar */}
           <div
             className={`w-1/4 border-r ${darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-50 border-gray-200"}`}
           >
-            <div className="p-4">
+            <div className="p-3">
               <button
                 onClick={createNewChat}
-                className="w-full py-2 px-4 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                className="w-full py-1.5 px-3 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm"
               >
                 + New Chat
               </button>
             </div>
-            <div className="overflow-y-auto h-[calc(100%-80px)]">
+            <div className="overflow-y-auto h-[calc(100%-60px)]">
               {chatHistories.map((chat) => (
                 <div
                   key={chat.id}
-                  className={`flex justify-between items-center p-3 cursor-pointer hover:bg-gray-200 ${
+                  className={`flex justify-between items-center p-2 cursor-pointer hover:bg-gray-200 ${
                     currentChatId === chat.id ? "bg-gray-200" : ""
                   }`}
                 >
                   <div
-                    className="flex-1 truncate"
+                    className="flex-1 truncate text-sm"
                     onClick={() => selectChat(chat.id)}
                   >
                     {chat.title}
@@ -252,19 +252,19 @@ function ChatBox() {
             className={`flex-1 flex flex-col ${darkMode ? "bg-gray-900" : "bg-white"}`}
           >
             {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex justify-between items-center p-2 border-b">
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`px-4 py-2 rounded flex items-center gap-2 ${
+                className={`px-3 py-1 rounded flex items-center gap-1 text-sm ${
                   darkMode ? "text-white" : "text-gray-700"
                 }`}
               >
-                <LuSunMoon className="text-xl" />
+                <LuSunMoon className="text-lg" />
                 {darkMode ? "Light Mode" : "Dark Mode"}
               </button>
               <button
                 onClick={exportPDF}
-                className="px-4 py-2 rounded flex items-center gap-2 text-gray-700"
+                className="px-3 py-1 rounded flex items-center gap-1 text-gray-700 text-sm"
               >
                 <FaFilePdf /> Export PDF
               </button>
@@ -272,17 +272,15 @@ function ChatBox() {
 
             {/* Messages */}
             <div
-              className={`flex-1 overflow-y-auto p-2 ${darkMode ? "bg-gray-800" : "bg-gray-50"}`}
+              className={`flex-1 overflow-y-auto p-3 ${darkMode ? "bg-gray-800" : "bg-gray-50"}`}
             >
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`mb-2 ${
-                    msg.sender === "user" ? "ml-auto" : "mr-auto"
-                  }`}
+                  className={`mb-4 ${msg.sender === "user" ? "ml-auto" : ""}`}
                 >
                   <div
-                    className={`flex items-start gap-2 max-w-2xl ${
+                    className={`flex items-start gap-2 max-w-3xl ${
                       msg.sender === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -294,13 +292,13 @@ function ChatBox() {
                       }`}
                     >
                       {msg.sender === "user" ? (
-                        <FaUser className="text-base" />
+                        <FaUser className="text-sm" />
                       ) : (
-                        <PiStarFourFill className="text-base" />
+                        <PiStarFourFill className="text-sm" />
                       )}
                     </div>
                     <div
-                      className={`prose prose-sm max-w-none py-2 px-3 rounded-lg ${
+                      className={`prose max-w-none p-3 rounded-lg text-sm ${
                         msg.sender === "user"
                           ? "bg-blue-600 text-white"
                           : darkMode
@@ -315,7 +313,7 @@ function ChatBox() {
               ))}
               {loading && (
                 <div className="flex items-center gap-2 text-gray-500 text-sm">
-                  <PiStarFourFill className="animate-spin text-base" />
+                  <PiStarFourFill className="animate-spin" />
                   <span>AI is thinking...</span>
                 </div>
               )}
@@ -332,7 +330,7 @@ function ChatBox() {
                     e.key === "Enter" && !e.shiftKey && sendMessage()
                   }
                   placeholder="Type your message..."
-                  className={`flex-1 py-2 px-3 rounded-lg border ${
+                  className={`flex-1 p-2 rounded-lg border text-sm ${
                     darkMode
                       ? "bg-gray-700 text-white border-gray-600"
                       : "bg-white border-gray-300"
@@ -341,7 +339,7 @@ function ChatBox() {
                 <button
                   onClick={sendMessage}
                   disabled={loading}
-                  className="py-2 px-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <IoSend className="text-lg" />
                 </button>
