@@ -32,6 +32,19 @@ function ChatBox() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Add greeting message when chat is opened
+  useEffect(() => {
+    if (isOpen && messages.length === 0 && !currentChatId) {
+      const greetingMessage: ChatMessage = {
+        id: Date.now().toString(),
+        sender: "ai",
+        text: "Hello, how can I help you today?",
+        timestamp: new Date(),
+      };
+      setMessages([greetingMessage]);
+    }
+  }, [isOpen, messages.length, currentChatId]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -57,12 +70,22 @@ function ChatBox() {
     const newChatId = Date.now().toString();
     const newChat: ChatHistory = {
       id: newChatId,
-      title: "New Chat",
+      title: "New Chat", // This will be updated with first message
       messages: [],
     };
+
+    // Add greeting message to new chat
+    const greetingMessage: ChatMessage = {
+      id: Date.now().toString(),
+      sender: "ai",
+      text: "Hello, how can I help you today?",
+      timestamp: new Date(),
+    };
+
+    newChat.messages = [greetingMessage];
     setChatHistories((prev) => [...prev, newChat]);
     setCurrentChatId(newChatId);
-    setMessages([]);
+    setMessages([greetingMessage]);
   };
 
   const selectChat = (chatId: string) => {
@@ -108,19 +131,39 @@ function ChatBox() {
       // Update chat history
       if (currentChatId) {
         setChatHistories((prev) =>
-          prev.map((h) =>
-            h.id === currentChatId
-              ? { ...h, messages: [...h.messages, newMessage, aiMessage] }
-              : h,
-          ),
+          prev.map((h) => {
+            if (h.id === currentChatId) {
+              // Update title only if it's still the default "New Chat"
+              const updatedTitle =
+                h.title === "New Chat"
+                  ? input.length > 30
+                    ? input.slice(0, 30) + "..."
+                    : input
+                  : h.title;
+
+              return {
+                ...h,
+                title: updatedTitle,
+                messages: [...h.messages, newMessage, aiMessage],
+              };
+            }
+            return h;
+          }),
         );
       } else {
         // Create new chat if none is selected
         const newChatId = Date.now().toString();
+        const greetingMessage: ChatMessage = {
+          id: (Date.now() - 1).toString(),
+          sender: "ai",
+          text: "Hello, how can I help you today?",
+          timestamp: new Date(Date.now() - 1000),
+        };
+
         const newChat: ChatHistory = {
           id: newChatId,
-          title: input.slice(0, 30) + "...",
-          messages: [newMessage, aiMessage],
+          title: input.length > 30 ? input.slice(0, 30) + "..." : input,
+          messages: [greetingMessage, newMessage, aiMessage],
         };
         setChatHistories((prev) => [...prev, newChat]);
         setCurrentChatId(newChatId);
