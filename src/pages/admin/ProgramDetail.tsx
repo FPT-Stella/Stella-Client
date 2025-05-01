@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Major } from "../../models/Major";
 import PO from "../../components/Admin/PO";
 import EditProgram from "../../components/Admin/EditProgram";
-
+import SubjectCombo from "../../components/Admin/SubjectCombo";
 function ProgramDetail() {
   const { programId } = useParams<{ programId: string }>();
   const [editForm] = Form.useForm();
@@ -168,6 +168,9 @@ function ProgramDetail() {
         </div>
         <div>
           <PO />
+        </div>
+        <div>
+          <SubjectCombo />
         </div>
         <div className="flex justify-end gap-5 mt-8">
           <Button

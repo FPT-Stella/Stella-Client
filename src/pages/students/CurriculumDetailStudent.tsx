@@ -61,7 +61,7 @@ function CurriculumDetailStudent() {
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: any) =>
-          getSubjectByID(item.subjectId),
+          getSubjectByID(item.subjectId)
         );
 
         const subjectData = await Promise.all(subjectPromises);

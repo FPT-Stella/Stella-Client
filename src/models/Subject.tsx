@@ -38,3 +38,22 @@ export interface CreateSubject {
   learningTeachingType: boolean;
   termNo: number;
 }
+export interface CreateComboSubject {
+  programId: string;
+  comboName: string;
+  description: string;
+  programOutcome: string;
+}
+export interface ComboSubject {
+  id: string;
+  programId: string;
+  comboName: string;
+  description: string;
+  programOutcome: string;
+}
+
+export interface UpdateComboSubject {
+  comboName: string;
+  description: string;
+  programOutcome: string;
+}

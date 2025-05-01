@@ -1,5 +1,5 @@
 import rootApi from "./rootApi";
-import { CreateSubject } from "../models/Subject";
+import { CreateSubject,CreateComboSubject,UpdateComboSubject } from "../models/Subject";
 
 export const getSubject = async () => {
     try {
@@ -62,6 +62,82 @@ export const getSubject = async () => {
       return response.data;
     } catch (error) {
       console.error(`Error updating SubjectSubject with ID ${id}:`, error);
+      throw error;
+    }
+  };
+
+  export const getComboSubject = async (programId: string) => {
+    try {
+      const response = await rootApi.get(`/SubjectCombo/search`, {
+        params: { programId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+  export const getComboSubjectById = async (id: string) => {
+    try {
+      const response = await rootApi.get(`/SubjectCombo/${id}`, {
+        params: { id },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+  export const getComboSubjectByProgram = async (programId: string) => {
+    try {
+      const response = await rootApi.get(`/SubjectCombo/program/${programId}`, {
+        params: { programId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+  export const addComboSubject = async (subject:CreateComboSubject) => {
+    try {
+      const response = await rootApi.post("/SubjectCombo", subject);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding Combo Subject:", error);
+      throw error;
+    }
+  };
+  export const deleteComboSubject = async (id: string) => {
+    try {
+      const response = await rootApi.delete(`/SubjectCombo/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting Combo Subject:", error);
+      throw error;
+    }
+  };
+  export const updateComboSubject = async (id: string, data: UpdateComboSubject) => {
+    try {
+      const response = await rootApi.put(`/SubjectCombo/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating SubjectSubject with ID ${id}:`, error);
+      throw error;
+    }
+  };
+
+
+
+  
+
+
+  export const getSubjectInCurriculum= async () => {
+    try {
+      const response = await rootApi.get("/SubjectInCurriculum");
+      return response.data; 
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
       throw error;
     }
   };
