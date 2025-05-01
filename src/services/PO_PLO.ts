@@ -12,13 +12,13 @@ export const getAllPLO = async () => {
 };
 
 export const getPLOByCurriculum = async (id: string) => {
-    try {
-        const response = await rootApi.get<PLO[]>(`PLO/curriculum/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching PLO by ID:", error);
-        throw error;
-    }
+  try {
+    const response = await rootApi.get<PLO[]>(`PLO/curriculum/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching PLO by ID:", error);
+    throw error;
+  }
 };
 
 export const getPLOById = async (id: string) => {
@@ -133,9 +133,9 @@ export const updatePO = async (id: string, data: Partial<CreatePO>) => {
   }
 };
 
-export const getMappingByPLO = async (ploId: string) => {
+export const getMappingByPLO = async (poId: string) => {
   try {
-    const response = await rootApi.get(`/PO_PLO_Mapping/plo/${ploId}`);
+    const response = await rootApi.get<string[]>(`/PO_PLO_Mapping/plo/${poId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching PLO mapping:", error);
