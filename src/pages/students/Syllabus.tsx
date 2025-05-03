@@ -112,17 +112,19 @@ function Syllabus() {
               { value: "subjectCode", label: "Search by Code" },
               { value: "subjectName", label: "Search by Name" },
             ]}
+            className="rounded-none"
           />
           <Input
             placeholder={`Search by ${searchField === "subjectCode" ? "Code" : "Name"}`}
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 300 }}
+            className="rounded-none"
           />
           <Button
             type="primary"
             onClick={fetchSubjects}
-            className="bg-blue-500"
+            className="bg-blue-500 rounded-none"
           >
             Search
           </Button>
