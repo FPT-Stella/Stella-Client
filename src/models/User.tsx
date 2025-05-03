@@ -6,6 +6,7 @@ export interface Student {
   phone: string;
   address: string;
 }
+
 export interface updateStudent {
   studentCode: string;
   phone: string;

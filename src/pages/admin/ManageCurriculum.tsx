@@ -78,11 +78,11 @@ function ManageCurriculum() {
       const data = await getCurriculum();
       setCurriculums(data);
 
-      toast.success("Major deleted successfully!");
+      toast.success("Curriculum deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete major:", error);
-      toast.error("Failed to delete major.");
+      console.error("Failed to delete curriculum:", error);
+      toast.error("Failed to delete curriculum.");
     } finally {
       setLoading(false);
     }
@@ -141,7 +141,15 @@ function ManageCurriculum() {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      render: (text: string) => <div className="line-clamp-3">{text}</div>,
+      render: (text: string) => {
+        const cleanText = text.replace(/^"(.*)"$/, "$1");
+        return (
+          <div className="line-clamp-3 whitespace-pre-line" title={cleanText}>
+            {cleanText}
+          </div>
+        );
+      },
+
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,

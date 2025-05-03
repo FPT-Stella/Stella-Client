@@ -7,19 +7,22 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
-import { getAllPO, deletePO, addPO, updatePO } from "../../services/PO_PLO";
-import { CreatePO, PO } from "../../models/PO_PLO";
-import { Program } from "../../models/Program";
-import { getProgram } from "../../services/Program";
+import {
+  getPLOByCurriculum,
+  deletePLO,
+  addPLO,
+  updatePLO,
+} from "../../services/PO_PLO";
+import { CreatePLO, PLO } from "../../models/PO_PLO";
 import "react-toastify/dist/ReactToastify.css";
-import POForm from "../../components/Admin/POForm";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-
-function ManagePO() {
-  const [POS, setPOS] = useState<PO[]>([]);
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [filteredPOS, setFilteredPOS] = useState<PO[]>([]);
+import PLOForm from "./PLOForm";
+import { useParams } from "react-router-dom";
+import { AxiosError } from "axios";
+import POMappingList from "../../components/Admin/PO_POL";
+function ManagePLO() {
+  const { curriculumId } = useParams<{ curriculumId: string }>();
+  const [POLS, setPOLS] = useState<PLO[]>([]);
+  const [filteredPOLS, setFilteredPOLS] = useState<PLO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -27,114 +30,130 @@ function ManagePO() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PO | null>(null);
+  const [editing, setEditing] = useState<PLO | null>(null);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
-  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchPO = async () => {
+    const fetchPLO = async () => {
       try {
-        const data = await getAllPO();
-        setPOS(data);
-        setFilteredPOS(data);
-        const dataPro = await getProgram();
-        setPrograms(dataPro);
+        const data = await getPLOByCurriculum(curriculumId!);
+        setPOLS(data);
+
+        setFilteredPOLS(data);
       } catch (error) {
-        console.error("Fail to fetching POS:", error);
+        console.error("Fail to fetching POLS:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPO();
-  }, []);
+    fetchPLO();
+  }, [curriculumId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filteredData = POS.filter((po) =>
-      po.poName.toLowerCase().includes(value.toLowerCase())
+    const filteredData = POLS.filter((plo) =>
+      plo.ploName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredPOS(filteredData);
+    setFilteredPOLS(filteredData);
   };
 
-  const handleAddPO = async (values: CreatePO) => {
+  const handleAddPLO = async (values: CreatePLO) => {
     try {
       setLoading(true);
-      const newPO = await addPO(values);
-      setPOS((prev) => [...prev, newPO]);
-      setFilteredPOS((prev) => [...prev, newPO]);
-      toast.success("PO added successfully!");
+      const newPLO = await addPLO(values);
+      setPOLS((prev) => [...prev, newPLO]);
+      setFilteredPOLS((prev) => [...prev, newPLO]);
+      toast.success("PLO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error: any) {
-      console.error("Failed to add program:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.details);
+    } catch (error) {
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
       } else {
-        toast.error("Failed to add program.");
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEditPO = async (values: {
-    poName: string;
+  const handleEditPLO = async (values: {
+    ploName: string;
     description: string;
   }) => {
     if (!editing) return;
     try {
       setLoading(true);
-      await updatePO(editing.id, values);
-      const data = await getAllPO();
-      setPOS(data);
-      setFilteredPOS(data);
-      toast.success("PO updated successfully!");
+      await updatePLO(editing.id, values);
+      toast.success("PLO updated successfully!");
+      const data = await getPLOByCurriculum(curriculumId!);
+      setPOLS(data);
+      setFilteredPOLS(data);
+
       setIsEditModalVisible(false);
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
-      console.error("Failed to update PO:", error);
-      toast.error("Failed to update PO.");
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to update:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to update.");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
+      }
     } finally {
       setLoading(false);
     }
   };
-
   const handleDelete = async () => {
     if (!selecteditem) return;
     try {
       setLoading(true);
-      await deletePO(selecteditem);
-      const data = await getAllPO();
-      setPOS(data);
-      setFilteredPOS(data);
+      await deletePLO(selecteditem);
+      const data = await getPLOByCurriculum(curriculumId!);
+      setPOLS(data);
+      setFilteredPOLS(data);
 
-      toast.success("PO deleted successfully!");
+      toast.success("PLO deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete PO:", error);
-      toast.error("Failed to delete PO.");
+      console.error("Failed to delete PLO:", error);
+      toast.error("Failed to delete PLO.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleViewDetail = (poId: string) => {
-    navigate(`/ProgramOutcomes/DetailPO/${poId}`);
-  };
-  const showEditModal = (po: PO) => {
-    setEditing(po);
+  const showEditModal = (plo: PLO) => {
+    setEditing(plo);
     setIsEditModalVisible(true);
     editForm.setFieldsValue({
-      poName: po.poName,
-      description: po.description,
+      ploName: plo.ploName,
+      description: plo.description,
     });
   };
 
@@ -145,9 +164,9 @@ function ManagePO() {
 
   const columns = [
     {
-      title: "PO Name",
-      dataIndex: "poName",
-      key: "poName",
+      title: "PLO Name",
+      dataIndex: "ploName",
+      key: "ploName",
       width: 100,
       onHeaderCell: () => ({
         style: {
@@ -157,23 +176,7 @@ function ManagePO() {
         },
       }),
     },
-    {
-      title: "Program Code",
-      dataIndex: "programId",
-      key: "programId",
-      width: 120,
-      onHeaderCell: () => ({
-        style: {
-          backgroundColor: headerBg,
-          color: headerColor,
-          fontWeight: "bold",
-        },
-      }),
-      render: (programId: string) => {
-        const Program = programs.find((p) => p.id === programId);
-        return Program ? Program.programCode : "Unknown";
-      },
-    },
+
     {
       title: "Description",
       dataIndex: "description",
@@ -187,21 +190,25 @@ function ManagePO() {
       }),
     },
     {
+      title: "PO",
+      key: "po",
+      width: 200,
+      render: (record: PLO) => {
+        return <POMappingList ploId={record.id} />;
+      },
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
       title: "Action",
       key: "action",
-      render: (record: PO) => {
+      render: (record: PLO) => {
         const items: MenuProps["items"] = [
-          {
-            key: "detail",
-            label: (
-              <Button
-                className="border-none w-full text-green-700"
-                onClick={() => handleViewDetail(record.id)}
-              >
-                <MdOutlineRemoveRedEye /> View Detail
-              </Button>
-            ),
-          },
           {
             key: "edit",
             label: (
@@ -242,51 +249,52 @@ function ManagePO() {
   ];
 
   return (
-    <div className="h-full flex flex-col px-10 py-5">
+    <div className="h-full flex flex-col  py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
-        Manage Program Outcomes
+        Manage Program Learning Outcomes
       </div>
       {/* Table */}
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
-        <div className="mb-4 flex justify-between">
-          <Input
-            placeholder="Search by Name"
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{ width: 300 }}
-          />
-          <div>
-            <Button
-              className="bg-[#635BFF] text-white font-medium"
-              onClick={() => setIsModalVisible(true)}
-            >
-              <IoAddCircleOutline /> Add Program Outcomes
-            </Button>
-          </div>
-        </div>
-        <Table
-          size="small"
-          dataSource={filteredPOS}
-          columns={columns}
-          rowKey="id"
-          loading={loading}
-          pagination={{ pageSize: 8 }}
+
+      <div className="mb-4 flex justify-between">
+        <Input
+          placeholder="Search by Name"
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value)}
+          style={{ width: 300 }}
         />
+        <div>
+          <Button
+            className="bg-[#635BFF] text-white font-medium"
+            onClick={() => setIsModalVisible(true)}
+          >
+            <IoAddCircleOutline /> Add Program Learning Outcomes
+          </Button>
+        </div>
       </div>
+      <Table
+        size="small"
+        dataSource={filteredPOLS}
+        columns={columns}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
+
       <Modal
-        width="40%"
-        title="Add PO"
+        title="Add PLO"
+        width="50%"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <POForm form={form} onFinish={handleAddPO} />
+        <PLOForm form={form} onFinish={handleAddPLO} />
       </Modal>
 
       {/* Modal for Editing */}
       <Modal
         title="Edit PLO"
+        width="50%"
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
@@ -295,20 +303,20 @@ function ManagePO() {
         }}
         footer={null}
       >
-        <Form form={editForm} layout="vertical" onFinish={handleEditPO}>
+        <Form form={editForm} layout="vertical" onFinish={handleEditPLO}>
           <Form.Item
-            label="PO Name"
-            name="poName"
+            label="PLO Name"
+            name="ploName"
             rules={[
-              { required: true, message: "Please enter the PO name!" },
+              { required: true, message: "Please enter the PLO name!" },
               {
-                pattern: /^PO.{1,}$/,
+                pattern: /^PLO\d+$/,
                 message:
-                  "PO name must start with 'PO' and be at least 3 characters.",
+                  "PLO name must be in the format 'PLO+number' (e.g., PLO1, PLO25)",
               },
             ]}
           >
-            <Input placeholder="Enter PO name" />
+            <Input placeholder="Enter PLO name" />
           </Form.Item>
 
           <Form.Item
@@ -318,12 +326,12 @@ function ManagePO() {
               { required: true, message: "Please enter the description!" },
             ]}
           >
-            <Input.TextArea placeholder="Enter description" rows={5} />
+            <Input.TextArea placeholder="Enter description" rows={4} />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
-              Update PO
+              Update PLO
             </Button>
           </Form.Item>
         </Form>
@@ -337,10 +345,10 @@ function ManagePO() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the PO?</p>
+        <p>Are you sure you want to delete the PLO?</p>
       </Modal>
     </div>
   );
 }
 
-export default ManagePO;
+export default ManagePLO;

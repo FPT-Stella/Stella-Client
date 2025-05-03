@@ -20,3 +20,15 @@ export interface CreatePO {
   poName: string;
   description: string;
 }
+export interface Mapping {
+  poId: string;
+  polId: string;
+}
+export interface MappingPLO {
+  id: string;
+  name: string;
+}
+export interface PoPloMapping {
+  ploId: string;
+  poIds: string[];
+}

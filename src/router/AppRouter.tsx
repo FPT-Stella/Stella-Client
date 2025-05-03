@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -18,14 +17,21 @@ import ManageMajor from "../pages/admin/ManageMajor";
 import ManageProgram from "../pages/admin/ManageProgram";
 import ManageCurriculum from "../pages/admin/ManageCurriculum";
 import CurriculumDetail from "../pages/admin/CurriculumDetail";
+import CurriculumDetailStudent from "../pages/students/CurriculumDetailStudent";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
-
-import PLO from "../pages/admin/PLO";
-import PO from "../pages/admin/PO";
+import Subject from "../pages/admin/Subject";
+import PO from "../components/Admin/PO";
+import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
-
+import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
+import ProgramDetail from "../pages/admin/ProgramDetail";
+import ComboSubjectDetail from "../pages/admin/ComboSubjectDetail";
+import AddSubject from "../pages/admin/AddSubject";
+import EditSubject from "../pages/admin/EditSubject";
+
+import SyllabusDetails from "../pages/students/SyllabusDetails";
 
 function AppRouter() {
   return (
@@ -51,11 +57,35 @@ function AppRouter() {
                 <PrivateRoute element={Curriculum} allowedRoles={["Student"]} />
               }
             />
+
+            <Route
+              path="/curriculum/:curriculumId/"
+              element={
+                <PrivateRoute
+                  element={CurriculumDetailStudent}
+                  allowedRoles={["Student"]}
+                />
+              }
+            />
             <Route
               path="/Syllabus"
               element={
                 <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
               }
+            />
+            <Route
+              path="/Syllabus/:subjectId"
+              element={
+                <PrivateRoute
+                  element={SyllabusDetails}
+                  allowedRoles={["Student"]}
+                />
+              }
+            />
+
+            <Route
+              path="/program/:programId/curriculum/:curriculumId/outcomes"
+              element={<POStudent />}
             />
           </Route>
 
@@ -66,6 +96,12 @@ function AppRouter() {
               path="/dashboard"
               element={
                 <PrivateRoute element={Dashboard} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
+              path="/manageSubject"
+              element={
+                <PrivateRoute element={Subject} allowedRoles={["Admin"]} />
               }
             />
             <Route
@@ -90,6 +126,27 @@ function AppRouter() {
                   element={CurriculumDetail}
                   allowedRoles={["Admin"]}
                 />
+              }
+            />
+            <Route
+              path="/manageSubject/:subjectId/"
+              element={
+                <PrivateRoute
+                  element={SubjectDetail}
+                  allowedRoles={["Admin"]}
+                />
+              }
+            />
+            <Route
+              path="/manageSubject/update/:subjectId"
+              element={
+                <PrivateRoute element={EditSubject} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
+              path="/manageSubject/AddSubject"
+              element={
+                <PrivateRoute element={AddSubject} allowedRoles={["Admin"]} />
               }
             />
             <Route
@@ -126,8 +183,22 @@ function AppRouter() {
               }
             />
             <Route
-              path="/ProgramLearningOutcomes"
-              element={<PrivateRoute element={PLO} allowedRoles={["Admin"]} />}
+              path="/manageProgram/:programId"
+              element={
+                <PrivateRoute
+                  element={ProgramDetail}
+                  allowedRoles={["Admin"]}
+                />
+              }
+            />
+            <Route
+              path="/manageProgram/:programId/combo/:combosubjectId"
+              element={
+                <PrivateRoute
+                  element={ComboSubjectDetail}
+                  allowedRoles={["Admin"]}
+                />
+              }
             />
             <Route
               path="/ProgramOutcomes"

@@ -253,7 +253,7 @@ function ManageUser() {
           columns={columns}
           rowKey="id"
           loading={loading}
-          pagination={{ pageSize: 8 }}
+          pagination={{ pageSize: 10 }}
         />
       </div>
       <Modal

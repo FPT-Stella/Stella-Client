@@ -7,7 +7,7 @@ import { getProgram } from "../../services/Program";
 import { Program } from "../../models/Program";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { AxiosError } from "axios";
 function AddNewCurriculum() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -28,17 +28,37 @@ function AddNewCurriculum() {
   }, []);
 
   const handleSubmit = async (values: CreateCurriculum) => {
-    console.log("Value", values);
     try {
       setLoading(true);
-      await AddCurriculum(values);
+
+      const curriculumData = {
+        ...values,
+        description: JSON.stringify(values.description),
+      };
+
+      const response = await AddCurriculum(curriculumData);
+      console.log(response);
+
       toast.success("Curriculum added successfully!");
-      navigate("/manageCurriculum");
+
+      navigate(`/manageCurriculum`);
     } catch (error) {
-      console.error("Failed to add curriculum:", error);
-      toast.error(
-        `Failed to add curriculum. Please try again! ${String(error)}`
-      );
+      // Sử dụng AxiosError để xác định kiểu lỗi
+      if (error instanceof AxiosError) {
+        console.error("Failed to add:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(error.response.data.details);
+        } else {
+          toast.error("Failed to add.");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to add.");
+      }
     } finally {
       setLoading(false);
     }
@@ -164,7 +184,11 @@ function AddNewCurriculum() {
             name="description"
             rules={[{ required: true, message: "Please input description!" }]}
           >
-            <Input.TextArea rows={4} placeholder="Enter description" />
+            <Input.TextArea
+              rows={4}
+              placeholder="Enter description"
+              autoSize={{ minRows: 10, maxRows: 25 }}
+            />
           </Form.Item>
 
           <Form.Item className="flex justify-end ">

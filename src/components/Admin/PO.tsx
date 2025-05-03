@@ -7,16 +7,26 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
-import { getAllPLO, deletePLO, addPLO, updatePLO } from "../../services/PO_PLO";
-import { CreatePLO, PLO } from "../../models/PO_PLO";
-import { Curriculum } from "../../models/Curriculum";
-import { getCurriculum } from "../../services/Curriculum";
+import { useParams } from "react-router-dom";
+
+import {
+  getPOByProgramId,
+  deletePO,
+  addPO,
+  updatePO,
+} from "../../services/PO_PLO";
+import { CreatePO, PO } from "../../models/PO_PLO";
+import { Program } from "../../models/Program";
+import { getProgram } from "../../services/Program";
 import "react-toastify/dist/ReactToastify.css";
-import PLOForm from "../../components/Admin/PLOForm";
-function ManagePLO() {
-  const [POLS, setPOLS] = useState<PLO[]>([]);
-  const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
-  const [filteredPOLS, setFilteredPOLS] = useState<PLO[]>([]);
+import POForm from "./POForm";
+
+function ManagePO() {
+  const { programId } = useParams<{ programId: string }>();
+
+  const [POS, setPOS] = useState<PO[]>([]);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [filteredPOS, setFilteredPOS] = useState<PO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -24,53 +34,61 @@ function ManagePLO() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PLO | null>(null);
+  const [editing, setEditing] = useState<PO | null>(null);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
   useEffect(() => {
-    const fetchPLO = async () => {
+    const fetchPO = async () => {
       try {
-        const data = await getAllPLO();
-        setPOLS(data);
-        setFilteredPOLS(data);
-        const dataCurri = await getCurriculum();
-        setCurriculums(dataCurri);
+        const data = await getPOByProgramId(programId!);
+        setPOS(data);
+        setFilteredPOS(data);
+        const dataPro = await getProgram();
+        setPrograms(dataPro);
       } catch (error) {
-        console.error("Fail to fetching POLS:", error);
+        console.error("Fail to fetching POS:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPLO();
-  }, []);
+    fetchPO();
+  }, [programId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filteredData = POLS.filter((plo) =>
-      plo.ploName.toLowerCase().includes(value.toLowerCase())
+    const filteredData = POS.filter((po) =>
+      po.poName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredPOLS(filteredData);
+    setFilteredPOS(filteredData);
   };
 
-  const handleAddPLO = async (values: CreatePLO) => {
+  const handleAddPO = async (values: CreatePO) => {
     try {
       setLoading(true);
-      const newPLO = await addPLO(values);
-      setPOLS((prev) => [...prev, newPLO]);
-      setFilteredPOLS((prev) => [...prev, newPLO]);
-      toast.success("PLO added successfully!");
+      const newPO = await addPO(values);
+
+      setPOS((prev) => [...prev, newPO]);
+      setFilteredPOS((prev) => [...prev, newPO]);
+      toast.success("PO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to add program:", error);
       if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
         error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response &&
         error.response.data &&
-        error.response.data.message
+        typeof error.response.data === "object" &&
+        "details" in error.response.data &&
+        typeof error.response.data.details === "string"
       ) {
         toast.error(error.response.data.details);
       } else {
@@ -81,24 +99,24 @@ function ManagePLO() {
     }
   };
 
-  const handleEditPLO = async (values: {
-    ploName: string;
+  const handleEditPO = async (values: {
+    poName: string;
     description: string;
   }) => {
     if (!editing) return;
     try {
       setLoading(true);
-      await updatePLO(editing.id, values);
-      const data = await getAllPLO();
-      setPOLS(data);
-      setFilteredPOLS(data);
-      toast.success("PLO updated successfully!");
+      await updatePO(editing.id, values);
+      const data = await getPOByProgramId(programId!);
+      setPOS(data);
+      setFilteredPOS(data);
+      toast.success("PO updated successfully!");
       setIsEditModalVisible(false);
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
-      console.error("Failed to update PLO:", error);
-      toast.error("Failed to update PLO.");
+      console.error("Failed to update PO:", error);
+      toast.error("Failed to update PO.");
     } finally {
       setLoading(false);
     }
@@ -108,27 +126,27 @@ function ManagePLO() {
     if (!selecteditem) return;
     try {
       setLoading(true);
-      await deletePLO(selecteditem);
-      const data = await getAllPLO();
-      setPOLS(data);
-      setFilteredPOLS(data);
+      await deletePO(selecteditem);
+      const data = await getPOByProgramId(programId!);
+      setPOS(data);
+      setFilteredPOS(data);
 
-      toast.success("PLO deleted successfully!");
+      toast.success("PO deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete PLO:", error);
-      toast.error("Failed to delete PLO.");
+      console.error("Failed to delete PO:", error);
+      toast.error("Failed to delete PO.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showEditModal = (plo: PLO) => {
-    setEditing(plo);
+  const showEditModal = (po: PO) => {
+    setEditing(po);
     setIsEditModalVisible(true);
     editForm.setFieldsValue({
-      ploName: plo.ploName,
-      description: plo.description,
+      poName: po.poName,
+      description: po.description,
     });
   };
 
@@ -139,9 +157,9 @@ function ManagePLO() {
 
   const columns = [
     {
-      title: "PLO Name",
-      dataIndex: "ploName",
-      key: "ploName",
+      title: "PO Name",
+      dataIndex: "poName",
+      key: "poName",
       width: 100,
       onHeaderCell: () => ({
         style: {
@@ -152,9 +170,10 @@ function ManagePLO() {
       }),
     },
     {
-      title: "Curriculum",
-      dataIndex: "curriculumId",
-      key: "curriculumId",
+      title: "Program Code",
+      dataIndex: "programId",
+      key: "programId",
+      width: 120,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -162,9 +181,9 @@ function ManagePLO() {
           fontWeight: "bold",
         },
       }),
-      render: (curriculumId: string) => {
-        const Curriculum = curriculums.find((p) => p.id === curriculumId);
-        return Curriculum ? Curriculum.curriculumCode : "Unknown";
+      render: (programId: string) => {
+        const Program = programs.find((p) => p.id === programId);
+        return Program ? Program.programCode : "Unknown";
       },
     },
     {
@@ -182,7 +201,8 @@ function ManagePLO() {
     {
       title: "Action",
       key: "action",
-      render: (record: PLO) => {
+      width: 80,
+      render: (record: PO) => {
         const items: MenuProps["items"] = [
           {
             key: "edit",
@@ -224,50 +244,52 @@ function ManagePLO() {
   ];
 
   return (
-    <div className="h-full flex flex-col px-10 py-5">
+    <div className="h-full flex flex-col py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
-        Manage Program Learning Outcomes
+        Manage Program Outcomes
       </div>
       {/* Table */}
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
-        <div className="mb-4 flex justify-between">
-          <Input
-            placeholder="Search by Name"
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{ width: 300 }}
-          />
-          <div>
-            <Button
-              className="bg-[#635BFF] text-white font-medium"
-              onClick={() => setIsModalVisible(true)}
-            >
-              <IoAddCircleOutline /> Add Program Learning Outcomes
-            </Button>
-          </div>
-        </div>
-        <Table
-          size="small"
-          dataSource={filteredPOLS}
-          columns={columns}
-          rowKey="id"
-          loading={loading}
-          pagination={{ pageSize: 8 }}
+
+      <div className="mb-4 flex justify-between">
+        <Input
+          placeholder="Search by Name"
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value)}
+          style={{ width: 300 }}
         />
+        <div>
+          <Button
+            className="bg-[#635BFF] text-white font-medium"
+            onClick={() => setIsModalVisible(true)}
+          >
+            <IoAddCircleOutline /> Add Program Outcomes
+          </Button>
+        </div>
       </div>
+      <Table
+        size="small"
+        dataSource={filteredPOS}
+        columns={columns}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
+
       <Modal
-        title="Add PLO"
+        width="50%"
+        title="Add PO"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <PLOForm form={form} onFinish={handleAddPLO} />
+        <POForm form={form} onFinish={handleAddPO} />
       </Modal>
 
       {/* Modal for Editing */}
       <Modal
         title="Edit PLO"
+        width="50%"
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
@@ -276,13 +298,20 @@ function ManagePLO() {
         }}
         footer={null}
       >
-        <Form form={editForm} layout="vertical" onFinish={handleEditPLO}>
+        <Form form={editForm} layout="vertical" onFinish={handleEditPO}>
           <Form.Item
-            label="PLO Name"
-            name="ploName"
-            rules={[{ required: true, message: "Please enter the PLO name!" }]}
+            label="PO Name"
+            name="poName"
+            rules={[
+              { required: true, message: "Please enter the PO name!" },
+              {
+                pattern: /^PO.{1,}$/,
+                message:
+                  "PO name must start with 'PO' and be at least 3 characters.",
+              },
+            ]}
           >
-            <Input placeholder="Enter PLO name" />
+            <Input placeholder="Enter PO name" />
           </Form.Item>
 
           <Form.Item
@@ -292,12 +321,12 @@ function ManagePLO() {
               { required: true, message: "Please enter the description!" },
             ]}
           >
-            <Input.TextArea placeholder="Enter description" rows={4} />
+            <Input.TextArea placeholder="Enter description" rows={5} />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
-              Update PLO
+              Update PO
             </Button>
           </Form.Item>
         </Form>
@@ -311,10 +340,10 @@ function ManagePLO() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the PLO?</p>
+        <p>Are you sure you want to delete the PO?</p>
       </Modal>
     </div>
   );
 }
 
-export default ManagePLO;
+export default ManagePO;
