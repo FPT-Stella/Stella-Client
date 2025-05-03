@@ -5,9 +5,8 @@ import type { ColumnsType } from "antd/es/table";
 import { getCurriculumById } from "../../services/Curriculum";
 import { getProgramById } from "../../services/Program";
 import { getPloByCurriculum } from "../../services/PO_PLO";
-import { getSubjectInCurriculum } from "../../services/Subject";
+import { getSubjectByCurriculumId } from "../../services/Subject";
 import { getSubjectByID } from "../../services/Subject";
-import { DescriptionFormatter } from "../../components/Student/DescriptionFormatter";
 import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
 import { PLO } from "../../models/PO_PLO";
@@ -57,7 +56,7 @@ function CurriculumDetailStudent() {
 
         setSubjectsLoading(true);
         // Get subject IDs in curriculum
-        const subjectIds = await getSubjectInCurriculum(curriculumId);
+        const subjectIds = await getSubjectByCurriculumId(curriculumId);
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: any) =>
@@ -142,6 +141,11 @@ function CurriculumDetailStudent() {
   const handleViewPO = () => {
     if (program) {
       navigate(`/program/${program.id}/curriculum/${curriculumId}/outcomes`);
+    }
+  };
+  const handleViewCombo = () => {
+    if (program) {
+      navigate(`/program/${program.id}/combos`);
     }
   };
 
@@ -231,6 +235,13 @@ function CurriculumDetailStudent() {
             className="bg-blue-600 text-white hover:bg-blue-700"
           >
             View Program Outcomes
+          </Button>
+          <Button
+            type="primary"
+            onClick={handleViewCombo}
+            className="bg-green-600 text-white hover:bg-green-700"
+          >
+            View Subject Combos
           </Button>
         </div>
       </div>
