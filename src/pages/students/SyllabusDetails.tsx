@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Spin } from "antd";
+import { Button, Spin, Table } from "antd";
 import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
+import { getCLOsBySubjectId } from "../../services/CLO";
+
+// Define the CLO interface
+interface CLO {
+  id: string;
+  cloName: string;
+  description: string;
+  subjectId: string;
+}
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
+  const [clos, setCLOs] = useState<CLO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [closLoading, setCLOsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,12 +37,70 @@ function SyllabusDetails() {
       }
     };
 
+    const fetchCLOs = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+        const data = await getCLOsBySubjectId(subjectId);
+        setCLOs(data);
+      } catch (error) {
+        console.error("Failed to fetch CLOs:", error);
+      } finally {
+        setCLOsLoading(false);
+      }
+    };
+
     fetchSubjectDetails();
+    fetchCLOs();
   }, [subjectId]);
 
   const handleBack = () => {
     navigate("/syllabus");
   };
+
+  // Function to format CLO ID (e.g., CLO1, CLO2, etc.)
+  const formatCLOId = (id: string, index: number) => {
+    return `CLO${index + 1}`;
+  };
+
+  // Function to render JSON content with line breaks
+  const renderJsonContent = (content: string) => {
+    try {
+      const parsedContent = JSON.parse(content);
+      return (
+        <div>
+          {parsedContent.split("\n").map((line: string, index: number) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== parsedContent.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    } catch (e) {
+      return <div>{content}</div>;
+    }
+  };
+
+  // CLO table columns
+  const cloColumns = [
+    {
+      title: "CLO ID",
+      key: "cloId",
+      width: "20%",
+      render: (_: any, _record: any, index: number) => (
+        <div className="font-medium">{formatCLOId(_record.id, index)}</div>
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "details",
+      key: "description",
+      width: "80%",
+    },
+  ];
 
   if (loading) {
     return (
@@ -197,6 +266,28 @@ function SyllabusDetails() {
             </tbody>
           </table>
         </div>
+
+        {/* CLO Table Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Course Learning Outcomes (CLOs)
+          </h3>
+
+          {closLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spin size="small" tip="Loading CLOs..." />
+            </div>
+          ) : (
+            <Table
+              columns={cloColumns}
+              dataSource={clos}
+              rowKey="id"
+              pagination={false}
+              className="border border-gray-200"
+              locale={{ emptyText: "No CLOs found for this subject" }}
+            />
+          )}
+        </div>
         <div className="flex justify-end mt-8">
           <Button
             className="bg-[#635BFF] font-medium text-white"
@@ -209,24 +300,4 @@ function SyllabusDetails() {
     </div>
   );
 }
-
-// Helper function to render JSON content with line breaks
-function renderJsonContent(content: string) {
-  try {
-    const parsedContent = JSON.parse(content);
-    return (
-      <>
-        {parsedContent.split("\n").map((line: string, index: number) => (
-          <React.Fragment key={index}>
-            {line}
-            {index !== parsedContent.split("\n").length - 1 && <br />}
-          </React.Fragment>
-        ))}
-      </>
-    );
-  } catch (e) {
-    return content;
-  }
-}
-
 export default SyllabusDetails;
