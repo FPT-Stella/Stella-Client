@@ -71,7 +71,7 @@ function LoginAdmin() {
             {/* Password Field */}
             <div className="mb-8">
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Mật khẩu
+                Password
               </label>
               <Field
                 type="password"
@@ -91,7 +91,7 @@ function LoginAdmin() {
               type="submit"
               className="w-full bg-[#5B62E6] hover:bg-[#5b62e64f] text-white font-semibold py-2 rounded-lg transition"
             >
-              Đăng nhập
+              Login
             </button>
           </Form>
         )}
