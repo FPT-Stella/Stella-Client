@@ -92,27 +92,31 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
         open={isModalOpen}
         onCancel={handleCancel}
         footer={[
-          <button
-            key="clear"
-            onClick={() => setSelectedPOIds([])}
-            className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1 rounded"
-          >
-            Clear
-          </button>,
-          <button
-            key="cancel"
-            onClick={handleCancel}
-            className="bg-white border border-gray-300 hover:bg-gray-100 text-black px-4 py-1 rounded"
-          >
-            Cancel
-          </button>,
-          <button
-            key="submit"
-            onClick={handleOk}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
-          >
-            Save
-          </button>,
+          <div className="flex justify-end gap-2.5">
+            <button
+              key="clear"
+              onClick={() => setSelectedPOIds([])}
+              className="bg-green-600 hover:bg-gray-300 text-white px-4 py-1 rounded"
+            >
+              Reset
+            </button>
+
+            <button
+              key="cancel"
+              onClick={handleCancel}
+              className="bg-red-600 border border-gray-300 hover:bg-gray-100 text-white px-4 py-1 rounded"
+            >
+              Cancel
+            </button>
+
+            <button
+              key="submit"
+              onClick={handleOk}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+            >
+              Save
+            </button>
+          </div>,
         ]}
         width={"68%"}
       >

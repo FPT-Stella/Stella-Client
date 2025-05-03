@@ -11,3 +11,4 @@ export const sendChatMessage = async (input: string) => {
     throw error;
   }
 };
+
