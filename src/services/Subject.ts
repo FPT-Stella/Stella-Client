@@ -1,9 +1,7 @@
+
 import rootApi from "./rootApi";
-import {
-  CreateSubject,
-  CreateComboSubject,
-  UpdateComboSubject,
-} from "../models/Subject";
+
+import { CreateSubject,CreateComboSubject,UpdateComboSubject,ComboMapping ,CreateSjCurriculum} from "../models/Subject";
 
 export const getSubject = async () => {
   try {
@@ -144,23 +142,65 @@ export const getSubjectsByComboId = async (comboId: string) => {
   }
 };
 
-export const getSubjectByCurriculumId = async (curriculumId: string) => {
-  try {
-    const response = await rootApi.get(
-      `/SubjectInCurriculum/curriculum/${curriculumId}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Subject:", error);
-    throw error;
-  }
-};
-export const getSubjectInCurriculum = async () => {
-  try {
-    const response = await rootApi.get("/SubjectInCurriculum");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Subject:", error);
-    throw error;
-  }
-};
+
+
+  export const getSubjcetByComboId = async (id: string) => {
+    try {
+      const response = await rootApi.get(`SubjectComboSubject/combo/${id}`, {
+        params: { id },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+  export const updateMappingSubject = async (data:ComboMapping ) => {
+    try {
+      const response = await rootApi.patch('/SubjectComboSubject/subject-combo-mapping', data);
+      return response.data;
+    } catch (error) {
+      console.error("Lỗi khi cập nhật Mapping PLO:", error);
+      throw error;
+    }
+  };
+  export const addSubjectInCurriculum = async (subject:CreateSjCurriculum) => {
+    try {
+      const response = await rootApi.post("/SubjectInCurriculum", subject);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding Subject:", error);
+      throw error;
+    }
+  };
+  export const getSubjectInCurriculumByCurriID = async (id: string) => {
+    try {
+      const response = await rootApi.get(`/SubjectInCurriculum/curriculum/${id}`, {
+        params: { id },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+
+  export const deleteSubjectInCurriculum = async (id: string) => {
+    try {
+      const response = await rootApi.delete(`/SubjectInCurriculum/subject/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting Combo Subject:", error);
+      throw error;
+    }
+  };
+  export const getSubjectInCurriculum= async () => {
+    try {
+      const response = await rootApi.get("/SubjectInCurriculum");
+      return response.data; 
+    } catch (error) {
+      console.error("Error fetching Subject:", error);
+      throw error;
+    }
+  };
+  

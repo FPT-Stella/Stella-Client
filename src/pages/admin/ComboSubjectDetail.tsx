@@ -11,7 +11,7 @@ import {
   updateComboSubject,
 } from "../../services/Subject";
 import { AxiosError } from "axios";
-
+import SubjectComboSubject from "../../components/Admin/SubjectComboSubject";
 import { ComboSubject, UpdateComboSubject } from "../../models/Subject";
 function ComboSubjectDetail() {
   const { programId } = useParams<{ programId: string }>();
@@ -25,6 +25,7 @@ function ComboSubjectDetail() {
   const [comboSubject, setComboSubject] = useState<ComboSubject | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -189,6 +190,9 @@ function ComboSubjectDetail() {
           >
             Edit Combo Subject
           </Button>
+        </div>
+        <div>
+          <SubjectComboSubject />
         </div>
         <div className="flex justify-end gap-5 mt-8">
           <Button

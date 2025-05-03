@@ -8,6 +8,7 @@ import { Button, Spin, Modal } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PLO from "../../components/Admin/PLO";
+import SubjectInCurriculum from "../../components/Admin/SubjectInCurriculum";
 function CurriculumDetail() {
   const { curriculumId } = useParams<{ curriculumId: string }>();
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
@@ -174,6 +175,9 @@ function CurriculumDetail() {
 
         <div>
           <PLO />
+        </div>
+        <div>
+          <SubjectInCurriculum />
         </div>
         <div className="flex justify-end gap-5 mt-8">
           <Button

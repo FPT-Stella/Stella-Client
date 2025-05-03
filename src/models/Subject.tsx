@@ -57,3 +57,24 @@ export interface UpdateComboSubject {
   description: string;
   programOutcome: string;
 }
+export interface MappingSubject {
+  subjectComboId: string;
+  subjectId: string;
+  id: string;
+}
+export interface ComboMapping {
+  subjectComboId: string;
+  subjectIds: string[];
+}
+
+export interface CreateSjCurriculum {
+  subjectId: string;
+  curriculumId: string;
+}
+export interface SjCurriculum {
+  subjectId: string;
+  curriculumId: string;
+  subjectCode: string;
+  subjectName: string;
+  id: string;
+}
