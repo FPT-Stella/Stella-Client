@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Spin, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -61,7 +61,7 @@ function CurriculumDetailStudent() {
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: any) =>
-          getSubjectByID(item.subjectId)
+          getSubjectByID(item.subjectId),
         );
 
         const subjectData = await Promise.all(subjectPromises);
@@ -195,7 +195,16 @@ function CurriculumDetailStudent() {
                 Description
               </td>
               <td className="py-4 px-6 border">
-                <DescriptionFormatter description={curriculum.description} />
+                {JSON.parse(curriculum.description)
+                  .split("\n")
+                  .map((line: string, index: number) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index !==
+                        JSON.parse(curriculum.description).split("\n").length -
+                          1 && <br />}
+                    </React.Fragment>
+                  ))}
               </td>
             </tr>
             <tr>
