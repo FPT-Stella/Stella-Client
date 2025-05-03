@@ -30,7 +30,7 @@ import ProgramDetail from "../pages/admin/ProgramDetail";
 import ComboSubjectDetail from "../pages/admin/ComboSubjectDetail";
 import AddSubject from "../pages/admin/AddSubject";
 import EditSubject from "../pages/admin/EditSubject";
-
+import Tool from "../pages/admin/Tool";
 import SyllabusDetails from "../pages/students/SyllabusDetails";
 
 function AppRouter() {
@@ -118,6 +118,10 @@ function AppRouter() {
                   allowedRoles={["Admin"]}
                 />
               }
+            />
+            <Route
+              path="/manageTool"
+              element={<PrivateRoute element={Tool} allowedRoles={["Admin"]} />}
             />
             <Route
               path="/manageCurriculum/:curriculumId/"
