@@ -144,11 +144,11 @@ function ManageProgram() {
       setProgram(data);
       setFilteredProgram(data);
 
-      toast.success("Major deleted successfully!");
+      toast.success("Program deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete major:", error);
-      toast.error("Failed to delete major.");
+      console.error("Failed to delete Program:", error);
+      toast.error("Failed to delete Program.");
     } finally {
       setLoading(false);
     }

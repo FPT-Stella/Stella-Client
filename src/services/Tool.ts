@@ -30,7 +30,7 @@ export const deleteTool = async (id: string) => {
       throw error;
     }
   };
-  export const updateProgram = async (id: string, data: Partial<Tool>) => {
+  export const updateTool = async (id: string, data: Partial<Tool>) => {
       try {
         const response = await rootApi.put(`/Tool/${id}`, data);
         return response.data;
@@ -39,3 +39,12 @@ export const deleteTool = async (id: string) => {
         throw error;
       }
     };
+    export const getToolById = async(id: string)=>{
+        try{
+            const response = await rootApi.get(`/Tool/${id}`);
+            return response.data;
+        } catch(error){
+            console.error("Error fetching Tool", error);
+            throw error;
+        }
+      }
