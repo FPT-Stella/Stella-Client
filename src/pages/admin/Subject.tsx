@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Dropdown, Select } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";

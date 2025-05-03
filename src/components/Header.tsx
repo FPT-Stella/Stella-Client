@@ -1,4 +1,3 @@
-import React from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import { Dropdown, type MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
