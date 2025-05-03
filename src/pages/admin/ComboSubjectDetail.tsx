@@ -11,7 +11,7 @@ import {
   updateComboSubject,
 } from "../../services/Subject";
 import { AxiosError } from "axios";
-import SubjectComboSubject from "../../components/Admin/subjectComboSubject";
+import SubjectComboSubject from "../../components/Admin/SubjectComboSubject";
 import { ComboSubject, UpdateComboSubject } from "../../models/Subject";
 function ComboSubjectDetail() {
   const { programId } = useParams<{ programId: string }>();
