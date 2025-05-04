@@ -54,7 +54,7 @@ function SyllabusDetails() {
   };
 
   // Function to format CLO ID (e.g., CLO1, CLO2, etc.)
-  const formatCLOId = (id: string, index: number) => {
+  const formatCLOId = (_id: string, index: number) => {
     return `CLO${index + 1}`;
   };
 
