@@ -162,7 +162,7 @@ function ComboSubjects() {
       </div>
 
       {/* Subjects Table */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg  p-6">
         <Table
           columns={subjectColumns}
           dataSource={filteredSubjects}

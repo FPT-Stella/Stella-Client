@@ -131,7 +131,7 @@ function Syllabus() {
       <div className="text-2xl font-semibold text-center text-[#2A384D] h-12 mb-6">
         Syllabus Management
       </div>
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
+      <div className="flex-1 bg-white  rounded-md p-5">
         <div className="mb-4 flex gap-4">
           <Select
             defaultValue="subjectCode"
