@@ -1,6 +1,6 @@
 
 import rootApi from "./rootApi";
-import { Tool,CreateTool } from "../models/Tool";
+import { Tool,CreateTool ,CreateMappingTool} from "../models/Tool";
 
 export const getTool = async()=>{
     try{
@@ -48,3 +48,21 @@ export const deleteTool = async (id: string) => {
             throw error;
         }
       }
+      export const getToolBySubjectId = async(id: string)=>{
+        try{
+            const response = await rootApi.get(`/SubjectTool/subject/${id}/tools-with-names`);
+            return response.data;
+        } catch(error){
+            console.error("Error fetching Tool", error);
+            throw error;
+        }
+      }
+      export const updateSubjectTool = async (id: string, data: Partial<CreateMappingTool>) => {
+        try {
+          const response = await rootApi.patch(`/SubjectTool/subject-tools`, data);
+          return response.data;
+        } catch (error) {
+          console.error(`Error updating Tool with ID ${id}:`, error);
+          throw error;
+        }
+      };
