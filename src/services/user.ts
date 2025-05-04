@@ -1,6 +1,5 @@
 import rootApi from "./rootApi";
-import {
-  createStudentPayload,
+import { 
   Student,
   updateStudent,
   User,

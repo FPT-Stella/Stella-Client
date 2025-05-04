@@ -8,45 +8,35 @@ import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
 import { useParams } from "react-router-dom";
 
-import {
-  getPOByProgramId,
-  deletePO,
-  addPO,
-  updatePO,
-} from "../../services/PO_PLO";
-import { CreatePO, PO } from "../../models/PO_PLO";
-import { Program } from "../../models/Program";
-import { getProgram } from "../../services/Program";
+import { getCLOBySubjectId, addCLO } from "../../services/CLO";
+import { CLO, CreateCLO } from "../../models/CLO";
 import "react-toastify/dist/ReactToastify.css";
-import POForm from "./POForm";
+import CLOForm from "./CLOForm";
 
-function ManagePO() {
-  const { programId } = useParams<{ programId: string }>();
+function ManageCLO() {
+  const { subjectId } = useParams<{ subjectId: string }>();
 
-  const [POS, setPOS] = useState<PO[]>([]);
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [filteredPOS, setFilteredPOS] = useState<PO[]>([]);
+  const [CLOS, setCLOS] = useState<CLO[]>([]);
+  const [filtered, setFiltered] = useState<CLO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] =
-    useState<boolean>(false);
-  const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PO | null>(null);
+  //   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  //   const [isDeleteModalVisible, setIsDeleteModalVisible] =
+  //     useState<boolean>(false);
+  //   const [selecteditem, setSelecteditem] = useState<string | null>(null);
+  //   const [editing, setEditing] = useState<CLO | null>(null);
   const [form] = Form.useForm();
-  const [editForm] = Form.useForm();
+  //   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
   useEffect(() => {
-    const fetchPO = async () => {
+    const fetchCLO = async () => {
       try {
-        const data = await getPOByProgramId(programId!);
-        setPOS(data);
-        setFilteredPOS(data);
-        const dataPro = await getProgram();
-        setPrograms(dataPro);
+        const data = await getCLOBySubjectId(subjectId!);
+        setCLOS(data);
+        setFiltered(data);
       } catch (error) {
         console.error("Fail to fetching POS:", error);
       } finally {
@@ -54,24 +44,24 @@ function ManagePO() {
       }
     };
 
-    fetchPO();
-  }, [programId]);
+    fetchCLO();
+  }, [subjectId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filteredData = POS.filter((po) =>
-      po.poName.toLowerCase().includes(value.toLowerCase())
+    const filteredData = CLOS.filter((clo) =>
+      clo.details.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredPOS(filteredData);
+    setFiltered(filteredData);
   };
 
-  const handleAddPO = async (values: CreatePO) => {
+  const handleAddCLO = async (values: CreateCLO) => {
     try {
       setLoading(true);
-      const newPO = await addPO(values);
+      const newCLO = await addCLO(values);
 
-      setPOS((prev) => [...prev, newPO]);
-      setFilteredPOS((prev) => [...prev, newPO]);
+      setCLOS((prev) => [...prev, newCLO]);
+      setFiltered((prev) => [...prev, newCLO]);
       toast.success("PO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
@@ -98,68 +88,68 @@ function ManagePO() {
     }
   };
 
-  const handleEditPO = async (values: {
-    poName: string;
-    description: string;
-  }) => {
-    if (!editing) return;
-    try {
-      setLoading(true);
-      await updatePO(editing.id, values);
-      const data = await getPOByProgramId(programId!);
-      setPOS(data);
-      setFilteredPOS(data);
-      toast.success("PO updated successfully!");
-      setIsEditModalVisible(false);
-      setEditing(null);
-      editForm.resetFields();
-    } catch (error) {
-      console.error("Failed to update PO:", error);
-      toast.error("Failed to update PO.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   const handleEditPO = async (values: {
+  //     poName: string;
+  //     description: string;
+  //   }) => {
+  //     if (!editing) return;
+  //     try {
+  //       setLoading(true);
+  //       await updatePO(editing.id, values);
+  //       const data = await getPOByProgramId(programId!);
+  //       setPOS(data);
+  //       setFilteredPOS(data);
+  //       toast.success("PO updated successfully!");
+  //       setIsEditModalVisible(false);
+  //       setEditing(null);
+  //       editForm.resetFields();
+  //     } catch (error) {
+  //       console.error("Failed to update PO:", error);
+  //       toast.error("Failed to update PO.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-  const handleDelete = async () => {
-    if (!selecteditem) return;
-    try {
-      setLoading(true);
-      await deletePO(selecteditem);
-      const data = await getPOByProgramId(programId!);
-      setPOS(data);
-      setFilteredPOS(data);
+  //   const handleDelete = async () => {
+  //     if (!selecteditem) return;
+  //     try {
+  //       setLoading(true);
+  //       await delete(selecteditem);
+  //       const data = await getPOByProgramId(programId!);
+  //       setPOS(data);
+  //       setFilteredPOS(data);
 
-      toast.success("PO deleted successfully!");
-      setIsDeleteModalVisible(false);
-    } catch (error) {
-      console.error("Failed to delete PO:", error);
-      toast.error("Failed to delete PO.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //       toast.success("PO deleted successfully!");
+  //       setIsDeleteModalVisible(false);
+  //     } catch (error) {
+  //       console.error("Failed to delete PO:", error);
+  //       toast.error("Failed to delete PO.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-  const showEditModal = (po: PO) => {
-    setEditing(po);
-    setIsEditModalVisible(true);
-    editForm.setFieldsValue({
-      poName: po.poName,
-      description: po.description,
-    });
-  };
+  //   const showEditModal = (po: PO) => {
+  //     setEditing(po);
+  //     setIsEditModalVisible(true);
+  //     editForm.setFieldsValue({
+  //       poName: po.poName,
+  //       description: po.description,
+  //     });
+  //   };
 
-  const showDeleteModal = (id: string) => {
-    setSelecteditem(id);
-    setIsDeleteModalVisible(true);
-  };
+  //   const showDeleteModal = (id: string) => {
+  //     setSelecteditem(id);
+  //     setIsDeleteModalVisible(true);
+  //   };
 
   const columns = [
     {
-      title: "PO Name",
-      dataIndex: "poName",
-      key: "poName",
-      width: 100,
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -168,27 +158,11 @@ function ManagePO() {
         },
       }),
     },
-    {
-      title: "Program Code",
-      dataIndex: "programId",
-      key: "programId",
-      width: 120,
-      onHeaderCell: () => ({
-        style: {
-          backgroundColor: headerBg,
-          color: headerColor,
-          fontWeight: "bold",
-        },
-      }),
-      render: (programId: string) => {
-        const Program = programs.find((p) => p.id === programId);
-        return Program ? Program.programCode : "Unknown";
-      },
-    },
+
     {
       title: "Description",
-      dataIndex: "description",
-      key: "description",
+      dataIndex: "details",
+      key: "details",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -201,14 +175,14 @@ function ManagePO() {
       title: "Action",
       key: "action",
       width: 80,
-      render: (record: PO) => {
+      render: () => {
         const items: MenuProps["items"] = [
           {
             key: "edit",
             label: (
               <Button
                 className="border-none w-full text-blue-700 flex justify-start"
-                onClick={() => showEditModal(record)}
+                // onClick={() => showEditModal(record)}
               >
                 <FiEdit /> Edit
               </Button>
@@ -219,7 +193,7 @@ function ManagePO() {
             label: (
               <Button
                 className="border-none w-full text-red-600"
-                onClick={() => showDeleteModal(record.id)}
+                // onClick={() => showDeleteModal(record.id)}
               >
                 <RiDeleteBin7Fill /> Delete
               </Button>
@@ -246,7 +220,7 @@ function ManagePO() {
     <div className="h-full flex flex-col py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
-        Manage Program Outcomes
+        Manage Course Learning Outcomes
       </div>
       {/* Table */}
 
@@ -262,13 +236,13 @@ function ManagePO() {
             className="bg-[#635BFF] text-white font-medium"
             onClick={() => setIsModalVisible(true)}
           >
-            <IoAddCircleOutline /> Add Program Outcomes
+            <IoAddCircleOutline /> Add Course Learning Outcomesss
           </Button>
         </div>
       </div>
       <Table
         size="small"
-        dataSource={filteredPOS}
+        dataSource={filtered}
         columns={columns}
         rowKey="id"
         loading={loading}
@@ -282,11 +256,11 @@ function ManagePO() {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <POForm form={form} onFinish={handleAddPO} />
+        <CLOForm form={form} onFinish={handleAddCLO} />
       </Modal>
 
       {/* Modal for Editing */}
-      <Modal
+      {/* <Modal
         title="Edit PLO"
         width="50%"
         open={isEditModalVisible}
@@ -329,8 +303,8 @@ function ManagePO() {
             </Button>
           </Form.Item>
         </Form>
-      </Modal>
-      <Modal
+      </Modal> */}
+      {/* <Modal
         title="Confirm Delete"
         open={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
@@ -340,9 +314,9 @@ function ManagePO() {
         cancelText="Cancel"
       >
         <p>Are you sure you want to delete the PO?</p>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }
 
-export default ManagePO;
+export default ManageCLO;

@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Dropdown, Select } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
@@ -97,7 +96,7 @@ function ManageSubjects() {
       }),
     },
     {
-      title: "subjectName",
+      title: "Name",
       dataIndex: "subjectName",
       key: "subjectName",
 
@@ -110,9 +109,11 @@ function ManageSubjects() {
       }),
     },
     {
-      title: "subjectDescription",
+      title: "Description",
       dataIndex: "subjectDescription",
       key: "subjectDescription",
+      render: (text: string) =>
+        text?.replace(/^"|"$/g, "").replace(/\n/g, "").trim(),
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -122,7 +123,7 @@ function ManageSubjects() {
       }),
     },
     {
-      title: " credits",
+      title: "Credits",
       dataIndex: "credits",
       key: "credits",
       onHeaderCell: () => ({

@@ -5,7 +5,8 @@ import { Subject } from "../../models/Subject";
 import { getSubjectByID, deleteSubject } from "../../services/Subject";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import CLO from "../../components/Admin/CLO";
+import Material from "../../components/Admin/MaterialSubject";
 function SubjectDetail() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
@@ -289,13 +290,21 @@ function SubjectDetail() {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-end gap-5 mt-8">
+        <div className="flex justify-end gap-5 mt-5 mb-10">
           <Button
-            className="bg-blue-500 font-medium text-white"
+            className="bg-[#635BFF] font-medium text-white"
             onClick={() => navigate(`/manageSubject/update/${subjectId}`)}
           >
             Edit
           </Button>
+        </div>
+        <div>
+          <CLO />
+        </div>
+        <div>
+          <Material />
+        </div>
+        <div className="flex justify-end gap-5 mt-8">
           <Button
             className="bg-red-500 font-medium text-white"
             onClick={showDeleteModal}
