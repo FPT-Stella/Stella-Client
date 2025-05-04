@@ -6,6 +6,7 @@ import { getProgramById } from "../../services/Program";
 import { getComboSubjectByProgram } from "../../services/Subject";
 import { Program } from "../../models/Program";
 import { ComboSubject } from "../../models/Subject";
+// import { DescriptionFormatter } from "../../components/Student/DescriptionFormatter";
 
 function SubjectCombos() {
   const { programId } = useParams<{ programId: string }>();
@@ -48,6 +49,24 @@ function SubjectCombos() {
     setFilteredCombos(filtered);
   };
 
+  const formatDescription = (text: string) => {
+    try {
+      // Check if it's a JSON string and parse it
+      const content =
+        typeof text === "string" && text.trim().startsWith("{")
+          ? JSON.parse(text)
+          : text;
+
+      return (
+        <div className="line-clamp-3 prose prose-sm max-w-none">
+          {typeof content === "string" ? content : JSON.stringify(content)}
+        </div>
+      );
+    } catch (e) {
+      return <div className="line-clamp-3">{text}</div>;
+    }
+  };
+
   const comboColumns: ColumnsType<ComboSubject> = [
     {
       title: "Combo Name",
@@ -83,6 +102,7 @@ function SubjectCombos() {
           fontWeight: "bold",
         },
       }),
+      render: (text) => formatDescription(text),
     },
     {
       title: "Program Outcome",
@@ -96,6 +116,7 @@ function SubjectCombos() {
           fontWeight: "bold",
         },
       }),
+      render: (text) => formatDescription(text),
     },
   ];
 
