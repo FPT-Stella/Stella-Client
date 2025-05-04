@@ -223,7 +223,7 @@ function CurriculumDetailStudent() {
       </div>
 
       {/* Curriculum Information Card */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <table className="min-w-full border border-gray-200">
           <tbody>
             <tr>
@@ -299,7 +299,7 @@ function CurriculumDetailStudent() {
       </div>
 
       {/* Subjects Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Curriculum Subjects
         </h2>
@@ -316,7 +316,7 @@ function CurriculumDetailStudent() {
       </div>
 
       {/* PLO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg  p-6">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Program Learning Outcomes (PLOs)
         </h2>

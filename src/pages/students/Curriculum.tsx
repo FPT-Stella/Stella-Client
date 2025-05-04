@@ -199,7 +199,7 @@ function CurriculumPage() {
       {/* Increased horizontal margins */}
       <div className="text-4xl font-semibold text-center mb-8">Curriculum</div>
       {/* Program Information Card */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">
           Your Program Information
         </h2>
@@ -233,7 +233,7 @@ function CurriculumPage() {
         </table>
       </div>
       {/* Curriculums Table with Search */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg  p-6">
         <div className="flex items-center gap-4 mb-6">
           <Select
             defaultValue="curriculumCode"
