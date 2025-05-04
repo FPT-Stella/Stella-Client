@@ -258,7 +258,7 @@ function MaterialSubject() {
   ];
 
   return (
-    <div className="h-full flex flex-col py-10">
+    <div className="h-full flex flex-col py-5">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
         Manage Program Outcomes

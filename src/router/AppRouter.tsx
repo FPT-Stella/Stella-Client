@@ -24,7 +24,7 @@ import Subject from "../pages/admin/Subject";
 import PO from "../components/Admin/PO";
 import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
-import SubjectDetail from "../pages/admin/SubjectDetail";
+// import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
 import ProgramDetail from "../pages/admin/ProgramDetail";
 import ComboSubjectDetail from "../pages/admin/ComboSubjectDetail";
@@ -35,6 +35,7 @@ import SyllabusDetails from "../pages/students/SyllabusDetails";
 import SubjectCombos from "../pages/students/SubjectCombo";
 import ComboSubjects from "../pages/students/ComboSubjects";
 import ToolDetail from "../pages/admin/ToolDetail";
+import SubjectDetailAD from "../pages/admin/SubjectDetailAD";
 function AppRouter() {
   return (
     <div>
@@ -161,7 +162,7 @@ function AppRouter() {
               path="/manageSubject/:subjectId/"
               element={
                 <PrivateRoute
-                  element={SubjectDetail}
+                  element={SubjectDetailAD}
                   allowedRoles={["Admin"]}
                 />
               }
