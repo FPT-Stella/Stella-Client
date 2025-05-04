@@ -63,7 +63,7 @@ function CurriculumDetailStudent() {
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: SubjectInCurriculum) =>
-          getSubjectByID(item.subjectId),
+          getSubjectByID(item.subjectId)
         );
 
         const subjectData = await Promise.all(subjectPromises);
@@ -216,7 +216,7 @@ function CurriculumDetailStudent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="my-12 mx-4 md:mx-8 lg:mx-16">
       {/* Curriculum Header */}
       <div className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Curriculum Details
@@ -233,7 +233,7 @@ function CurriculumDetailStudent() {
               <td className="py-4 px-6 border">{curriculum.curriculumCode}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 font-medium w-48 border bg-[#f0f5ff] text-[#1d39c4]">
                 Program
               </td>
               <td className="py-4 px-6 border">
@@ -241,13 +241,13 @@ function CurriculumDetailStudent() {
               </td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Curriculum Name
               </td>
               <td className="py-4 px-6 border">{curriculum.curriculumName}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border align-top">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border align-top">
                 Description
               </td>
               <td className="py-4 px-6 border">
@@ -264,13 +264,13 @@ function CurriculumDetailStudent() {
               </td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Total Credits
               </td>
               <td className="py-4 px-6 border">{curriculum.totalCredit}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Duration
               </td>
               <td className="py-4 px-6 border">
@@ -280,7 +280,7 @@ function CurriculumDetailStudent() {
           </tbody>
         </table>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-5">
           <Button
             type="primary"
             onClick={handleViewPO}
@@ -297,7 +297,21 @@ function CurriculumDetailStudent() {
           </Button>
         </div>
       </div>
+      {/* PLO Table Section */}
+      <div className="bg-white rounded-lg  p-6">
+        <h2 className="text-xl font-semibold mb-6 text-gray-700">
+          Program Learning Outcomes (PLOs)
+        </h2>
 
+        <Table
+          columns={ploColumns}
+          dataSource={plos}
+          rowKey="id"
+          className=""
+          size="large"
+          pagination={false}
+        />
+      </div>
       {/* Subjects Table Section */}
       <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
@@ -309,27 +323,8 @@ function CurriculumDetailStudent() {
           dataSource={subjects}
           rowKey="id"
           loading={subjectsLoading}
-          pagination={{ pageSize: 10 }}
-          className="border border-gray-200"
-          size="middle"
-        />
-      </div>
-
-      {/* PLO Table Section */}
-      <div className="bg-white rounded-lg  p-6">
-        <h2 className="text-xl font-semibold mb-6 text-gray-700">
-          Program Learning Outcomes (PLOs)
-        </h2>
-
-        <Table
-          columns={ploColumns}
-          dataSource={plos}
-          rowKey="id"
-          pagination={{
-            pageSize: plos.length,
-          }}
-          className="border border-gray-200"
           size="large"
+          pagination={false}
         />
       </div>
     </div>
