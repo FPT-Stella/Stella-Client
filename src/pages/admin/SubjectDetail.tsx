@@ -6,6 +6,7 @@ import { getSubjectByID, deleteSubject } from "../../services/Subject";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CLO from "../../components/Admin/CLO";
+import Material from "../../components/Admin/MaterialSubject";
 function SubjectDetail() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
@@ -299,6 +300,9 @@ function SubjectDetail() {
         </div>
         <div>
           <CLO />
+        </div>
+        <div>
+          <Material />
         </div>
         <div className="flex justify-end gap-5 mt-8">
           <Button

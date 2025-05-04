@@ -15,3 +15,9 @@ export interface CreateMaterial {
   materialUrl: string;
   description: string;
 }
+export interface UpdateMaterial {
+  materialName: string;
+  materialType: string;
+  materialUrl: string;
+  description: string;
+}
