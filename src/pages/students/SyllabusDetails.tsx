@@ -5,13 +5,18 @@ import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
 import { getCLOBySubjectId } from "../../services/CLO";
 import { CLO } from "../../models/CLO";
+import { getSubjectTools } from "../../services/Subject";
+import { getToolById } from "../../services/Tool";
+import { Tool } from "../../models/Tool";
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
   const [clos, setCLOs] = useState<CLO[]>([]);
+  const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [closLoading, setCLOsLoading] = useState<boolean>(true);
+  const [toolsLoading, setToolsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
@@ -47,8 +52,33 @@ function SyllabusDetails() {
       }
     };
 
+    const fetchTools = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+
+        // First get all tool IDs for this subject
+        const toolIds = await getSubjectTools(subjectId);
+
+        // Then fetch details for each tool
+        const toolPromises = toolIds.map((toolId: string) =>
+          getToolById(toolId),
+        );
+        const toolsData = await Promise.all(toolPromises);
+
+        setTools(toolsData);
+      } catch (error) {
+        console.error("Failed to fetch tools:", error);
+      } finally {
+        setToolsLoading(false);
+      }
+    };
+
     fetchSubjectDetails();
     fetchCLOs();
+    fetchTools();
   }, [subjectId]);
 
   const handleBack = () => {
@@ -60,6 +90,23 @@ function SyllabusDetails() {
     return `CLO${index + 1}`;
   };
 
+  const formatToolDescription = (description: string) => {
+    try {
+      const parsedContent = JSON.parse(description);
+      return (
+        <div className="whitespace-pre-line">
+          {parsedContent.split("\n").map((line: string, index: number) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== parsedContent.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    } catch (e) {
+      return <div className="whitespace-pre-line">{description}</div>;
+    }
+  };
   // Function to render JSON content with line breaks
   const renderJsonContent = (content: string) => {
     try {
@@ -78,6 +125,37 @@ function SyllabusDetails() {
       return <div>{content}</div>;
     }
   };
+
+  // Tool table columns
+  const toolColumns = [
+    {
+      title: "Tool Name",
+      dataIndex: "toolName",
+      key: "toolName",
+      width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "75%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (text: string) => formatToolDescription(text),
+    },
+  ];
 
   // CLO table columns
   const cloColumns = [
@@ -274,6 +352,28 @@ function SyllabusDetails() {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        {/* Tools Table Section - Add this before the Materials table */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Learning Tools
+          </h3>
+
+          {toolsLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spin size="small" tip="Loading tools..." />
+            </div>
+          ) : (
+            <Table
+              columns={toolColumns}
+              dataSource={tools}
+              rowKey="id"
+              pagination={false}
+              className="border-none"
+              locale={{ emptyText: "No tools found for this subject" }}
+            />
+          )}
         </div>
 
         {/* CLO Table Section */}
