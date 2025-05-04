@@ -22,7 +22,7 @@ export const getMaterialBySubjectId = async (id: string) => {
       throw error;
     }
   };
-  export const addProgram = async (material:CreateMaterial) => {
+  export const addMaterial = async (material:CreateMaterial) => {
     try {
       const response = await rootApi.post("/Material", material);
       return response.data;
@@ -31,7 +31,7 @@ export const getMaterialBySubjectId = async (id: string) => {
       throw error;
     }
   };
-  export const updateProgram = async (id: string, material: Partial<Material>) => {
+  export const updateMaterial = async (id: string, material: Partial<Material>) => {
       try {
         const response = await rootApi.put(`/Material/${id}`, material);
         return response.data;
