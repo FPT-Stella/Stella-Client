@@ -5,6 +5,9 @@ import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
 import { getCLOBySubjectId } from "../../services/CLO";
 import { CLO } from "../../models/CLO";
+import { getMaterialBySubjectId } from "../../services/Material";
+import { Material } from "../../models/Material";
+import { FiLink } from "react-icons/fi";
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
@@ -15,6 +18,7 @@ function SyllabusDetails() {
   const navigate = useNavigate();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
+  const [material, setMaterial] = useState<Material[]>([]);
 
   useEffect(() => {
     const fetchSubjectDetails = async () => {
@@ -23,6 +27,9 @@ function SyllabusDetails() {
           console.error("Subject ID is missing");
           return;
         }
+        const dataM = await getMaterialBySubjectId(subjectId);
+        setMaterial(dataM);
+
         const data = await getSubjectByID(subjectId);
         setSubject(data);
       } catch (error) {
@@ -79,6 +86,68 @@ function SyllabusDetails() {
     }
   };
 
+  const columnsMaterial = [
+    {
+      title: "Name",
+      dataIndex: "materialName",
+      key: "materialName",
+      width: 200,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Type",
+      dataIndex: "materialType",
+      key: "materialType",
+      width: 100,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+
+    {
+      title: "Link",
+      dataIndex: "materialUrl",
+      key: "materialUrl",
+      width: 80,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (url: string) =>
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <FiLink className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl" />
+          </a>
+        ) : (
+          "-"
+        ),
+    },
+  ];
   // CLO table columns
   const cloColumns = [
     {
@@ -297,6 +366,19 @@ function SyllabusDetails() {
             />
           )}
         </div>
+        <div className="mt-16">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Material Of Course
+          </h3>
+          <Table
+            columns={columnsMaterial}
+            dataSource={material}
+            rowKey="id"
+            pagination={false}
+            locale={{ emptyText: "No CLOs found for this subject" }}
+          />
+        </div>
+
         <div className="flex justify-end mt-8">
           <Button
             className="bg-[#635BFF] font-medium text-white"
