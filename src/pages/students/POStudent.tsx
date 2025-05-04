@@ -228,14 +228,14 @@ function POStudent() {
       </div>
 
       {/* Program Information */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700 border-b pb-2">
           {program.programCode} - {program.programName}
         </h2>
       </div>
 
       {/* PLO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Program Learning Outcomes (PLOs)
         </h2>
@@ -250,7 +250,7 @@ function POStudent() {
       </div>
 
       {/* PO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Program Outcomes (POs)
         </h2>
@@ -265,7 +265,7 @@ function POStudent() {
       </div>
 
       {/* Mapping Matrix Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg  p-6">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Mapping POs to PLOs
         </h2>

@@ -134,7 +134,7 @@ function SyllabusDetails() {
         </span>
         <span className="text-[#2A384D]">{subject.subjectCode}</span>
       </div>
-      <div className="flex-1 bg-white shadow-md rounded-md py-5 px-10">
+      <div className="flex-1 bg-white  rounded-md py-5 px-10">
         <h2 className="text-lg w-fit mx-auto font-bold text-gray-600 my-4 border-b-2 border-gray-600">
           Syllabus: {subject.subjectCode} - {subject.subjectName}
         </h2>
