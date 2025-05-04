@@ -11,6 +11,7 @@ import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
 import { PLO } from "../../models/PO_PLO";
 import { Subject } from "../../models/Subject";
+import { SubjectInCurriculum } from "../../models/Curriculum";
 import { Link } from "react-router-dom";
 
 function CurriculumDetailStudent() {
@@ -59,8 +60,8 @@ function CurriculumDetailStudent() {
         const subjectIds = await getSubjectInCurriculumByCurriID(curriculumId);
 
         // Fetch each subject's details
-        const subjectPromises = subjectIds.map((item: Subject) =>
-          getSubjectByID(item.id),
+        const subjectPromises = subjectIds.map((item: SubjectInCurriculum) =>
+          getSubjectByID(item.subjectId),
         );
 
         const subjectData = await Promise.all(subjectPromises);

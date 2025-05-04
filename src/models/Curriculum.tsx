@@ -8,6 +8,15 @@ export interface Curriculum {
   startYear: number;
   endYear: number;
 }
+
+export interface SubjectInCurriculum {
+  subjectId: string;
+  curriculumId: string;
+  subjectCode: string;
+  subjectName: string;
+  id: string;
+}
+
 export interface CreateCurriculum {
   programId: string;
   curriculumCode: string;
