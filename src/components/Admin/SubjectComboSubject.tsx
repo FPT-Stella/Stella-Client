@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Modal, Checkbox, Spin } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Subject, MappingSubject, ComboMapping } from "../../models/Subject";

@@ -187,7 +187,7 @@ export const getSubjectsByComboId = async (comboId: string) => {
 
   export const deleteSubjectInCurriculum = async (id: string) => {
     try {
-      const response = await rootApi.delete(`/SubjectInCurriculum/subject/${id}`);
+      const response = await rootApi.delete(`/SubjectInCurriculum/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting Combo Subject:", error);
