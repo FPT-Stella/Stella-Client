@@ -184,9 +184,13 @@ export const getSubjectInCurriculumByCurriID = async (id: string) => {
   }
 };
 
-export const deleteSubjectInCurriculum = async (id: string) => {
+export const deleteSubjectInCurriculumBySubjectId = async (
+  subjectId: string,
+) => {
   try {
-    const response = await rootApi.delete(`/SubjectInCurriculum/subject/${id}`);
+    const response = await rootApi.delete(
+      `/SubjectInCurriculum/subject/${subjectId}`,
+    );
     return response.data;
   } catch (error) {
     console.error("Error deleting Combo Subject:", error);
@@ -199,6 +203,16 @@ export const getSubjectInCurriculum = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching Subject:", error);
+    throw error;
+  }
+};
+
+export const deleteSubjectInCurriculum = async (id: string) => {
+  try {
+    const response = await rootApi.delete(`/SubjectInCurriculum/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting Combo Subject:", error);
     throw error;
   }
 };
