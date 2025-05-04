@@ -5,13 +5,18 @@ import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
 import { getCLOBySubjectId } from "../../services/CLO";
 import { CLO } from "../../models/CLO";
+import { getMaterialBySubjectId } from "../../services/Material";
+import { Material } from "../../models/Material";
+import { FiLink } from "react-icons/fi";
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
   const [clos, setCLOs] = useState<CLO[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [closLoading, setCLOsLoading] = useState<boolean>(true);
+  const [materialsLoading, setMaterialsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
@@ -46,9 +51,24 @@ function SyllabusDetails() {
         setCLOsLoading(false);
       }
     };
+    const fetchMaterials = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+        const data = await getMaterialBySubjectId(subjectId);
+        setMaterials(data);
+      } catch (error) {
+        console.error("Failed to fetch materials:", error);
+      } finally {
+        setMaterialsLoading(false);
+      }
+    };
 
     fetchSubjectDetails();
     fetchCLOs();
+    fetchMaterials();
   }, [subjectId]);
 
   const handleBack = () => {
@@ -78,6 +98,89 @@ function SyllabusDetails() {
       return <div>{content}</div>;
     }
   };
+
+  // Format description for materials
+  const formatMaterialDescription = (description: string) => {
+    try {
+      return (
+        <div className="whitespace-pre-line">
+          {description.split("\n").map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== description.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    } catch (e) {
+      return <div>{description}</div>;
+    }
+  };
+
+  // Materials table columns
+  const materialColumns = [
+    {
+      title: "Material Name",
+      dataIndex: "materialName",
+      key: "materialName",
+      width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Type",
+      dataIndex: "materialType",
+      key: "materialType",
+      width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "45%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (text: string) => formatMaterialDescription(text),
+    },
+    {
+      title: "Link",
+      dataIndex: "materialUrl",
+      key: "materialUrl",
+      width: "10%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (url: string) =>
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <FiLink className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl" />
+          </a>
+        ) : (
+          "-"
+        ),
+    },
+  ];
 
   // CLO table columns
   const cloColumns = [
@@ -274,6 +377,28 @@ function SyllabusDetails() {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        {/* Materials Table Section - Add this before the CLO table */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Course Materials
+          </h3>
+
+          {materialsLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spin size="small" tip="Loading materials..." />
+            </div>
+          ) : (
+            <Table
+              columns={materialColumns}
+              dataSource={materials}
+              rowKey="id"
+              pagination={false}
+              className="border-none"
+              locale={{ emptyText: "No materials found for this subject" }}
+            />
+          )}
         </div>
 
         {/* CLO Table Section */}
