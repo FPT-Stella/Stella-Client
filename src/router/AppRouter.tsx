@@ -32,6 +32,8 @@ import AddSubject from "../pages/admin/AddSubject";
 import EditSubject from "../pages/admin/EditSubject";
 import Tool from "../pages/admin/Tool";
 import SyllabusDetails from "../pages/students/SyllabusDetails";
+import SubjectCombos from "../pages/students/SubjectCombo";
+import ComboSubjects from "../pages/students/ComboSubjects";
 import ToolDetail from "../pages/admin/ToolDetail";
 function AppRouter() {
   return (
@@ -96,8 +98,16 @@ function AppRouter() {
               path="/program/:programId/curriculum/:curriculumId/outcomes"
               element={<POStudent />}
             />
-          </Route>
+            <Route
+              path="/program/:programId/combos"
+              element={<SubjectCombos />}
+            />
 
+            <Route
+              path="/program/:programId/combos/:comboId/subjects"
+              element={<ComboSubjects />}
+            />
+          </Route>
           {/* ADMIN */}
 
           <Route element={<LayoutAdmin />}>

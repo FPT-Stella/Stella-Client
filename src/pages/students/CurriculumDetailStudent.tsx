@@ -7,7 +7,6 @@ import { getProgramById } from "../../services/Program";
 import { getPloByCurriculum } from "../../services/PO_PLO";
 import { getSubjectInCurriculumByCurriID } from "../../services/Subject";
 import { getSubjectByID } from "../../services/Subject";
-import { DescriptionFormatter } from "../../components/Student/DescriptionFormatter";
 import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
 import { PLO } from "../../models/PO_PLO";
@@ -144,6 +143,11 @@ function CurriculumDetailStudent() {
       navigate(`/program/${program.id}/curriculum/${curriculumId}/outcomes`);
     }
   };
+  const handleViewCombo = () => {
+    if (program) {
+      navigate(`/program/${program.id}/combos`);
+    }
+  };
 
   if (loading) {
     return (
@@ -231,6 +235,13 @@ function CurriculumDetailStudent() {
             className="bg-blue-600 text-white hover:bg-blue-700"
           >
             View Program Outcomes
+          </Button>
+          <Button
+            type="primary"
+            onClick={handleViewCombo}
+            className="bg-green-600 text-white hover:bg-green-700"
+          >
+            View Subject Combos
           </Button>
         </div>
       </div>
