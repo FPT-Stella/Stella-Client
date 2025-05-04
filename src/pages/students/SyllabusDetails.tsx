@@ -3,15 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button, Spin, Table } from "antd";
 import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
-import { getCLOsBySubjectId } from "../../services/CLO";
-
-// Define the CLO interface
-interface CLO {
-  id: string;
-  cloName: string;
-  description: string;
-  subjectId: string;
-}
+import { getCLOBySubjectId } from "../../services/CLO";
+import { CLO } from "../../models/CLO";
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
@@ -43,7 +36,7 @@ function SyllabusDetails() {
           console.error("Subject ID is missing");
           return;
         }
-        const data = await getCLOsBySubjectId(subjectId);
+        const data = await getCLOBySubjectId(subjectId);
         setCLOs(data);
       } catch (error) {
         console.error("Failed to fetch CLOs:", error);
