@@ -19,3 +19,4 @@ export const addCLO = async (data: CreateCLO) => {
     throw error;
   }
 };
+

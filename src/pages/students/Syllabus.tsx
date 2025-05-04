@@ -6,7 +6,7 @@ import { Subject } from "../../models/Subject";
 import { Link } from "react-router-dom";
 
 function Syllabus() {
-  const [subjects, setSubjects] = useState<Subject[]>([]);
+  // const [subjects, setSubjects] = useState<Subject[]>([]);
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
@@ -17,7 +17,6 @@ function Syllabus() {
     try {
       setLoading(true);
       const data = await getSubject();
-      setSubjects(data);
 
       if (!searchText.trim()) {
         setFilteredSubjects(data);
@@ -26,7 +25,7 @@ function Syllabus() {
           subject[searchField as keyof Subject]
             ?.toString()
             .toLowerCase()
-            .includes(searchText.toLowerCase()),
+            .includes(searchText.toLowerCase())
         );
         setFilteredSubjects(filtered);
       }
@@ -114,7 +113,9 @@ function Syllabus() {
             ]}
           />
           <Input
-            placeholder={`Search by ${searchField === "subjectCode" ? "Code" : "Name"}`}
+            placeholder={`Search by ${
+              searchField === "subjectCode" ? "Code" : "Name"
+            }`}
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 300 }}
