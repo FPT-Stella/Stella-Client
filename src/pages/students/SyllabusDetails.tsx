@@ -13,6 +13,8 @@ function SyllabusDetails() {
   const [loading, setLoading] = useState<boolean>(true);
   const [closLoading, setCLOsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchSubjectDetails = async () => {
@@ -83,6 +85,13 @@ function SyllabusDetails() {
       title: "CLO ID",
       key: "cloId",
       width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (_: any, _record: any, index: number) => (
         <div className="font-medium">{formatCLOId(_record.id, index)}</div>
       ),
@@ -92,6 +101,13 @@ function SyllabusDetails() {
       dataIndex: "details",
       key: "description",
       width: "80%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
