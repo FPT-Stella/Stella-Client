@@ -23,6 +23,8 @@ function CurriculumDetailStudent() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [subjectsLoading, setSubjectsLoading] = useState<boolean>(true);
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,12 +87,26 @@ function CurriculumDetailStudent() {
       key: "ploName",
       width: "30%",
       className: "font-medium",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       width: "70%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
@@ -100,6 +116,13 @@ function CurriculumDetailStudent() {
       dataIndex: "subjectCode",
       key: "subjectCode",
       width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       sorter: (a, b) => a.subjectCode.localeCompare(b.subjectCode),
     },
     {
@@ -107,6 +130,13 @@ function CurriculumDetailStudent() {
       dataIndex: "subjectName",
       key: "subjectName",
       width: "40%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: Subject) => (
         <Link
           to={`/syllabus/${record.id}`}
@@ -122,6 +152,13 @@ function CurriculumDetailStudent() {
       key: "termNo",
       width: "10%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       sorter: (a, b) => a.termNo - b.termNo,
     },
     {
@@ -130,12 +167,26 @@ function CurriculumDetailStudent() {
       key: "credits",
       width: "10%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Prerequisite",
       dataIndex: "prerequisiteName",
       key: "prerequisiteName",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 

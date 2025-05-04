@@ -12,6 +12,8 @@ function Syllabus() {
   const [searchText, setSearchText] = useState<string>("");
   const [searchField, setSearchField] = useState<string>("subjectCode");
   const [dataFetched, setDataFetched] = useState<boolean>(false);
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   const fetchSubjects = async () => {
     try {
@@ -25,7 +27,7 @@ function Syllabus() {
           subject[searchField as keyof Subject]
             ?.toString()
             .toLowerCase()
-            .includes(searchText.toLowerCase())
+            .includes(searchText.toLowerCase()),
         );
         setFilteredSubjects(filtered);
       }
@@ -52,18 +54,39 @@ function Syllabus() {
       dataIndex: "subjectCode",
       key: "subjectCode",
       width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Subject Name",
       dataIndex: "subjectName",
       key: "subjectName",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Topic",
       dataIndex: "topic",
       key: "topic",
       width: "40%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: Subject) => {
         try {
           const parsedTopic = JSON.parse(text);
@@ -92,6 +115,13 @@ function Syllabus() {
       dataIndex: "insDate",
       key: "insDate",
       width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (date: Date) => new Date(date).toLocaleDateString(),
     },
   ];

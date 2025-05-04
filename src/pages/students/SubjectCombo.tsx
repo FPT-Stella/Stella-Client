@@ -14,6 +14,8 @@ function SubjectCombos() {
   const [filteredCombos, setFilteredCombos] = useState<ComboSubject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +55,13 @@ function SubjectCombos() {
       key: "comboName",
       width: "20%",
       className: "font-medium",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text, record) => (
         <Link
           to={`/program/${programId}/combos/${record.id}/subjects`}
@@ -67,12 +76,26 @@ function SubjectCombos() {
       dataIndex: "description",
       key: "description",
       width: "35%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Program Outcome",
       dataIndex: "programOutcome",
       key: "programOutcome",
       width: "30%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 

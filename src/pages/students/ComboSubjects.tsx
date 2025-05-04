@@ -18,6 +18,8 @@ function ComboSubjects() {
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +67,13 @@ function ComboSubjects() {
       dataIndex: "subjectCode",
       key: "subjectCode",
       width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       sorter: (a, b) => a.subjectCode.localeCompare(b.subjectCode),
     },
     {
@@ -72,6 +81,13 @@ function ComboSubjects() {
       dataIndex: "subjectName",
       key: "subjectName",
       width: "40%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Term",
@@ -80,12 +96,26 @@ function ComboSubjects() {
       width: "15%",
       align: "center",
       sorter: (a, b) => a.termNo - b.termNo,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Note",
       dataIndex: "note",
       key: "note",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text) => {
         try {
           return <div className="line-clamp-2">{JSON.parse(text)}</div>;

@@ -22,6 +22,8 @@ function CurriculumPage() {
   const [searchText, setSearchText] = useState<string>("");
   const [searchType, setSearchType] = useState<string>("curriculumCode");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,12 +107,26 @@ function CurriculumPage() {
       key: "curriculumCode",
       className: "font-medium",
       width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Name",
       dataIndex: "curriculumName",
       key: "curriculumName",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: Curriculum) => (
         <Link
           to={`/curriculum/${record.id}/`}
@@ -125,6 +141,13 @@ function CurriculumPage() {
       dataIndex: "description",
       key: "description",
       width: "35%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string) => <div className="line-clamp-2">{text}</div>,
     },
     {
@@ -133,12 +156,26 @@ function CurriculumPage() {
       key: "totalCredit",
       width: "10%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Year",
       key: "year",
       width: "15%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (_, record) => (
         <span>{`${record.startYear} - ${record.endYear}`}</span>
       ),
