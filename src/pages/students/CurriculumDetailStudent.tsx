@@ -5,7 +5,7 @@ import type { ColumnsType } from "antd/es/table";
 import { getCurriculumById } from "../../services/Curriculum";
 import { getProgramById } from "../../services/Program";
 import { getPloByCurriculum } from "../../services/PO_PLO";
-import { getSubjectByCurriculumId } from "../../services/Subject";
+import { getSubjectInCurriculumByCurriID } from "../../services/Subject";
 import { getSubjectByID } from "../../services/Subject";
 import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
@@ -56,7 +56,7 @@ function CurriculumDetailStudent() {
 
         setSubjectsLoading(true);
         // Get subject IDs in curriculum
-        const subjectIds = await getSubjectByCurriculumId(curriculumId);
+        const subjectIds = await getSubjectInCurriculumByCurriID(curriculumId);
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: any) =>
