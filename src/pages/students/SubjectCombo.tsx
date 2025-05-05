@@ -169,7 +169,7 @@ function SubjectCombos() {
           dataSource={filteredCombos}
           rowKey="id"
           pagination={{ pageSize: 10 }}
-          className="border border-gray-200"
+          className=""
           size="middle"
           locale={{ emptyText: "No subject combinations found" }}
         />

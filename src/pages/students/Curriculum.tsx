@@ -273,7 +273,7 @@ function CurriculumPage() {
           onRow={() => ({
             className: "hover:bg-gray-50 transition-colors cursor-pointer",
           })}
-          scroll={{ x: 100 }}
+          pagination={false}
           size="large"
         />
       </div>
