@@ -4,10 +4,15 @@ import { GrGoogle } from "react-icons/gr";
 
 const createGoogleURL = () => {
   const baseUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+  
+  // Xác định URL Redirect dựa trên môi trường
+  const redirectUri = window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1') 
+    ? import.meta.env.VITE_GCP_REDIRECT_URI_DEV  // URL cho môi trường dev
+    : import.meta.env.VITE_GCP_REDIRECT_URI_PROD; // URL cho môi trường production
 
   const params = {
     client_id: import.meta.env.VITE_GCP_CLIENT_ID,
-    redirect_uri: import.meta.env.VITE_GCP_REDIRECT_URI,
+    redirect_uri: redirectUri,
     response_type: "code",
     scope: [
       "https://www.googleapis.com/auth/userinfo.email",
@@ -17,6 +22,7 @@ const createGoogleURL = () => {
     access_type: "offline",
   };
 
+  console.log("Using redirect URI:", redirectUri);
   return `${baseUrl}?${new URLSearchParams(params)}`;
 };
 
