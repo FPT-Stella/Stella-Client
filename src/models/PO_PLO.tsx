@@ -3,6 +3,7 @@ export interface PLO {
   curriculumId: string;
   ploName: string;
   description: string;
+  curriculumCode: string;
 }
 export interface CreatePLO {
   curriculumId: string;

@@ -8,11 +8,16 @@ import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
 import { useParams } from "react-router-dom";
 
-import { getCLOBySubjectId, addCLO } from "../../services/CLO";
+import {
+  getCLOBySubjectId,
+  addCLO,
+  deleteCLO,
+  updateCLO,
+} from "../../services/CLO";
 import { CLO, CreateCLO } from "../../models/CLO";
 import "react-toastify/dist/ReactToastify.css";
 import CLOForm from "./CLOForm";
-
+import CLOMappingList from "./CLO_PLO";
 function ManageCLO() {
   const { subjectId } = useParams<{ subjectId: string }>();
 
@@ -21,13 +26,13 @@ function ManageCLO() {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  //   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
-  //   const [isDeleteModalVisible, setIsDeleteModalVisible] =
-  //     useState<boolean>(false);
-  //   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  //   const [editing, setEditing] = useState<CLO | null>(null);
+  const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] =
+    useState<boolean>(false);
+  const [selecteditem, setSelecteditem] = useState<string | null>(null);
+  const [editing, setEditing] = useState<CLO | null>(null);
   const [form] = Form.useForm();
-  //   const [editForm] = Form.useForm();
+  const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
@@ -50,7 +55,7 @@ function ManageCLO() {
   const handleSearch = (value: string) => {
     setSearchText(value);
     const filteredData = CLOS.filter((clo) =>
-      clo.details.toLowerCase().includes(value.toLowerCase())
+      clo.cloName.toLowerCase().includes(value.toLowerCase())
     );
     setFiltered(filteredData);
   };
@@ -62,7 +67,7 @@ function ManageCLO() {
 
       setCLOS((prev) => [...prev, newCLO]);
       setFiltered((prev) => [...prev, newCLO]);
-      toast.success("PO added successfully!");
+      toast.success("CLO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
     } catch (error: unknown) {
@@ -88,68 +93,79 @@ function ManageCLO() {
     }
   };
 
-  //   const handleEditPO = async (values: {
-  //     poName: string;
-  //     description: string;
-  //   }) => {
-  //     if (!editing) return;
-  //     try {
-  //       setLoading(true);
-  //       await updatePO(editing.id, values);
-  //       const data = await getPOByProgramId(programId!);
-  //       setPOS(data);
-  //       setFilteredPOS(data);
-  //       toast.success("PO updated successfully!");
-  //       setIsEditModalVisible(false);
-  //       setEditing(null);
-  //       editForm.resetFields();
-  //     } catch (error) {
-  //       console.error("Failed to update PO:", error);
-  //       toast.error("Failed to update PO.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleEditCLO = async (values: CreateCLO) => {
+    if (!editing) return;
+    try {
+      setLoading(true);
+      await updateCLO(editing.id, values);
+      const data = await getCLOBySubjectId(subjectId!);
+      setCLOS(data);
+      setFiltered(data);
+      toast.success("CLO updated successfully!");
+      setIsEditModalVisible(false);
+      setEditing(null);
+      editForm.resetFields();
+    } catch (error) {
+      console.error("Failed to update CLO:", error);
+      toast.error("Failed to update CLO.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //   const handleDelete = async () => {
-  //     if (!selecteditem) return;
-  //     try {
-  //       setLoading(true);
-  //       await delete(selecteditem);
-  //       const data = await getPOByProgramId(programId!);
-  //       setPOS(data);
-  //       setFilteredPOS(data);
+  const handleDelete = async () => {
+    if (!selecteditem) return;
+    try {
+      setLoading(true);
+      await deleteCLO(selecteditem);
+      const data = await getCLOBySubjectId(subjectId!);
+      setCLOS(data);
+      setFiltered(data);
 
-  //       toast.success("PO deleted successfully!");
-  //       setIsDeleteModalVisible(false);
-  //     } catch (error) {
-  //       console.error("Failed to delete PO:", error);
-  //       toast.error("Failed to delete PO.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+      toast.success("CLO deleted successfully!");
+      setIsDeleteModalVisible(false);
+    } catch (error) {
+      console.error("Failed to delete CLO:", error);
+      toast.error("Failed to delete CLO.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //   const showEditModal = (po: PO) => {
-  //     setEditing(po);
-  //     setIsEditModalVisible(true);
-  //     editForm.setFieldsValue({
-  //       poName: po.poName,
-  //       description: po.description,
-  //     });
-  //   };
+  const showEditModal = (clo: CLO) => {
+    setEditing(clo);
+    setIsEditModalVisible(true);
+    editForm.setFieldsValue({
+      cloName: clo.cloName,
+      cloDetails: clo.cloDetails,
+      loDetails: clo.loDetails,
+      subjectId: clo.subjectId,
+    });
+  };
 
-  //   const showDeleteModal = (id: string) => {
-  //     setSelecteditem(id);
-  //     setIsDeleteModalVisible(true);
-  //   };
+  const showDeleteModal = (id: string) => {
+    setSelecteditem(id);
+    setIsDeleteModalVisible(true);
+  };
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+    // {
+    //   title: "ID",
+    //   dataIndex: "id",
+    //   key: "id",
 
+    //   onHeaderCell: () => ({
+    //     style: {
+    //       backgroundColor: headerBg,
+    //       color: headerColor,
+    //       fontWeight: "bold",
+    //     },
+    //   }),
+    // },
+    {
+      title: "CLO Name",
+      dataIndex: "cloName",
+      key: "cloName",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -158,11 +174,25 @@ function ManageCLO() {
         },
       }),
     },
-
     {
       title: "Description",
-      dataIndex: "details",
-      key: "details",
+      dataIndex: "cloDetails",
+      key: "cloDetails",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "PLO",
+      key: "plo",
+      width: 300,
+      render: (record: CLO) => {
+        return <CLOMappingList cloId={record.id} />;
+      },
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -174,15 +204,15 @@ function ManageCLO() {
     {
       title: "Action",
       key: "action",
-      width: 80,
-      render: () => {
+      width: 90,
+      render: (record: CLO) => {
         const items: MenuProps["items"] = [
           {
             key: "edit",
             label: (
               <Button
                 className="border-none w-full text-blue-700 flex justify-start"
-                // onClick={() => showEditModal(record)}
+                onClick={() => showEditModal(record)}
               >
                 <FiEdit /> Edit
               </Button>
@@ -193,7 +223,7 @@ function ManageCLO() {
             label: (
               <Button
                 className="border-none w-full text-red-600"
-                // onClick={() => showDeleteModal(record.id)}
+                onClick={() => showDeleteModal(record.id)}
               >
                 <RiDeleteBin7Fill /> Delete
               </Button>
@@ -260,8 +290,8 @@ function ManageCLO() {
       </Modal>
 
       {/* Modal for Editing */}
-      {/* <Modal
-        title="Edit PLO"
+      <Modal
+        title="Edit CLO"
         width="50%"
         open={isEditModalVisible}
         onCancel={() => {
@@ -271,40 +301,50 @@ function ManageCLO() {
         }}
         footer={null}
       >
-        <Form form={editForm} layout="vertical" onFinish={handleEditPO}>
+        <Form form={editForm} layout="vertical" onFinish={handleEditCLO}>
           <Form.Item
-            label="PO Name"
-            name="poName"
+            label="CLO Name"
+            name="cloName"
             rules={[
-              { required: true, message: "Please enter the PO name!" },
+              { required: true, message: "Please enter the CLO name!" },
               {
-                pattern: /^PO.{1,}$/,
+                // pattern: /^PO.{1,}$/,
+                pattern: /^CLO\d+$/,
+
                 message:
-                  "PO name must start with 'PO' and be at least 3 characters.",
+                  "CLO name must start with 'PO' and be at least 4 characters.",
               },
             ]}
           >
             <Input placeholder="Enter PO name" />
           </Form.Item>
 
+          <Form.Item hidden name="subjectId">
+            <Input hidden />
+          </Form.Item>
+
           <Form.Item
             label="Description"
-            name="description"
+            name="cloDetails"
             rules={[
               { required: true, message: "Please enter the description!" },
             ]}
           >
-            <Input.TextArea placeholder="Enter description" rows={5} />
+            <Input.TextArea placeholder="Enter description" rows={6} />
+          </Form.Item>
+
+          <Form.Item hidden name="loDetails">
+            <Input hidden />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
-              Update PO
+              Update
             </Button>
           </Form.Item>
         </Form>
-      </Modal> */}
-      {/* <Modal
+      </Modal>
+      <Modal
         title="Confirm Delete"
         open={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
@@ -313,8 +353,8 @@ function ManageCLO() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the PO?</p>
-      </Modal> */}
+        <p>Are you sure you want to delete the CLO?</p>
+      </Modal>
     </div>
   );
 }
