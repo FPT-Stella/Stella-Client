@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CLO from "../../components/Admin/CLO";
 import Material from "../../components/Admin/MaterialSubject";
 import SubjectDetail from "./SubjectDetail";
-
+import MappingTool from "../../components/Admin/MappingTool";
 function SubjectDetailAD() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
@@ -92,6 +92,11 @@ function SubjectDetailAD() {
               key: "3",
               label: "Material",
               children: <Material />,
+            },
+            {
+              key: "4",
+              label: "Tool",
+              children: <MappingTool />,
             },
           ]}
         />

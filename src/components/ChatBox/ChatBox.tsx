@@ -148,7 +148,7 @@ function ChatBox() {
               };
             }
             return h;
-          }),
+          })
         );
       } else {
         // Create new chat if none is selected
@@ -189,7 +189,7 @@ function ChatBox() {
       doc.text(
         `${msg.sender === "user" ? "You" : "AI"}: ${msg.text}`,
         10,
-        10 + i * 10,
+        10 + i * 10
       );
     });
     doc.save("chat_history.pdf");
@@ -199,12 +199,12 @@ function ChatBox() {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-3 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
+        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
       >
         {isOpen ? (
-          <IoCloseSharp className="text-xl" />
+          <IoCloseSharp className="text-3xl" />
         ) : (
-          <IoChatbubbles className="text-xl" />
+          <IoChatbubbles className="text-3xl" />
         )}
       </button>
 
@@ -212,7 +212,11 @@ function ChatBox() {
         <div className="fixed bottom-20 right-8 w-[60%] h-[70%] bg-white border rounded-lg shadow-lg z-50 flex">
           {/* Sidebar */}
           <div
-            className={`w-1/4 border-r ${darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-50 border-gray-200"}`}
+            className={`w-1/4 border-r ${
+              darkMode
+                ? "bg-gray-800 border-gray-700"
+                : "bg-gray-50 border-gray-200"
+            }`}
           >
             <div className="p-3">
               <button
@@ -249,7 +253,9 @@ function ChatBox() {
 
           {/* Main Chat Area */}
           <div
-            className={`flex-1 flex flex-col ${darkMode ? "bg-gray-900" : "bg-white"}`}
+            className={`flex-1 flex flex-col ${
+              darkMode ? "bg-gray-900" : "bg-white"
+            }`}
           >
             {/* Header */}
             <div className="flex justify-between items-center p-2 border-b">
@@ -272,7 +278,9 @@ function ChatBox() {
 
             {/* Messages */}
             <div
-              className={`flex-1 overflow-y-auto p-3 ${darkMode ? "bg-gray-800" : "bg-gray-50"}`}
+              className={`flex-1 overflow-y-auto p-3 ${
+                darkMode ? "bg-gray-800" : "bg-gray-50"
+              }`}
             >
               {messages.map((msg) => (
                 <div
@@ -302,8 +310,8 @@ function ChatBox() {
                         msg.sender === "user"
                           ? "bg-blue-600 text-white"
                           : darkMode
-                            ? "bg-gray-700 text-white"
-                            : "bg-white"
+                          ? "bg-gray-700 text-white"
+                          : "bg-white"
                       }`}
                     >
                       <ReactMarkdown>{msg.text}</ReactMarkdown>
