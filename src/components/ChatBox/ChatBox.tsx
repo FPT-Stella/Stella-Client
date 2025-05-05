@@ -43,7 +43,10 @@ function ChatBox() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
-  const [size, setSize] = useState<ChatBoxSize>({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
+  const [size, setSize] = useState<ChatBoxSize>({
+    width: DEFAULT_WIDTH,
+    height: DEFAULT_HEIGHT,
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
@@ -74,7 +77,7 @@ function ChatBox() {
     if (savedHistories) {
       setChatHistories(JSON.parse(savedHistories));
     }
-    
+
     // Load saved chat box size if exists
     const savedSize = localStorage.getItem("chatBoxSize");
     if (savedSize) {
@@ -86,7 +89,7 @@ function ChatBox() {
     // Save chat histories to localStorage whenever it changes
     localStorage.setItem("chatHistories", JSON.stringify(chatHistories));
   }, [chatHistories]);
-  
+
   useEffect(() => {
     // Save chat box size to localStorage
     localStorage.setItem("chatBoxSize", JSON.stringify(size));
@@ -96,10 +99,10 @@ function ChatBox() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing || !chatBoxRef.current) return;
-      
+
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      
+
       // Calculate new width and height as percentages
       const newWidth = Math.min(
         MAX_WIDTH,
@@ -109,22 +112,22 @@ function ChatBox() {
         MAX_HEIGHT,
         Math.max(MIN_HEIGHT, (e.clientY / windowHeight) * 100)
       );
-      
+
       setSize({ width: newWidth, height: newHeight });
     };
-    
+
     const handleMouseUp = () => {
       setIsResizing(false);
     };
-    
+
     if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
     }
-    
+
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isResizing]);
 
@@ -260,7 +263,7 @@ function ChatBox() {
     });
     doc.save("chat_history.pdf");
   };
-  
+
   const resetSize = () => {
     setSize({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
   };
@@ -279,11 +282,11 @@ function ChatBox() {
       </button>
 
       {isOpen && (
-        <div 
+        <div
           ref={chatBoxRef}
-          style={{ 
-            width: `${size.width}%`, 
-            height: `${size.height}%` 
+          style={{
+            width: `${size.width}%`,
+            height: `${size.height}%`,
           }}
           className="fixed bottom-20 right-8 bg-white border rounded-lg shadow-xl z-50 flex overflow-hidden"
         >
@@ -296,7 +299,7 @@ function ChatBox() {
             >
               <TbResize size={16} />
             </button>
-            <div 
+            <div
               className="w-4 h-4 cursor-nwse-resize bg-gray-200 hover:bg-gray-300 transition-colors"
               onMouseDown={startResizing}
               title="Kéo để thay đổi kích thước"
@@ -359,10 +362,12 @@ function ChatBox() {
           <div className="flex-1 flex flex-col bg-white">
             {/* Messages */}
             <div className="flex-1 overflow-y-auto">
-              {messages.map((msg, index) => (
+              {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`${msg.sender === "user" ? "bg-white" : "bg-[#f9f9f9]"}`}
+                  className={`${
+                    msg.sender === "user" ? "bg-white" : "bg-[#f9f9f9]"
+                  }`}
                 >
                   <div className="max-w-4xl mx-auto py-5 px-4">
                     <div className="flex items-start gap-4">
@@ -398,7 +403,9 @@ function ChatBox() {
                       <FaRobot className="text-sm" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-sm mb-1">AI Assistant</div>
+                      <div className="font-medium text-sm mb-1">
+                        AI Assistant
+                      </div>
                       <div className="text-gray-500 text-sm flex items-center gap-2">
                         <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse"></div>
                         <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse delay-150"></div>
