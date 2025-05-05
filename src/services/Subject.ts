@@ -17,6 +17,16 @@ export const getSubject = async () => {
     throw error;
   }
 };
+export const getSubjectTools = async (id: string) => {
+  try {
+    const response = await rootApi.get(`/SubjectTool/subject/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Subject:", error);
+    throw error;
+  }
+};
+
 export const getSubjectByID = async (id: string) => {
   try {
     const response = await rootApi.get(`/Subject/${id}`);
