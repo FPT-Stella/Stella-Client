@@ -323,6 +323,10 @@ function MaterialSubject() {
             name="materialUrl"
             rules={[
               { required: true, message: "Please enter the materialUrl!" },
+              {
+                type: "url",
+                message: "Please enter url ( https:// or http://)",
+              },
             ]}
           >
             <Input placeholder="Enter materialUrl" />
@@ -379,6 +383,10 @@ function MaterialSubject() {
             name="materialUrl"
             rules={[
               { required: true, message: "Please enter the materialUrl!" },
+              {
+                type: "url",
+                message: "Please enter url ( https:// or http://)",
+              },
             ]}
           >
             <Input placeholder="Enter materialUrl" />

@@ -342,7 +342,7 @@ function ManageProgram() {
       </div>
       {/* Modal for Adding Program */}
       <Modal
-        title="Add Major"
+        title="Add Program"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
@@ -350,7 +350,7 @@ function ManageProgram() {
         <ProgramForm form={form} onFinish={handleAddProgram} />
       </Modal>
       <Modal
-        title="Edit Major"
+        title="Edit Program"
         open={isEditModalVisible}
         onCancel={() => {
           setEditModalVisible(false);
