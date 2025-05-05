@@ -4,6 +4,7 @@ import { GrGoogle } from "react-icons/gr";
 const createGoogleURL = () => {
   const baseUrl = "https://accounts.google.com/o/oauth2/v2/auth";
   
+  //login 
   const params = {
     client_id: import.meta.env.VITE_GCP_CLIENT_ID,
     redirect_uri: import.meta.env.VITE_GCP_REDIRECT_URI,
