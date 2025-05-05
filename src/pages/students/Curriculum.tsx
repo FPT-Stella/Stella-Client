@@ -15,7 +15,7 @@ function CurriculumPage() {
   const [program, setProgram] = useState<Program>({} as Program);
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [filteredCurriculums, setFilteredCurriculums] = useState<Curriculum[]>(
-    [],
+    []
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -56,7 +56,7 @@ function CurriculumPage() {
         if (programData.id) {
           const curriculumData = await getCurriculumByProgram(programData.id);
           setCurriculums(curriculumData);
-          // setFilteredCurriculums(curriculumData);
+          setFilteredCurriculums(curriculumData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -80,7 +80,7 @@ function CurriculumPage() {
         curriculum[searchType as keyof Curriculum]
           ?.toString()
           .toLowerCase()
-          .includes(searchText.toLowerCase()),
+          .includes(searchText.toLowerCase())
       );
       setFilteredCurriculums(filtered);
     }
@@ -206,7 +206,7 @@ function CurriculumPage() {
         <table className="min-w-full border border-gray-200 bg-white">
           <tbody>
             <tr>
-              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-gray-50">
+              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-[#f0f5ff] text-[#1d39c4]">
                 Program Code:
               </td>
               <td className="py-4 border border-gray-200 px-6">
@@ -214,7 +214,7 @@ function CurriculumPage() {
               </td>
             </tr>
             <tr>
-              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-gray-50">
+              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-[#f0f5ff] text-[#1d39c4]">
                 Program Name:
               </td>
               <td className="py-4 border border-gray-200 px-6">
@@ -222,7 +222,7 @@ function CurriculumPage() {
               </td>
             </tr>
             <tr>
-              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-gray-50">
+              <td className="py-4 border border-gray-200 px-6 font-medium w-48 bg-[#f0f5ff] text-[#1d39c4]">
                 Description:
               </td>
               <td className="py-4 border border-gray-200 px-6">
@@ -246,7 +246,9 @@ function CurriculumPage() {
             className="rounded-none"
           />
           <Input
-            placeholder={`Search by ${searchType === "curriculumCode" ? "Code" : "Name"}`}
+            placeholder={`Search by ${
+              searchType === "curriculumCode" ? "Code" : "Name"
+            }`}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={handleKeyPress}
@@ -263,29 +265,17 @@ function CurriculumPage() {
           </Button>
         </div>
 
-        {hasSearched ? (
-          <Table
-            columns={columns}
-            dataSource={filteredCurriculums}
-            rowKey="id"
-            // pagination={{
-            //   pageSize: 10,
-            //   showSizeChanger: true,
-            //   showTotal: (total, range) =>
-            //     `${range[0]}-${range[1]} of ${total} curriculums`,
-            // }}
-            className="border border-gray-200"
-            onRow={() => ({
-              className: "hover:bg-gray-50 transition-colors cursor-pointer",
-            })}
-            scroll={{ x: 1000 }}
-            size="large"
-          />
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            Use the search above to find curriculums
-          </div>
-        )}
+        <Table
+          columns={columns}
+          dataSource={filteredCurriculums}
+          rowKey="id"
+          className=""
+          onRow={() => ({
+            className: "hover:bg-gray-50 transition-colors cursor-pointer",
+          })}
+          scroll={{ x: 100 }}
+          size="large"
+        />
       </div>
     </div>
   );

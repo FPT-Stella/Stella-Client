@@ -27,16 +27,19 @@ const SidebarData: SidebarDataType[] = [
     heading: "Student",
     href: "/manageStudent",
   },
+
   {
     icon: FaPenRuler,
     heading: "Tool",
     href: "/manageTool",
   },
+
   {
-    icon: PiStudentFill,
-    heading: "Major",
-    href: "/manageMajor",
+    icon: MdOutlineMenuBook,
+    heading: "Subject",
+    href: "/manageSubject",
   },
+
   {
     icon: FaBookOpenReader,
     heading: "Curriculum",
@@ -47,11 +50,10 @@ const SidebarData: SidebarDataType[] = [
     heading: "Program",
     href: "/manageProgram",
   },
-
   {
-    icon: MdOutlineMenuBook,
-    heading: "Subject",
-    href: "/manageSubject",
+    icon: PiStudentFill,
+    heading: "Major",
+    href: "/manageMajor",
   },
 ];
 

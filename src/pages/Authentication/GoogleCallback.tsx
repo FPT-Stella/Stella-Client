@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PiStarFourFill } from "react-icons/pi";
+import { Spin } from "antd";
 
 const GoogleCallback = () => {
   const { search } = useLocation();
@@ -41,9 +41,9 @@ const GoogleCallback = () => {
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-black bg-opacity-10">
-      <p className="text-7xl text-blue-400 flex flex-col justify-center items-center">
-        <PiStarFourFill className="animate-spin [animation-duration:3s]" />
-      </p>
+      <div className="h-screen flex items-center justify-center">
+        <Spin size="large" tip="Loading curriculum data..." />
+      </div>
     </div>
   );
 };
