@@ -86,42 +86,42 @@ function CurriculumDetail() {
           <table className="min-w-full border border-gray-200">
             <tbody>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Curriculum ID :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.id}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Curriculum Code :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.curriculumCode}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Program Code :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {program?.programCode || "N/A"}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Curriculum Name:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.curriculumName}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Description:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {JSON.parse(curriculum.description)
                     .split("\n")
                     .map((line: string, index: number) => (
@@ -136,26 +136,26 @@ function CurriculumDetail() {
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Total Credit:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.totalCredit}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Start Year:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.startYear}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   End Year:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {curriculum.endYear}
                 </td>
               </tr>

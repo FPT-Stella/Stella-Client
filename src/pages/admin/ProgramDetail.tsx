@@ -116,42 +116,42 @@ function ProgramDetail() {
           <table className="min-w-full border border-gray-200">
             <tbody>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Program ID :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {program.id}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Program Code :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {program.programCode}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Program Name :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {program.programName}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Major Code:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {major?.majorName || "N/A"}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Description:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black ">
                   {program.description}
                 </td>
               </tr>
