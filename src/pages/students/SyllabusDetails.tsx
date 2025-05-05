@@ -20,6 +20,7 @@ function SyllabusDetails() {
   const navigate = useNavigate();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
+  const [material, setMaterial] = useState<Material[]>([]);
 
   useEffect(() => {
     const fetchSubjectDetails = async () => {
@@ -28,6 +29,9 @@ function SyllabusDetails() {
           console.error("Subject ID is missing");
           return;
         }
+        const dataM = await getMaterialBySubjectId(subjectId);
+        setMaterial(dataM);
+
         const data = await getSubjectByID(subjectId);
         setSubject(data);
       } catch (error) {
@@ -163,7 +167,7 @@ function SyllabusDetails() {
       title: "Link",
       dataIndex: "materialUrl",
       key: "materialUrl",
-      width: "10%",
+      width: 80,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -422,6 +426,19 @@ function SyllabusDetails() {
             />
           )}
         </div>
+        <div className="mt-16">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Material Of Course
+          </h3>
+          <Table
+            columns={columnsMaterial}
+            dataSource={material}
+            rowKey="id"
+            pagination={false}
+            locale={{ emptyText: "No CLOs found for this subject" }}
+          />
+        </div>
+
         <div className="flex justify-end mt-8">
           <Button
             className="bg-[#635BFF] font-medium text-white"

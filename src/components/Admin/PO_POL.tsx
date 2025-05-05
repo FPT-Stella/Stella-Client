@@ -32,7 +32,6 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
         const mappingData = await getMappingPLO(ploId);
         setMapping(mappingData);
 
-        // Gán trước các PO đã mapping (nếu có)
         setSelectedPOIds(mappingData.map((po) => po.id));
       } catch (error) {
         console.error("Failed to fetch PO mapping:", error);
