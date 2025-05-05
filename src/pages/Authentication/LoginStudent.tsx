@@ -6,7 +6,9 @@ const createGoogleURL = () => {
   
   const params = {
     client_id: import.meta.env.VITE_GCP_CLIENT_ID,
-    redirect_uri: import.meta.env.VITE_GCP_REDIRECT_URI,
+    redirect_uri: import.meta.env.MODE === 'development' 
+      ? import.meta.env.VITE_GCP_REDIRECT_URI_DEV 
+      : import.meta.env.VITE_GCP_REDIRECT_URI_PROD,
     response_type: "code",
     scope: [
       "https://www.googleapis.com/auth/userinfo.email",
