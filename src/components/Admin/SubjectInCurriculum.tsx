@@ -246,7 +246,7 @@ function SubjectInCurriculum() {
     <div className="h-full flex flex-col py-10">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8 mb-4">
-        Manage Program Learning Outcomes
+        Subjects In Curriculum
       </div>
 
       <div className="mb-4 flex justify-between">
