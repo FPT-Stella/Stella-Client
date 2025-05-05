@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { IoChatbubbles, IoCloseSharp, IoSend } from "react-icons/io5";
-import { PiStarFourFill } from "react-icons/pi";
+import { FaRobot } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { LuSunMoon } from "react-icons/lu";
 import { FaFilePdf } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
+import { BiPlus } from "react-icons/bi";
+import { TbResize } from "react-icons/tb";
 import jsPDF from "jspdf";
 import { sendChatMessage } from "../../services/Chat";
 import ReactMarkdown from "react-markdown";
@@ -22,15 +23,29 @@ interface ChatHistory {
   messages: ChatMessage[];
 }
 
+interface ChatBoxSize {
+  width: number;
+  height: number;
+}
+
+const DEFAULT_WIDTH = 80; // % of screen width
+const DEFAULT_HEIGHT = 75; // % of screen height
+const MIN_WIDTH = 40; // %
+const MIN_HEIGHT = 50; // %
+const MAX_WIDTH = 95; // %
+const MAX_HEIGHT = 95; // %
+
 function ChatBox() {
   const [isOpen, setIsOpen] = useState(false);
   const [chatHistories, setChatHistories] = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [size, setSize] = useState<ChatBoxSize>({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   // Add greeting message when chat is opened
   useEffect(() => {
@@ -59,12 +74,63 @@ function ChatBox() {
     if (savedHistories) {
       setChatHistories(JSON.parse(savedHistories));
     }
+    
+    // Load saved chat box size if exists
+    const savedSize = localStorage.getItem("chatBoxSize");
+    if (savedSize) {
+      setSize(JSON.parse(savedSize));
+    }
   }, []);
 
   useEffect(() => {
     // Save chat histories to localStorage whenever it changes
     localStorage.setItem("chatHistories", JSON.stringify(chatHistories));
   }, [chatHistories]);
+  
+  useEffect(() => {
+    // Save chat box size to localStorage
+    localStorage.setItem("chatBoxSize", JSON.stringify(size));
+  }, [size]);
+
+  // Handle resizing
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing || !chatBoxRef.current) return;
+      
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      // Calculate new width and height as percentages
+      const newWidth = Math.min(
+        MAX_WIDTH,
+        Math.max(MIN_WIDTH, (e.clientX / windowWidth) * 100)
+      );
+      const newHeight = Math.min(
+        MAX_HEIGHT,
+        Math.max(MIN_HEIGHT, (e.clientY / windowHeight) * 100)
+      );
+      
+      setSize({ width: newWidth, height: newHeight });
+    };
+    
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+    
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
+  const startResizing = () => {
+    setIsResizing(true);
+  };
 
   const createNewChat = () => {
     const newChatId = Date.now().toString();
@@ -194,12 +260,16 @@ function ChatBox() {
     });
     doc.save("chat_history.pdf");
   };
+  
+  const resetSize = () => {
+    setSize({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
+  };
 
   return (
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
+        className="fixed bottom-5 right-5 bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white p-4 rounded-full shadow-lg z-50 hover:from-[#5349FF] hover:to-[#1a9fc0] transition-all"
       >
         {isOpen ? (
           <IoCloseSharp className="text-3xl" />
@@ -209,148 +279,168 @@ function ChatBox() {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-8 w-[60%] h-[70%] bg-white border rounded-lg shadow-lg z-50 flex">
+        <div 
+          ref={chatBoxRef}
+          style={{ 
+            width: `${size.width}%`, 
+            height: `${size.height}%` 
+          }}
+          className="fixed bottom-20 right-8 bg-white border rounded-lg shadow-xl z-50 flex overflow-hidden"
+        >
+          {/* Size Controls */}
+          <div className="absolute top-0 right-0 flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-bl-lg z-10">
+            <button
+              onClick={resetSize}
+              className="p-1 text-gray-500 hover:text-blue-500 transition-colors"
+              title="Khôi phục kích thước mặc định"
+            >
+              <TbResize size={16} />
+            </button>
+            <div 
+              className="w-4 h-4 cursor-nwse-resize bg-gray-200 hover:bg-gray-300 transition-colors"
+              onMouseDown={startResizing}
+              title="Kéo để thay đổi kích thước"
+            ></div>
+          </div>
+
           {/* Sidebar */}
-          <div
-            className={`w-1/4 border-r ${
-              darkMode
-                ? "bg-gray-800 border-gray-700"
-                : "bg-gray-50 border-gray-200"
-            }`}
-          >
-            <div className="p-3">
+          <div className="w-[260px] bg-[#f9f9f9] border-r border-gray-200 flex flex-col">
+            <div className="p-3 border-b border-gray-200">
               <button
                 onClick={createNewChat}
-                className="w-full py-1.5 px-3 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm"
+                className="w-full py-2 px-3 rounded bg-[#635BFF] text-white hover:bg-[#5349FF] transition-colors text-sm font-medium flex items-center justify-center gap-2"
               >
-                + New Chat
+                <BiPlus className="text-lg" /> Cuộc trò chuyện mới
               </button>
             </div>
-            <div className="overflow-y-auto h-[calc(100%-60px)]">
-              {chatHistories.map((chat) => (
-                <div
-                  key={chat.id}
-                  className={`flex justify-between items-center p-2 cursor-pointer hover:bg-gray-200 ${
-                    currentChatId === chat.id ? "bg-gray-200" : ""
-                  }`}
-                >
-                  <div
-                    className="flex-1 truncate text-sm"
-                    onClick={() => selectChat(chat.id)}
-                  >
-                    {chat.title}
-                  </div>
-                  <button
-                    onClick={() => deleteChat(chat.id)}
-                    className="text-gray-500 hover:text-red-500"
-                  >
-                    <IoTrashOutline />
-                  </button>
+            <div className="overflow-y-auto flex-1 py-2">
+              {chatHistories.length === 0 ? (
+                <div className="text-center text-gray-500 py-4 text-sm">
+                  Chưa có cuộc trò chuyện nào
                 </div>
-              ))}
+              ) : (
+                chatHistories.map((chat) => (
+                  <div
+                    key={chat.id}
+                    className={`flex justify-between items-center px-3 py-2 cursor-pointer hover:bg-gray-200 mx-2 rounded-md ${
+                      currentChatId === chat.id ? "bg-gray-200" : ""
+                    }`}
+                  >
+                    <div
+                      className="flex-1 truncate text-sm font-medium"
+                      onClick={() => selectChat(chat.id)}
+                    >
+                      {chat.title}
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteChat(chat.id);
+                      }}
+                      className="text-gray-500 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+                    >
+                      <IoTrashOutline />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="p-3 border-t border-gray-200">
+              <button
+                onClick={exportPDF}
+                className="w-full py-2 px-3 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+              >
+                <FaFilePdf /> Xuất PDF
+              </button>
             </div>
           </div>
 
           {/* Main Chat Area */}
-          <div
-            className={`flex-1 flex flex-col ${
-              darkMode ? "bg-gray-900" : "bg-white"
-            }`}
-          >
-            {/* Header */}
-            <div className="flex justify-between items-center p-2 border-b">
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className={`px-3 py-1 rounded flex items-center gap-1 text-sm ${
-                  darkMode ? "text-white" : "text-gray-700"
-                }`}
-              >
-                <LuSunMoon className="text-lg" />
-                {darkMode ? "Light Mode" : "Dark Mode"}
-              </button>
-              <button
-                onClick={exportPDF}
-                className="px-3 py-1 rounded flex items-center gap-1 text-gray-700 text-sm"
-              >
-                <FaFilePdf /> Export PDF
-              </button>
-            </div>
-
+          <div className="flex-1 flex flex-col bg-white">
             {/* Messages */}
-            <div
-              className={`flex-1 overflow-y-auto p-3 ${
-                darkMode ? "bg-gray-800" : "bg-gray-50"
-              }`}
-            >
-              {messages.map((msg) => (
+            <div className="flex-1 overflow-y-auto">
+              {messages.map((msg, index) => (
                 <div
                   key={msg.id}
-                  className={`mb-4 ${msg.sender === "user" ? "ml-auto" : ""}`}
+                  className={`${msg.sender === "user" ? "bg-white" : "bg-[#f9f9f9]"}`}
                 >
-                  <div
-                    className={`flex items-start gap-2 max-w-3xl ${
-                      msg.sender === "user" ? "flex-row-reverse" : ""
-                    }`}
-                  >
-                    <div
-                      className={`p-1.5 rounded-full ${
-                        msg.sender === "user"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200"
-                      }`}
-                    >
-                      {msg.sender === "user" ? (
-                        <FaUser className="text-sm" />
-                      ) : (
-                        <PiStarFourFill className="text-sm" />
-                      )}
-                    </div>
-                    <div
-                      className={`prose max-w-none p-3 rounded-lg text-sm ${
-                        msg.sender === "user"
-                          ? "bg-blue-600 text-white"
-                          : darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-white"
-                      }`}
-                    >
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  <div className="max-w-4xl mx-auto py-5 px-4">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                          msg.sender === "user"
+                            ? "bg-gray-300 text-gray-700"
+                            : "bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] text-white"
+                        }`}
+                      >
+                        {msg.sender === "user" ? (
+                          <FaUser className="text-sm" />
+                        ) : (
+                          <FaRobot className="text-sm" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-sm mb-1">
+                          {msg.sender === "user" ? "Bạn" : "AI Assistant"}
+                        </div>
+                        <div className="prose max-w-none text-sm">
+                          <ReactMarkdown>{msg.text}</ReactMarkdown>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
               {loading && (
-                <div className="flex items-center gap-2 text-gray-500 text-sm">
-                  <PiStarFourFill className="animate-spin" />
-                  <span>AI is thinking...</span>
+                <div className="bg-[#f9f9f9] py-5">
+                  <div className="max-w-4xl mx-auto px-4 flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] flex items-center justify-center text-white">
+                      <FaRobot className="text-sm" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-sm mb-1">AI Assistant</div>
+                      <div className="text-gray-500 text-sm flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse delay-150"></div>
+                        <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse delay-300"></div>
+                        <span className="ml-1">Đang suy nghĩ...</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
-            <div className="p-2 border-t">
-              <div className="flex gap-2">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && !e.shiftKey && sendMessage()
-                  }
-                  placeholder="Type your message..."
-                  className={`flex-1 p-2 rounded-lg border text-sm ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600"
-                      : "bg-white border-gray-300"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={loading}
-                  className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <IoSend className="text-lg" />
-                </button>
+            <div className="p-4 border-t border-gray-200 bg-white">
+              <div className="max-w-4xl mx-auto">
+                <div className="relative">
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                      }
+                    }}
+                    placeholder="Nhập tin nhắn của bạn..."
+                    rows={1}
+                    className="w-full p-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#635BFF] focus:border-transparent resize-none text-sm bg-white"
+                    style={{ minHeight: "50px", maxHeight: "150px" }}
+                  />
+                  <button
+                    onClick={sendMessage}
+                    disabled={loading || !input.trim()}
+                    className="absolute right-3 bottom-2.5 p-2 text-white rounded-md bg-gradient-to-tl from-[#635BFF] to-[#2bb8db] hover:from-[#5349FF] hover:to-[#1a9fc0] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <IoSend className="text-lg" />
+                  </button>
+                </div>
+                <div className="text-xs text-gray-500 mt-2 text-center">
+                  AI Có thể tạo ra thông tin không chính xác hoặc gây hiểu lầm
+                </div>
               </div>
             </div>
           </div>
