@@ -21,3 +21,13 @@ export interface User {
   fullName: string;
   email: string;
 }
+
+export interface Dashboard {
+  totalStudents: number;
+  totalSubjects: number;
+  totalPrograms: number;
+  totalMajors: number;
+  totalCurriculums: number;
+  totalCLOs: number;
+  totalPLOs: number;
+}
