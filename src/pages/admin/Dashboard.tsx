@@ -1,8 +1,8 @@
-import { getstatistics, getBarChart } from "../../services/Dashboard";
+import { getstatistics } from "../../services/Dashboard";
 import {
   Dashboard,
-  StudentStatistics,
-  StudentByMajor,
+  // StudentStatistics,
+  // StudentByMajor,
 } from "../../models/User";
 import { useEffect, useState } from "react";
 import { Card, Spin } from "antd";
