@@ -1,14 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Spin } from "antd";
-import { getSubjectByID } from "../../services/Subject";
+import { Button, Spin, Table } from "antd";
+import { getSubjectByID, getSubjectTools } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
+import { getCLOBySubjectId } from "../../services/CLO";
+import { CLO } from "../../models/CLO";
+import { Tool } from "../../models/Tool";
+import { getMaterialBySubjectId } from "../../services/Material";
+import { Material } from "../../models/Material";
+import { FiLink } from "react-icons/fi";
+import { getToolById } from "../../services/Tool";
 
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
+  const [clos, setCLOs] = useState<CLO[]>([]);
+  const [material, setMaterial] = useState<Material[]>([]);
+  const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [closLoading, setCLOsLoading] = useState<boolean>(true);
+  const [, setMaterialsLoading] = useState<boolean>(true);
+  const [toolsLoading, setToolsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchSubjectDetails = async () => {
@@ -17,6 +32,9 @@ function SyllabusDetails() {
           console.error("Subject ID is missing");
           return;
         }
+        const dataM = await getMaterialBySubjectId(subjectId);
+        setMaterial(dataM);
+
         const data = await getSubjectByID(subjectId);
         setSubject(data);
       } catch (error) {
@@ -26,12 +44,237 @@ function SyllabusDetails() {
       }
     };
 
+    const fetchCLOs = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+        const data = await getCLOBySubjectId(subjectId);
+        setCLOs(data);
+      } catch (error) {
+        console.error("Failed to fetch CLOs:", error);
+      } finally {
+        setCLOsLoading(false);
+      }
+    };
+    const fetchMaterials = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+        const data = await getMaterialBySubjectId(subjectId);
+        setMaterial(data);
+      } catch (error) {
+        console.error("Failed to fetch materials:", error);
+      } finally {
+        setMaterialsLoading(false);
+      }
+    };
+
+    const fetchTools = async () => {
+      try {
+        if (!subjectId) {
+          console.error("Subject ID is missing");
+          return;
+        }
+
+        // First get all tool IDs for this subject
+        const toolIds = await getSubjectTools(subjectId);
+
+        // Then fetch details for each tool
+        const toolPromises = toolIds.map((toolId: string) =>
+          getToolById(toolId),
+        );
+        const toolsData = await Promise.all(toolPromises);
+
+        setTools(toolsData);
+      } catch (error) {
+        console.error("Failed to fetch tools:", error);
+      } finally {
+        setToolsLoading(false);
+      }
+    };
+
     fetchSubjectDetails();
+    fetchCLOs();
+    fetchMaterials();
+    fetchTools();
   }, [subjectId]);
 
   const handleBack = () => {
     navigate("/syllabus");
   };
+
+  // Function to format CLO ID (e.g., CLO1, CLO2, etc.)
+  const formatCLOId = (_id: string, index: number) => {
+    return `CLO${index + 1}`;
+  };
+
+  // Function to render JSON content with line breaks
+  const renderJsonContent = (content: string) => {
+    try {
+      const parsedContent = JSON.parse(content);
+      return (
+        <div>
+          {parsedContent.split("\n").map((line: string, index: number) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== parsedContent.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    } catch (e) {
+      return <div>{content}</div>;
+    }
+  };
+
+  // Format description for materials
+  const formatMaterialDescription = (description: string) => {
+    try {
+      return (
+        <div className="whitespace-pre-line">
+          {description.split("\n").map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== description.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    } catch (e) {
+      return <div>{description}</div>;
+    }
+  };
+  // Tool table columns
+  const toolColumns = [
+    {
+      title: "Tool Name",
+      dataIndex: "toolName",
+      key: "toolName",
+      width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "75%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (text: string) => renderJsonContent(text),
+    },
+  ];
+
+  // Materials table columns
+  const materialColumns = [
+    {
+      title: "Name",
+      dataIndex: "materialName",
+      key: "materialName",
+      width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Type",
+      dataIndex: "materialType",
+      key: "materialType",
+      width: 100,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "45%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (text: string) => formatMaterialDescription(text),
+    },
+    {
+      title: "Link",
+      dataIndex: "materialUrl",
+      key: "materialUrl",
+      width: 80,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (url: string) =>
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <FiLink className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl" />
+          </a>
+        ) : (
+          "-"
+        ),
+    },
+  ];
+
+  // CLO table columns
+  const cloColumns = [
+    {
+      title: "CLO ID",
+      key: "cloId",
+      width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (_: any, _record: any, index: number) => (
+        <div className="font-medium">{formatCLOId(_record.id, index)}</div>
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "details",
+      key: "description",
+      width: "80%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+  ];
 
   if (loading) {
     return (
@@ -56,7 +299,7 @@ function SyllabusDetails() {
         </span>
         <span className="text-[#2A384D]">{subject.subjectCode}</span>
       </div>
-      <div className="flex-1 bg-white shadow-md rounded-md py-5 px-10">
+      <div className="flex-1 bg-white  rounded-md py-5 px-10">
         <h2 className="text-lg w-fit mx-auto font-bold text-gray-600 my-4 border-b-2 border-gray-600">
           Syllabus: {subject.subjectCode} - {subject.subjectName}
         </h2>
@@ -197,6 +440,62 @@ function SyllabusDetails() {
             </tbody>
           </table>
         </div>
+        {/* Tools Table Section - Add this before the Materials table */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Learning Tools
+          </h3>
+
+          {toolsLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spin size="small" tip="Loading tools..." />
+            </div>
+          ) : (
+            <Table
+              columns={toolColumns}
+              dataSource={tools}
+              rowKey="id"
+              pagination={false}
+              className="border-none"
+              locale={{ emptyText: "No tools found for this subject" }}
+            />
+          )}
+        </div>
+
+        {/* CLO Table Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Course Learning Outcomes (CLOs)
+          </h3>
+
+          {closLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spin size="small" tip="Loading CLOs..." />
+            </div>
+          ) : (
+            <Table
+              columns={cloColumns}
+              dataSource={clos}
+              rowKey="id"
+              pagination={false}
+              className="border border-gray-200"
+              locale={{ emptyText: "No CLOs found for this subject" }}
+            />
+          )}
+        </div>
+        <div className="mt-16">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Material Of Course
+          </h3>
+          <Table
+            columns={materialColumns}
+            dataSource={material}
+            rowKey="id"
+            pagination={false}
+            locale={{ emptyText: "No CLOs found for this subject" }}
+          />
+        </div>
+
         <div className="flex justify-end mt-8">
           <Button
             className="bg-[#635BFF] font-medium text-white"
@@ -209,24 +508,4 @@ function SyllabusDetails() {
     </div>
   );
 }
-
-// Helper function to render JSON content with line breaks
-function renderJsonContent(content: string) {
-  try {
-    const parsedContent = JSON.parse(content);
-    return (
-      <>
-        {parsedContent.split("\n").map((line: string, index: number) => (
-          <React.Fragment key={index}>
-            {line}
-            {index !== parsedContent.split("\n").length - 1 && <br />}
-          </React.Fragment>
-        ))}
-      </>
-    );
-  } catch (e) {
-    return content;
-  }
-}
-
 export default SyllabusDetails;

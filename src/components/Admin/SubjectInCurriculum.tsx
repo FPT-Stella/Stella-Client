@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import {
   getSubjectInCurriculumByCurriID,
-  getSubjectByID,
   getSubject,
   addSubjectInCurriculum,
   deleteSubjectInCurriculum,
 } from "../../services/Subject";
-import { Subject, CreateSjCurriculum } from "../../models/Subject";
+import { SjCurriculum, Subject } from "../../models/Subject";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -29,8 +28,8 @@ function SubjectInCurriculum() {
   type CheckboxValueType = string | number;
 
   const { curriculumId } = useParams<{ curriculumId: string }>();
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [filteredsubject, setFilteredSubject] = useState<Subject[]>([]);
+  const [subjects, setSubjects] = useState<SjCurriculum[]>([]);
+  const [filteredsubject, setFilteredSubject] = useState<SjCurriculum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
 
@@ -38,7 +37,9 @@ function SubjectInCurriculum() {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [subjectToDelete, setSubjectToDelete] = useState<Subject | null>(null);
+  const [subjectToDelete, setSubjectToDelete] = useState<SjCurriculum | null>(
+    null
+  );
 
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
@@ -50,17 +51,9 @@ function SubjectInCurriculum() {
         const subjectRefs = await getSubjectInCurriculumByCurriID(
           curriculumId!
         );
-
-        const detailedSubjects: Subject[] = await Promise.all(
-          subjectRefs.map((ref: CreateSjCurriculum) =>
-            getSubjectByID(ref.subjectId)
-          )
+        const sortedSubjects = subjectRefs.sort(
+          (a: { termNo: number }, b: { termNo: number }) => a.termNo - b.termNo
         );
-
-        const sortedSubjects = detailedSubjects.sort(
-          (a, b) => a.termNo - b.termNo
-        );
-
         setSubjects(sortedSubjects);
         setFilteredSubject(sortedSubjects);
       } catch (error) {
@@ -119,12 +112,9 @@ function SubjectInCurriculum() {
       setSelectedSubjects([]);
 
       const subjectRefs = await getSubjectInCurriculumByCurriID(curriculumId!);
-      const detailedSubjects = await Promise.all(
-        subjectRefs.map((ref: CreateSjCurriculum) =>
-          getSubjectByID(ref.subjectId)
-        )
+      const sorted = subjectRefs.sort(
+        (a: { termNo: number }, b: { termNo: number }) => a.termNo - b.termNo
       );
-      const sorted = detailedSubjects.sort((a, b) => a.termNo - b.termNo);
       setSubjects(sorted);
       setFilteredSubject(sorted);
     } catch (error) {
@@ -219,7 +209,7 @@ function SubjectInCurriculum() {
       title: "Action",
       key: "action",
       width: 80,
-      render: (record: Subject) => {
+      render: (record: SjCurriculum) => {
         const items: MenuProps["items"] = [
           {
             key: "delete",
@@ -285,7 +275,6 @@ function SubjectInCurriculum() {
         pagination={{ pageSize: 10 }}
       />
 
-      {/* Modal Thêm Môn */}
       <Modal
         title="Chọn môn học để thêm vào chương trình"
         open={isAddModalOpen}
@@ -302,7 +291,9 @@ function SubjectInCurriculum() {
         >
           <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto">
             {allSubjects.map((subject) => {
-              const isDisabled = subjects.some((s) => s.id === subject.id);
+              const isDisabled = subjects.some(
+                (s) => s.subjectId === subject.id
+              );
               return (
                 <Checkbox
                   key={subject.id}
@@ -317,17 +308,15 @@ function SubjectInCurriculum() {
         </Checkbox.Group>
       </Modal>
 
-      {/* Modal Xác nhận xoá */}
       <Modal
         open={isDeleteModalOpen}
         onOk={confirmDeleteSubject}
         onCancel={() => setIsDeleteModalOpen(false)}
-        okText="Xoá"
-        cancelText="Hủy"
-        title="Xác nhận xoá"
+        okText="Delete"
+        cancelText="Cancel"
+        title="Delete"
       >
-        Do you want deletedelete
-        <strong>{subjectToDelete?.subjectName}</strong> ?
+        Do you want delete <strong>{subjectToDelete?.subjectName}</strong>?
       </Modal>
     </div>
   );

@@ -4,7 +4,6 @@ import { MappingPLO, PO, PoPloMapping } from "../../models/PO_PLO";
 import { RiEdit2Fill } from "react-icons/ri";
 import { getCurriculumById } from "../../services/Curriculum";
 import { useParams } from "react-router-dom";
-import { Curriculum } from "../../models/Curriculum";
 import { getPOByProgramId } from "../../services/PO_PLO";
 import { Modal, Checkbox } from "antd";
 import { ToastContainer } from "react-toastify";
@@ -18,7 +17,6 @@ interface POMappingListProps {
 const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
   const [mapping, setMapping] = useState<MappingPLO[]>([]);
   const { curriculumId } = useParams<{ curriculumId: string }>();
-  const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [pos, setPos] = useState<PO[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPOIds, setSelectedPOIds] = useState<string[]>([]);
@@ -27,7 +25,6 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
     const fetchMapping = async () => {
       try {
         const curriculumData = await getCurriculumById(curriculumId!);
-        setCurriculum(curriculumData);
 
         const poData = await getPOByProgramId(curriculumData.programId);
         setPos(poData);
@@ -35,7 +32,6 @@ const POMappingList: React.FC<POMappingListProps> = ({ ploId }) => {
         const mappingData = await getMappingPLO(ploId);
         setMapping(mappingData);
 
-        // Gán trước các PO đã mapping (nếu có)
         setSelectedPOIds(mappingData.map((po) => po.id));
       } catch (error) {
         console.error("Failed to fetch PO mapping:", error);

@@ -6,18 +6,19 @@ import { Subject } from "../../models/Subject";
 import { Link } from "react-router-dom";
 
 function Syllabus() {
-  const [subjects, setSubjects] = useState<Subject[]>([]);
+  // const [subjects, setSubjects] = useState<Subject[]>([]);
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
   const [searchField, setSearchField] = useState<string>("subjectCode");
   const [dataFetched, setDataFetched] = useState<boolean>(false);
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   const fetchSubjects = async () => {
     try {
       setLoading(true);
       const data = await getSubject();
-      setSubjects(data);
 
       if (!searchText.trim()) {
         setFilteredSubjects(data);
@@ -53,18 +54,39 @@ function Syllabus() {
       dataIndex: "subjectCode",
       key: "subjectCode",
       width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Subject Name",
       dataIndex: "subjectName",
       key: "subjectName",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Topic",
       dataIndex: "topic",
       key: "topic",
       width: "40%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: Subject) => {
         try {
           const parsedTopic = JSON.parse(text);
@@ -93,6 +115,13 @@ function Syllabus() {
       dataIndex: "insDate",
       key: "insDate",
       width: "20%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (date: Date) => new Date(date).toLocaleDateString(),
     },
   ];
@@ -102,7 +131,7 @@ function Syllabus() {
       <div className="text-2xl font-semibold text-center text-[#2A384D] h-12 mb-6">
         Syllabus Management
       </div>
-      <div className="flex-1 bg-white shadow-md rounded-md p-5">
+      <div className="flex-1 bg-white  rounded-md p-5">
         <div className="mb-4 flex gap-4">
           <Select
             defaultValue="subjectCode"
@@ -112,17 +141,21 @@ function Syllabus() {
               { value: "subjectCode", label: "Search by Code" },
               { value: "subjectName", label: "Search by Name" },
             ]}
+            className="rounded-none"
           />
           <Input
-            placeholder={`Search by ${searchField === "subjectCode" ? "Code" : "Name"}`}
+            placeholder={`Search by ${
+              searchField === "subjectCode" ? "Code" : "Name"
+            }`}
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 300 }}
+            className="rounded-none"
           />
           <Button
             type="primary"
             onClick={fetchSubjects}
-            className="bg-blue-500"
+            className="bg-blue-500 rounded-none"
           >
             Search
           </Button>

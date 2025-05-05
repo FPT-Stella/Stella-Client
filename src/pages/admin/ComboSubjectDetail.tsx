@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Spin, Modal, Form, Input } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ import {
   updateComboSubject,
 } from "../../services/Subject";
 import { AxiosError } from "axios";
-import SubjectComboSubject from "../../components/Admin/subjectComboSubject";
+import SubjectComboSubject from "../../components/Admin/SubjectComboSubject";
 import { ComboSubject, UpdateComboSubject } from "../../models/Subject";
 function ComboSubjectDetail() {
   const { programId } = useParams<{ programId: string }>();

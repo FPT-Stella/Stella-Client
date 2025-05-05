@@ -24,15 +24,18 @@ import Subject from "../pages/admin/Subject";
 import PO from "../components/Admin/PO";
 import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
-import SubjectDetail from "../pages/admin/SubjectDetail";
+// import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
 import ProgramDetail from "../pages/admin/ProgramDetail";
 import ComboSubjectDetail from "../pages/admin/ComboSubjectDetail";
 import AddSubject from "../pages/admin/AddSubject";
 import EditSubject from "../pages/admin/EditSubject";
-
+import Tool from "../pages/admin/Tool";
 import SyllabusDetails from "../pages/students/SyllabusDetails";
-
+import SubjectCombos from "../pages/students/SubjectCombo";
+import ComboSubjects from "../pages/students/ComboSubjects";
+import ToolDetail from "../pages/admin/ToolDetail";
+import SubjectDetailAD from "../pages/admin/SubjectDetailAD";
 function AppRouter() {
   return (
     <div>
@@ -54,7 +57,11 @@ function AppRouter() {
             <Route
               path="/curriculum"
               element={
-                <PrivateRoute element={Curriculum} allowedRoles={["Student"]} />
+                <PrivateRoute
+                  element={Curriculum}
+                  allowedRoles={["Student"]}
+                  requiresProfile={true}
+                />
               }
             />
 
@@ -64,13 +71,18 @@ function AppRouter() {
                 <PrivateRoute
                   element={CurriculumDetailStudent}
                   allowedRoles={["Student"]}
+                  requiresProfile={true}
                 />
               }
             />
             <Route
               path="/Syllabus"
               element={
-                <PrivateRoute element={Syllabus} allowedRoles={["Student"]} />
+                <PrivateRoute
+                  element={Syllabus}
+                  allowedRoles={["Student"]}
+                  requiresProfile={true}
+                />
               }
             />
             <Route
@@ -87,8 +99,16 @@ function AppRouter() {
               path="/program/:programId/curriculum/:curriculumId/outcomes"
               element={<POStudent />}
             />
-          </Route>
+            <Route
+              path="/program/:programId/combos"
+              element={<SubjectCombos />}
+            />
 
+            <Route
+              path="/program/:programId/combos/:comboId/subjects"
+              element={<ComboSubjects />}
+            />
+          </Route>
           {/* ADMIN */}
 
           <Route element={<LayoutAdmin />}>
@@ -120,6 +140,16 @@ function AppRouter() {
               }
             />
             <Route
+              path="/manageTool"
+              element={<PrivateRoute element={Tool} allowedRoles={["Admin"]} />}
+            />
+            <Route
+              path="/manageTool/:toolId/"
+              element={
+                <PrivateRoute element={ToolDetail} allowedRoles={["Admin"]} />
+              }
+            />
+            <Route
               path="/manageCurriculum/:curriculumId/"
               element={
                 <PrivateRoute
@@ -132,7 +162,7 @@ function AppRouter() {
               path="/manageSubject/:subjectId/"
               element={
                 <PrivateRoute
-                  element={SubjectDetail}
+                  element={SubjectDetailAD}
                   allowedRoles={["Admin"]}
                 />
               }

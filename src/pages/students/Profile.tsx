@@ -12,6 +12,7 @@ import { Student } from "../../models/User";
 import { Major } from "../../models/Major";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/bg2.png";
 
 function Profile() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function Profile() {
         setIsNewStudent(isNewStudent);
         localStorage.setItem(
           "profileCompleted",
-          isNewStudent ? "false" : "true",
+          isNewStudent ? "false" : "true"
         );
 
         // Set form values if student exists and has a studentCode
@@ -104,7 +105,7 @@ function Profile() {
         // Handle API error responses
         if (error.response?.data?.details === "StudentCode already exists") {
           toast.error(
-            "Student code is already in use. Please use a different one.",
+            "Student code is already in use. Please use a different one."
           );
           // Optionally clear the student code field
           form.setFields([
@@ -139,74 +140,79 @@ function Profile() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="w-full flex ">
       <ToastContainer /> {/* Add ToastContainer at the top level */}
-      <h1 className="text-2xl font-bold mb-6">
-        {isNewStudent ? "Complete Your Profile" : "Update Profile"}
-      </h1>
-      <Form form={form} layout="vertical" onFinish={handleUpdateProfile}>
-        <Form.Item
-          label="Student Code"
-          name="studentCode"
-          rules={[
-            { required: true, message: "Please input your student code!" },
-            {
-              pattern: /^[A-Za-z0-9]+$/,
-              message: "Student code can only contain letters and numbers!",
-            },
-          ]}
-        >
-          <Input disabled={!isNewStudent} />
-        </Form.Item>
-
-        <Form.Item
-          label="Phone"
-          name="phone"
-          rules={[
-            { required: true, message: "Please input your phone number!" },
-            {
-              pattern: /^[0-9]+$/,
-              message: "Phone number can only contain numbers!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Address"
-          name="address"
-          rules={[{ required: true, message: "Please input your address!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Major"
-          name="majorId"
-          rules={[{ required: true, message: "Please select your major!" }]}
-        >
-          <Select>
-            {majors.map((major) => (
-              <Select.Option key={major.id} value={major.id}>
-                {major.majorName}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500"
-            loading={submitting}
-            disabled={submitting}
+      <div className="w-1/2">
+        <img src={logo} alt="logo" className="w-full" />
+      </div>
+      <div className="flex-1 pr-28 mt-20">
+        <h1 className="text-3xl font-bold mb-6">
+          {isNewStudent ? "Complete Your Profile" : "Update Profile"}
+        </h1>
+        <Form form={form} layout="vertical" onFinish={handleUpdateProfile}>
+          <Form.Item
+            label={<span className="text-lg font-medium">Student Code</span>}
+            name="studentCode"
+            rules={[
+              { required: true, message: "Please input your student code!" },
+              {
+                pattern: /^[A-Za-z0-9]+$/,
+                message: "Student code can only contain letters and numbers!",
+              },
+            ]}
           >
-            {isNewStudent ? "Complete Profile" : "Update Profile"}
-          </Button>
-        </Form.Item>
-      </Form>
+            <Input disabled={!isNewStudent} />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-lg font-medium">Phone</span>}
+            name="phone"
+            rules={[
+              { required: true, message: "Please input your phone number!" },
+              {
+                pattern: /^[0-9]+$/,
+                message: "Phone number can only contain numbers!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-lg font-medium">Address</span>}
+            name="address"
+            rules={[{ required: true, message: "Please input your address!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-lg font-medium">Major</span>}
+            name="majorId"
+            rules={[{ required: true, message: "Please select your major!" }]}
+          >
+            <Select>
+              {majors.map((major) => (
+                <Select.Option key={major.id} value={major.id}>
+                  {major.majorName}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-[#635BFF] w-full text-white font-semibold py-5"
+              loading={submitting}
+              disabled={submitting}
+            >
+              {isNewStudent ? "Complete Profile" : "Update Profile"}
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 }

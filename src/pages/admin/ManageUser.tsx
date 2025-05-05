@@ -61,11 +61,11 @@ function ManageUser() {
       const data = await getAllStudents();
       setStudents(data);
 
-      toast.success("Major deleted successfully!");
+      toast.success("Student deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete major:", error);
-      toast.error("Failed to delete major.");
+      console.error("Failed to delete student:", error);
+      toast.error("Failed to delete student.");
     } finally {
       setLoading(false);
     }

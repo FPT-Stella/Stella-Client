@@ -71,3 +71,10 @@ export interface CreateSjCurriculum {
   subjectId: string;
   curriculumId: string;
 }
+export interface SjCurriculum {
+  subjectId: string;
+  curriculumId: string;
+  subjectCode: string;
+  subjectName: string;
+  id: string;
+}

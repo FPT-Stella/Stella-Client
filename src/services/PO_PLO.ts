@@ -157,9 +157,9 @@ export const addMapping = async (data: MappingData) => {
     throw error;
   }
 };
-export const getMappingPLO = async (poId: string): Promise<MappingPLO[]> => {
+export const getMappingPLO = async (ploId: string): Promise<MappingPLO[]> => {
   try {
-    const response = await rootApi.get(`/PO_PLO_Mapping/po/${poId}`);
+    const response = await rootApi.get(`/PO_PLO_Mapping/po/${ploId}`);
     return response.data; 
   } catch (error) {
     console.error("Error fetching mapping PLO:", error);

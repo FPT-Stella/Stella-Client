@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Dropdown, Select } from "antd";
 import { MdOutlineMoreVert } from "react-icons/md";
@@ -97,7 +96,7 @@ function ManageSubjects() {
       }),
     },
     {
-      title: "subjectName",
+      title: "Name",
       dataIndex: "subjectName",
       key: "subjectName",
 
@@ -110,9 +109,11 @@ function ManageSubjects() {
       }),
     },
     {
-      title: "subjectDescription",
+      title: "Description",
       dataIndex: "subjectDescription",
       key: "subjectDescription",
+      render: (text: string) =>
+        text?.replace(/^"|"$/g, "").replace(/\n/g, "").trim(),
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -122,7 +123,7 @@ function ManageSubjects() {
       }),
     },
     {
-      title: " credits",
+      title: "Credits",
       dataIndex: "credits",
       key: "credits",
       onHeaderCell: () => ({
@@ -179,14 +180,14 @@ function ManageSubjects() {
   ];
 
   return (
-    <div className="h-full flex flex-col px-10 py-5">
+    <div className="min-h-[88vh] flex flex-col px-10 py-5">
       <ToastContainer />
-      <div className="text-lg font-semibold text-[#2A384D] h-8">
+      <div className="text-lg font-semibold text-[#2A384D] h-8 mb-4">
         Manage Subjects
       </div>
       <div className="flex-1 bg-white shadow-md rounded-md p-5">
         <div className="mb-4 flex justify-between">
-          <div className="flex gap-4">
+          <div className="flex gap-4 my-5">
             <Select
               defaultValue="subjectCode"
               style={{ width: 150 }}
@@ -223,7 +224,7 @@ function ManageSubjects() {
             spinning: loading,
             tip: "Loading...",
           }}
-          pagination={{ pageSize: 8 }}
+          pagination={{ pageSize: 10 }}
         />
       </div>
 

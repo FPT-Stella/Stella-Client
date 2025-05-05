@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Spin, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { getCurriculumById } from "../../services/Curriculum";
 import { getProgramById } from "../../services/Program";
 import { getPloByCurriculum } from "../../services/PO_PLO";
-import { getSubjectInCurriculum } from "../../services/Subject";
+import { getSubjectInCurriculumByCurriID } from "../../services/Subject";
 import { getSubjectByID } from "../../services/Subject";
-import { DescriptionFormatter } from "../../components/Student/DescriptionFormatter";
 import { Curriculum } from "../../models/Curriculum";
 import { Program } from "../../models/Program";
 import { PLO } from "../../models/PO_PLO";
 import { Subject } from "../../models/Subject";
+import { SubjectInCurriculum } from "../../models/Curriculum";
 import { Link } from "react-router-dom";
 
 function CurriculumDetailStudent() {
@@ -23,6 +23,8 @@ function CurriculumDetailStudent() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [subjectsLoading, setSubjectsLoading] = useState<boolean>(true);
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,10 +59,10 @@ function CurriculumDetailStudent() {
 
         setSubjectsLoading(true);
         // Get subject IDs in curriculum
-        const subjectIds = await getSubjectInCurriculum(curriculumId);
+        const subjectIds = await getSubjectInCurriculumByCurriID(curriculumId);
 
         // Fetch each subject's details
-        const subjectPromises = subjectIds.map((item: any) =>
+        const subjectPromises = subjectIds.map((item: SubjectInCurriculum) =>
           getSubjectByID(item.subjectId)
         );
 
@@ -85,12 +87,26 @@ function CurriculumDetailStudent() {
       key: "ploName",
       width: "30%",
       className: "font-medium",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       width: "70%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
@@ -100,6 +116,13 @@ function CurriculumDetailStudent() {
       dataIndex: "subjectCode",
       key: "subjectCode",
       width: "15%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       sorter: (a, b) => a.subjectCode.localeCompare(b.subjectCode),
     },
     {
@@ -107,6 +130,13 @@ function CurriculumDetailStudent() {
       dataIndex: "subjectName",
       key: "subjectName",
       width: "40%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: Subject) => (
         <Link
           to={`/syllabus/${record.id}`}
@@ -122,6 +152,13 @@ function CurriculumDetailStudent() {
       key: "termNo",
       width: "10%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       sorter: (a, b) => a.termNo - b.termNo,
     },
     {
@@ -130,18 +167,37 @@ function CurriculumDetailStudent() {
       key: "credits",
       width: "10%",
       align: "center",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Prerequisite",
       dataIndex: "prerequisiteName",
       key: "prerequisiteName",
       width: "25%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
   const handleViewPO = () => {
     if (program) {
       navigate(`/program/${program.id}/curriculum/${curriculumId}/outcomes`);
+    }
+  };
+  const handleViewCombo = () => {
+    if (program) {
+      navigate(`/program/${program.id}/combos`);
     }
   };
 
@@ -160,14 +216,14 @@ function CurriculumDetailStudent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="my-12 mx-4 md:mx-8 lg:mx-16">
       {/* Curriculum Header */}
       <div className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Curriculum Details
       </div>
 
       {/* Curriculum Information Card */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <table className="min-w-full border border-gray-200">
           <tbody>
             <tr>
@@ -177,7 +233,7 @@ function CurriculumDetailStudent() {
               <td className="py-4 px-6 border">{curriculum.curriculumCode}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 font-medium w-48 border bg-[#f0f5ff] text-[#1d39c4]">
                 Program
               </td>
               <td className="py-4 px-6 border">
@@ -185,27 +241,36 @@ function CurriculumDetailStudent() {
               </td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Curriculum Name
               </td>
               <td className="py-4 px-6 border">{curriculum.curriculumName}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border align-top">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border align-top">
                 Description
               </td>
               <td className="py-4 px-6 border">
-                <DescriptionFormatter description={curriculum.description} />
+                {JSON.parse(curriculum.description)
+                  .split("\n")
+                  .map((line: string, index: number) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index !==
+                        JSON.parse(curriculum.description).split("\n").length -
+                          1 && <br />}
+                    </React.Fragment>
+                  ))}
               </td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Total Credits
               </td>
               <td className="py-4 px-6 border">{curriculum.totalCredit}</td>
             </tr>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6 bg-[#f0f5ff] text-[#1d39c4] font-medium w-48 border">
                 Duration
               </td>
               <td className="py-4 px-6 border">
@@ -215,7 +280,7 @@ function CurriculumDetailStudent() {
           </tbody>
         </table>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-5">
           <Button
             type="primary"
             onClick={handleViewPO}
@@ -223,11 +288,32 @@ function CurriculumDetailStudent() {
           >
             View Program Outcomes
           </Button>
+          <Button
+            type="primary"
+            onClick={handleViewCombo}
+            className="bg-green-600 text-white hover:bg-green-700"
+          >
+            View Subject Combos
+          </Button>
         </div>
       </div>
+      {/* PLO Table Section */}
+      <div className="bg-white rounded-lg  p-6">
+        <h2 className="text-xl font-semibold mb-6 text-gray-700">
+          Program Learning Outcomes (PLOs)
+        </h2>
 
+        <Table
+          columns={ploColumns}
+          dataSource={plos}
+          rowKey="id"
+          className=""
+          size="large"
+          pagination={false}
+        />
+      </div>
       {/* Subjects Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Curriculum Subjects
         </h2>
@@ -237,27 +323,8 @@ function CurriculumDetailStudent() {
           dataSource={subjects}
           rowKey="id"
           loading={subjectsLoading}
-          pagination={{ pageSize: 10 }}
-          className="border border-gray-200"
-          size="middle"
-        />
-      </div>
-
-      {/* PLO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-6 text-gray-700">
-          Program Learning Outcomes (PLOs)
-        </h2>
-
-        <Table
-          columns={ploColumns}
-          dataSource={plos}
-          rowKey="id"
-          pagination={{
-            pageSize: plos.length,
-          }}
-          className="border border-gray-200"
           size="large"
+          pagination={false}
         />
       </div>
     </div>

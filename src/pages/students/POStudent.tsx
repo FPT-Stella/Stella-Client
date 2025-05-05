@@ -30,6 +30,8 @@ function POStudent() {
   const [program, setProgram] = useState<Program | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [mappingMatrix, setMappingMatrix] = useState<MappingMatrix>({});
+  const headerBg = "#f0f5ff";
+  const headerColor = "#1d39c4";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,12 +96,26 @@ function POStudent() {
       key: "ploName",
       width: "30%",
       className: "font-medium",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       width: "70%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
@@ -110,12 +126,26 @@ function POStudent() {
       key: "poName",
       width: "30%",
       className: "font-medium",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       width: "70%",
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
     },
   ];
 
@@ -145,6 +175,13 @@ function POStudent() {
       key: "ploName",
       fixed: true,
       width: 300,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (text: string, record: PLO) => (
         <div className="px-4 py-2">
           <div className="font-medium text-gray-900">{text}</div>
@@ -157,15 +194,19 @@ function POStudent() {
     ...pos.map((po) => ({
       title: (
         <div className="text-center px-2">
-          <div className="font-medium text-gray-900">{po.poName}</div>
-          <div className="text-xs text-gray-500 line-clamp-1">
-            {po.description}
-          </div>
+          <div>{po.poName}</div>
         </div>
       ),
       key: po.id,
       width: 150,
       align: "center" as const,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
       render: (_: any, record: PLO) => (
         <Checkbox
           checked={mappingMatrix[record.id]?.[po.id] || false}
@@ -187,14 +228,14 @@ function POStudent() {
       </div>
 
       {/* Program Information */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700 border-b pb-2">
           {program.programCode} - {program.programName}
         </h2>
       </div>
 
       {/* PLO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Program Learning Outcomes (PLOs)
         </h2>
@@ -209,7 +250,7 @@ function POStudent() {
       </div>
 
       {/* PO Table Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white rounded-lg  p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Program Outcomes (POs)
         </h2>
@@ -224,7 +265,7 @@ function POStudent() {
       </div>
 
       {/* Mapping Matrix Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg  p-6">
         <h2 className="text-xl font-semibold mb-6 text-gray-700">
           Mapping POs to PLOs
         </h2>

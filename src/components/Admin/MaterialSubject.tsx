@@ -7,25 +7,25 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
 import { useParams } from "react-router-dom";
-
+import { FiLink } from "react-icons/fi";
 import {
-  getPOByProgramId,
-  deletePO,
-  addPO,
-  updatePO,
-} from "../../services/PO_PLO";
-import { CreatePO, PO } from "../../models/PO_PLO";
-import { Program } from "../../models/Program";
-import { getProgram } from "../../services/Program";
+  getMaterialBySubjectId,
+  deleteMaterial,
+  updateMaterial,
+  addMaterial,
+} from "../../services/Material";
+import {
+  Material,
+  CreateMaterial,
+  UpdateMaterial,
+} from "../../models/Material";
 import "react-toastify/dist/ReactToastify.css";
-import POForm from "./POForm";
 
-function ManagePO() {
-  const { programId } = useParams<{ programId: string }>();
+function MaterialSubject() {
+  const { subjectId } = useParams<{ subjectId: string }>();
 
-  const [POS, setPOS] = useState<PO[]>([]);
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [filteredPOS, setFilteredPOS] = useState<PO[]>([]);
+  const [material, setMaterial] = useState<Material[]>([]);
+  const [filtered, setFiltered] = useState<Material[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -33,7 +33,7 @@ function ManagePO() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PO | null>(null);
+  const [editing, setEditing] = useState<Material | null>(null);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
@@ -42,41 +42,39 @@ function ManagePO() {
   useEffect(() => {
     const fetchPO = async () => {
       try {
-        const data = await getPOByProgramId(programId!);
-        setPOS(data);
-        setFilteredPOS(data);
-        const dataPro = await getProgram();
-        setPrograms(dataPro);
+        const data = await getMaterialBySubjectId(subjectId!);
+        setMaterial(data);
+        setFiltered(data);
       } catch (error) {
-        console.error("Fail to fetching POS:", error);
+        console.error("Fail to fetching material:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPO();
-  }, [programId]);
+  }, [subjectId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filteredData = POS.filter((po) =>
-      po.poName.toLowerCase().includes(value.toLowerCase())
+    const filteredData = material.filter((m) =>
+      m.materialName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredPOS(filteredData);
+    setFiltered(filteredData);
   };
 
-  const handleAddPO = async (values: CreatePO) => {
+  const handleAdd = async (values: CreateMaterial) => {
     try {
       setLoading(true);
-      const newPO = await addPO(values);
+      const newMaterial = await addMaterial(values);
 
-      setPOS((prev) => [...prev, newPO]);
-      setFilteredPOS((prev) => [...prev, newPO]);
-      toast.success("PO added successfully!");
+      setMaterial((prev) => [...prev, newMaterial]);
+      setFiltered((prev) => [...prev, newMaterial]);
+      toast.success("Material added successfully!");
       setIsModalVisible(false);
       form.resetFields();
     } catch (error: unknown) {
-      console.error("Failed to add program:", error);
+      console.error("Failed to add material:", error);
       if (
         error &&
         typeof error === "object" &&
@@ -91,31 +89,28 @@ function ManagePO() {
       ) {
         toast.error(error.response.data.details);
       } else {
-        toast.error("Failed to add program.");
+        toast.error("Failed to add material.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEditPO = async (values: {
-    poName: string;
-    description: string;
-  }) => {
+  const handleEdit = async (values: UpdateMaterial) => {
     if (!editing) return;
     try {
       setLoading(true);
-      await updatePO(editing.id, values);
-      const data = await getPOByProgramId(programId!);
-      setPOS(data);
-      setFilteredPOS(data);
-      toast.success("PO updated successfully!");
+      await updateMaterial(editing.id, values);
+      const data = await getMaterialBySubjectId(subjectId!);
+      setMaterial(data);
+      setFiltered(data);
+      toast.success("Material updated successfully!");
       setIsEditModalVisible(false);
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
-      console.error("Failed to update PO:", error);
-      toast.error("Failed to update PO.");
+      console.error("Failed to update Material:", error);
+      toast.error("Failed to update Material.");
     } finally {
       setLoading(false);
     }
@@ -125,27 +120,29 @@ function ManagePO() {
     if (!selecteditem) return;
     try {
       setLoading(true);
-      await deletePO(selecteditem);
-      const data = await getPOByProgramId(programId!);
-      setPOS(data);
-      setFilteredPOS(data);
+      await deleteMaterial(selecteditem);
+      const data = await getMaterialBySubjectId(subjectId!);
+      setMaterial(data);
+      setFiltered(data);
 
-      toast.success("PO deleted successfully!");
+      toast.success("Material deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete PO:", error);
-      toast.error("Failed to delete PO.");
+      console.error("Failed to delete Material:", error);
+      toast.error("Failed to delete Material.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showEditModal = (po: PO) => {
-    setEditing(po);
+  const showEditModal = (m: Material) => {
+    setEditing(m);
     setIsEditModalVisible(true);
     editForm.setFieldsValue({
-      poName: po.poName,
-      description: po.description,
+      materialName: m.materialName,
+      description: m.description,
+      materialType: m.materialType,
+      materialUrl: m.materialUrl,
     });
   };
 
@@ -156,10 +153,10 @@ function ManagePO() {
 
   const columns = [
     {
-      title: "PO Name",
-      dataIndex: "poName",
-      key: "poName",
-      width: 100,
+      title: "Name",
+      dataIndex: "materialName",
+      key: "materialName",
+      width: 200,
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -167,23 +164,6 @@ function ManagePO() {
           fontWeight: "bold",
         },
       }),
-    },
-    {
-      title: "Program Code",
-      dataIndex: "programId",
-      key: "programId",
-      width: 120,
-      onHeaderCell: () => ({
-        style: {
-          backgroundColor: headerBg,
-          color: headerColor,
-          fontWeight: "bold",
-        },
-      }),
-      render: (programId: string) => {
-        const Program = programs.find((p) => p.id === programId);
-        return Program ? Program.programCode : "Unknown";
-      },
     },
     {
       title: "Description",
@@ -198,10 +178,45 @@ function ManagePO() {
       }),
     },
     {
+      title: "Type",
+      dataIndex: "materialType",
+      key: "materialType",
+      width: 100,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+    },
+
+    {
+      title: "Link",
+      dataIndex: "materialUrl",
+      key: "materialUrl",
+      width: 80,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: headerBg,
+          color: headerColor,
+          fontWeight: "bold",
+        },
+      }),
+      render: (url: string) =>
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <FiLink className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl" />
+          </a>
+        ) : (
+          "-"
+        ),
+    },
+    {
       title: "Action",
       key: "action",
       width: 80,
-      render: (record: PO) => {
+      render: (record: Material) => {
         const items: MenuProps["items"] = [
           {
             key: "edit",
@@ -243,7 +258,7 @@ function ManagePO() {
   ];
 
   return (
-    <div className="h-full flex flex-col py-10">
+    <div className="h-full flex flex-col py-5">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
         Manage Program Outcomes
@@ -262,13 +277,13 @@ function ManagePO() {
             className="bg-[#635BFF] text-white font-medium"
             onClick={() => setIsModalVisible(true)}
           >
-            <IoAddCircleOutline /> Add Program Outcomes
+            <IoAddCircleOutline /> Add Material
           </Button>
         </div>
       </div>
       <Table
         size="small"
-        dataSource={filteredPOS}
+        dataSource={filtered}
         columns={columns}
         rowKey="id"
         loading={loading}
@@ -276,19 +291,68 @@ function ManagePO() {
       />
 
       <Modal
-        width="50%"
-        title="Add PO"
+        width="55%"
+        title="Add Materialss"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <POForm form={form} onFinish={handleAddPO} />
+        <Form form={form} layout="vertical" onFinish={handleAdd}>
+          <Form.Item name="subjectId" initialValue={subjectId} hidden>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Material Name"
+            name="materialName"
+            rules={[{ required: true, message: "Please enter the name!" }]}
+          >
+            <Input placeholder="Enter Material name" />
+          </Form.Item>
+          <Form.Item
+            label="Material Type"
+            name="materialType"
+            rules={[
+              { required: true, message: "Please enter the material type!" },
+            ]}
+          >
+            <Input placeholder="Enter Material Link" />
+          </Form.Item>
+          <Form.Item
+            label="Material Url"
+            name="materialUrl"
+            rules={[
+              { required: true, message: "Please enter the materialUrl!" },
+              {
+                type: "url",
+                message: "Please enter url ( https:// or http://)",
+              },
+            ]}
+          >
+            <Input placeholder="Enter materialUrl" />
+          </Form.Item>
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[
+              { required: true, message: "Please enter the description!" },
+            ]}
+          >
+            <Input.TextArea placeholder="Enter description" rows={12} />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="w-full">
+              Update
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
 
       {/* Modal for Editing */}
       <Modal
-        title="Edit PLO"
-        width="50%"
+        title="Edit "
+        width="55%"
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
@@ -297,22 +361,36 @@ function ManagePO() {
         }}
         footer={null}
       >
-        <Form form={editForm} layout="vertical" onFinish={handleEditPO}>
+        <Form form={editForm} layout="vertical" onFinish={handleEdit}>
           <Form.Item
-            label="PO Name"
-            name="poName"
+            label="Material Name"
+            name="materialName"
+            rules={[{ required: true, message: "Please enter the name!" }]}
+          >
+            <Input placeholder="Enter Material name" />
+          </Form.Item>
+          <Form.Item
+            label="Material Type"
+            name="materialType"
             rules={[
-              { required: true, message: "Please enter the PO name!" },
+              { required: true, message: "Please enter the material type!" },
+            ]}
+          >
+            <Input placeholder="Enter Material Link" />
+          </Form.Item>
+          <Form.Item
+            label="Material Url"
+            name="materialUrl"
+            rules={[
+              { required: true, message: "Please enter the materialUrl!" },
               {
-                pattern: /^PO.{1,}$/,
-                message:
-                  "PO name must start with 'PO' and be at least 3 characters.",
+                type: "url",
+                message: "Please enter url ( https:// or http://)",
               },
             ]}
           >
-            <Input placeholder="Enter PO name" />
+            <Input placeholder="Enter materialUrl" />
           </Form.Item>
-
           <Form.Item
             label="Description"
             name="description"
@@ -320,12 +398,12 @@ function ManagePO() {
               { required: true, message: "Please enter the description!" },
             ]}
           >
-            <Input.TextArea placeholder="Enter description" rows={5} />
+            <Input.TextArea placeholder="Enter description" rows={12} />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
-              Update PO
+              Update
             </Button>
           </Form.Item>
         </Form>
@@ -339,10 +417,10 @@ function ManagePO() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the PO?</p>
+        <p>Are you sure you want to delete the Material?</p>
       </Modal>
     </div>
   );
 }
 
-export default ManagePO;
+export default MaterialSubject;

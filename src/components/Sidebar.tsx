@@ -7,6 +7,7 @@ import { PiStudentFill } from "react-icons/pi";
 import { MdOutlineViewTimeline } from "react-icons/md";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { MdOutlineMenuBook } from "react-icons/md";
+import { FaPenRuler } from "react-icons/fa6";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -20,16 +21,25 @@ const SidebarData: SidebarDataType[] = [
     heading: "Dashboard",
     href: "/dashboard",
   },
+
   {
     icon: FaUsers,
-    heading: "Student Management",
+    heading: "Student",
     href: "/manageStudent",
   },
+
   {
-    icon: PiStudentFill,
-    heading: "Major",
-    href: "/manageMajor",
+    icon: FaPenRuler,
+    heading: "Tool",
+    href: "/manageTool",
   },
+
+  {
+    icon: MdOutlineMenuBook,
+    heading: "Subject",
+    href: "/manageSubject",
+  },
+
   {
     icon: FaBookOpenReader,
     heading: "Curriculum",
@@ -40,11 +50,10 @@ const SidebarData: SidebarDataType[] = [
     heading: "Program",
     href: "/manageProgram",
   },
-
   {
-    icon: MdOutlineMenuBook,
-    heading: "Subject",
-    href: "/manageSubject",
+    icon: PiStudentFill,
+    heading: "Major",
+    href: "/manageMajor",
   },
 ];
 

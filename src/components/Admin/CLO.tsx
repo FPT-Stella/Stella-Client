@@ -6,22 +6,23 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import type { MenuProps } from "antd";
-import {
-  getPLOByCurriculum,
-  deletePLO,
-  addPLO,
-  updatePLO,
-} from "../../services/PO_PLO";
-import { CreatePLO, PLO } from "../../models/PO_PLO";
-import "react-toastify/dist/ReactToastify.css";
-import PLOForm from "./PLOForm";
 import { useParams } from "react-router-dom";
-import { AxiosError } from "axios";
-import POMappingList from "../../components/Admin/PO_POL";
-function ManagePLO() {
-  const { curriculumId } = useParams<{ curriculumId: string }>();
-  const [POLS, setPOLS] = useState<PLO[]>([]);
-  const [filteredPOLS, setFilteredPOLS] = useState<PLO[]>([]);
+
+import {
+  getCLOBySubjectId,
+  addCLO,
+  deleteCLO,
+  updateCLO,
+} from "../../services/CLO";
+import { CLO, CreateCLO } from "../../models/CLO";
+import "react-toastify/dist/ReactToastify.css";
+import CLOForm from "./CLOForm";
+import CLOMappingList from "./CLO_PLO";
+function ManageCLO() {
+  const { subjectId } = useParams<{ subjectId: string }>();
+
+  const [CLOS, setCLOS] = useState<CLO[]>([]);
+  const [filtered, setFiltered] = useState<CLO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -29,130 +30,116 @@ function ManagePLO() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] =
     useState<boolean>(false);
   const [selecteditem, setSelecteditem] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PLO | null>(null);
+  const [editing, setEditing] = useState<CLO | null>(null);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const headerBg = "#f0f5ff";
   const headerColor = "#1d39c4";
 
   useEffect(() => {
-    const fetchPLO = async () => {
+    const fetchCLO = async () => {
       try {
-        const data = await getPLOByCurriculum(curriculumId!);
-        setPOLS(data);
-
-        setFilteredPOLS(data);
+        const data = await getCLOBySubjectId(subjectId!);
+        setCLOS(data);
+        setFiltered(data);
       } catch (error) {
-        console.error("Fail to fetching POLS:", error);
+        console.error("Fail to fetching POS:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPLO();
-  }, [curriculumId]);
+    fetchCLO();
+  }, [subjectId]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filteredData = POLS.filter((plo) =>
-      plo.ploName.toLowerCase().includes(value.toLowerCase())
+    const filteredData = CLOS.filter((clo) =>
+      clo.cloName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredPOLS(filteredData);
+    setFiltered(filteredData);
   };
 
-  const handleAddPLO = async (values: CreatePLO) => {
+  const handleAddCLO = async (values: CreateCLO) => {
     try {
       setLoading(true);
-      const newPLO = await addPLO(values);
-      setPOLS((prev) => [...prev, newPLO]);
-      setFilteredPOLS((prev) => [...prev, newPLO]);
-      toast.success("PLO added successfully!");
+      const newCLO = await addCLO(values);
+
+      setCLOS((prev) => [...prev, newCLO]);
+      setFiltered((prev) => [...prev, newCLO]);
+      toast.success("CLO added successfully!");
       setIsModalVisible(false);
       form.resetFields();
-    } catch (error) {
-      // Sử dụng AxiosError để xác định kiểu lỗi
-      if (error instanceof AxiosError) {
-        console.error("Failed to add:", error);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          toast.error(error.response.data.details);
-        } else {
-          toast.error("Failed to add.");
-        }
+    } catch (error: unknown) {
+      console.error("Failed to add program:", error);
+      if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
+        error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response &&
+        error.response.data &&
+        typeof error.response.data === "object" &&
+        "details" in error.response.data &&
+        typeof error.response.data.details === "string"
+      ) {
+        toast.error(error.response.data.details);
       } else {
-        console.error("Unexpected error:", error);
-        toast.error("Failed to add.");
+        toast.error("Failed to add program.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEditPLO = async (values: {
-    ploName: string;
-    description: string;
-  }) => {
+  const handleEditCLO = async (values: CreateCLO) => {
     if (!editing) return;
     try {
       setLoading(true);
-      await updatePLO(editing.id, values);
-      toast.success("PLO updated successfully!");
-      const data = await getPLOByCurriculum(curriculumId!);
-      setPOLS(data);
-      setFilteredPOLS(data);
-
+      await updateCLO(editing.id, values);
+      const data = await getCLOBySubjectId(subjectId!);
+      setCLOS(data);
+      setFiltered(data);
+      toast.success("CLO updated successfully!");
       setIsEditModalVisible(false);
       setEditing(null);
       editForm.resetFields();
     } catch (error) {
-      // Sử dụng AxiosError để xác định kiểu lỗi
-      if (error instanceof AxiosError) {
-        console.error("Failed to update:", error);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          toast.error(error.response.data.details);
-        } else {
-          toast.error("Failed to update.");
-        }
-      } else {
-        console.error("Unexpected error:", error);
-        toast.error("Failed to add.");
-      }
+      console.error("Failed to update CLO:", error);
+      toast.error("Failed to update CLO.");
     } finally {
       setLoading(false);
     }
   };
+
   const handleDelete = async () => {
     if (!selecteditem) return;
     try {
       setLoading(true);
-      await deletePLO(selecteditem);
-      const data = await getPLOByCurriculum(curriculumId!);
-      setPOLS(data);
-      setFilteredPOLS(data);
+      await deleteCLO(selecteditem);
+      const data = await getCLOBySubjectId(subjectId!);
+      setCLOS(data);
+      setFiltered(data);
 
-      toast.success("PLO deleted successfully!");
+      toast.success("CLO deleted successfully!");
       setIsDeleteModalVisible(false);
     } catch (error) {
-      console.error("Failed to delete PLO:", error);
-      toast.error("Failed to delete PLO.");
+      console.error("Failed to delete CLO:", error);
+      toast.error("Failed to delete CLO.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showEditModal = (plo: PLO) => {
-    setEditing(plo);
+  const showEditModal = (clo: CLO) => {
+    setEditing(clo);
     setIsEditModalVisible(true);
     editForm.setFieldsValue({
-      ploName: plo.ploName,
-      description: plo.description,
+      cloName: clo.cloName,
+      cloDetails: clo.cloDetails,
+      loDetails: clo.loDetails,
+      subjectId: clo.subjectId,
     });
   };
 
@@ -162,11 +149,23 @@ function ManagePLO() {
   };
 
   const columns = [
+    // {
+    //   title: "ID",
+    //   dataIndex: "id",
+    //   key: "id",
+
+    //   onHeaderCell: () => ({
+    //     style: {
+    //       backgroundColor: headerBg,
+    //       color: headerColor,
+    //       fontWeight: "bold",
+    //     },
+    //   }),
+    // },
     {
-      title: "PLO Name",
-      dataIndex: "ploName",
-      key: "ploName",
-      width: 100,
+      title: "CLO Name",
+      dataIndex: "cloName",
+      key: "cloName",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -175,11 +174,10 @@ function ManagePLO() {
         },
       }),
     },
-
     {
       title: "Description",
-      dataIndex: "description",
-      key: "description",
+      dataIndex: "cloDetails",
+      key: "cloDetails",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -189,11 +187,11 @@ function ManagePLO() {
       }),
     },
     {
-      title: "PO",
-      key: "po",
-      width: 200,
-      render: (record: PLO) => {
-        return <POMappingList ploId={record.id} />;
+      title: "PLO",
+      key: "plo",
+      width: 300,
+      render: (record: CLO) => {
+        return <CLOMappingList cloId={record.id} />;
       },
       onHeaderCell: () => ({
         style: {
@@ -206,7 +204,8 @@ function ManagePLO() {
     {
       title: "Action",
       key: "action",
-      render: (record: PLO) => {
+      width: 90,
+      render: (record: CLO) => {
         const items: MenuProps["items"] = [
           {
             key: "edit",
@@ -248,10 +247,10 @@ function ManagePLO() {
   ];
 
   return (
-    <div className="h-full flex flex-col  py-10">
+    <div className="h-full flex flex-col py-5">
       <ToastContainer />
       <div className="text-lg font-semibold text-[#2A384D] h-8">
-        Manage Program Learning Outcomes
+        Manage Course Learning Outcomes
       </div>
       {/* Table */}
 
@@ -267,13 +266,13 @@ function ManagePLO() {
             className="bg-[#635BFF] text-white font-medium"
             onClick={() => setIsModalVisible(true)}
           >
-            <IoAddCircleOutline /> Add Program Learning Outcomes
+            <IoAddCircleOutline /> Add Course Learning Outcomesss
           </Button>
         </div>
       </div>
       <Table
         size="small"
-        dataSource={filteredPOLS}
+        dataSource={filtered}
         columns={columns}
         rowKey="id"
         loading={loading}
@@ -281,18 +280,18 @@ function ManagePLO() {
       />
 
       <Modal
-        title="Add PLO"
         width="50%"
+        title="Add PO"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <PLOForm form={form} onFinish={handleAddPLO} />
+        <CLOForm form={form} onFinish={handleAddCLO} />
       </Modal>
 
       {/* Modal for Editing */}
       <Modal
-        title="Edit PLO"
+        title="Edit CLO"
         width="50%"
         open={isEditModalVisible}
         onCancel={() => {
@@ -302,35 +301,45 @@ function ManagePLO() {
         }}
         footer={null}
       >
-        <Form form={editForm} layout="vertical" onFinish={handleEditPLO}>
+        <Form form={editForm} layout="vertical" onFinish={handleEditCLO}>
           <Form.Item
-            label="PLO Name"
-            name="ploName"
+            label="CLO Name"
+            name="cloName"
             rules={[
-              { required: true, message: "Please enter the PLO name!" },
+              { required: true, message: "Please enter the CLO name!" },
               {
-                pattern: /^PLO\d+$/,
+                // pattern: /^PO.{1,}$/,
+                pattern: /^CLO\d+$/,
+
                 message:
-                  "PLO name must be in the format 'PLO+number' (e.g., PLO1, PLO25)",
+                  "CLO name must start with 'PO' and be at least 4 characters.",
               },
             ]}
           >
-            <Input placeholder="Enter PLO name" />
+            <Input placeholder="Enter PO name" />
+          </Form.Item>
+
+          <Form.Item hidden name="subjectId">
+            <Input hidden />
           </Form.Item>
 
           <Form.Item
             label="Description"
-            name="description"
+            name="cloDetails"
             rules={[
               { required: true, message: "Please enter the description!" },
             ]}
           >
-            <Input.TextArea placeholder="Enter description" rows={4} />
+            <Input.TextArea placeholder="Enter description" rows={6} />
+          </Form.Item>
+
+          <Form.Item hidden name="loDetails">
+            <Input hidden />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
-              Update PLO
+              Update
             </Button>
           </Form.Item>
         </Form>
@@ -344,10 +353,10 @@ function ManagePLO() {
         okType="danger"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the PLO?</p>
+        <p>Are you sure you want to delete the CLO?</p>
       </Modal>
     </div>
   );
 }
 
-export default ManagePLO;
+export default ManageCLO;

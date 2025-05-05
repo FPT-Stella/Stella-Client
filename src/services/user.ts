@@ -1,10 +1,5 @@
 import rootApi from "./rootApi";
-import {
-  createStudentPayload,
-  Student,
-  updateStudent,
-  User,
-} from "../models/User";
+import { Student, updateStudent, User } from "../models/User";
 export const getAllStudents = async () => {
   try {
     const response = await rootApi.get<Student[]>("/Student/all");

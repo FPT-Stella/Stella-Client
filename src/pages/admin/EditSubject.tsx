@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, Button, Form, Select, Switch, Radio } from "antd";
 import { AxiosError } from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,45 +23,14 @@ function EditSubject() {
   const [subject, setSubject] = useState<Subject | null>(null);
 
   const [form] = Form.useForm();
-  // useEffect(() => {
-  //   const fetchSubjects = async () => {
-  //     try {
-  //       const data = await getSubject();
-  //       setSubjects(data);
-  //       const Data = await getSubjectByID(subjectId!);
-  //       setSubject(Data);
-  //       form.setFieldsValue({
-  //         subjectName: Data.subjectName,
-  //         subjectCode: Data.subjectCode,
-  //         subjectDescription: JSON.parse(Data.subjectdescription),
-  //         credits: Data.credits,
-  //         prerequisite: Data.prerequisite,
-  //         prerequisiteName: Data.prerequisiteName,
-  //         degreeLevel: Data.degreeLevel,
-  //         timeAllocation: Data.timeAllocation,
-  //         scoringScale: Data.scoringScale,
-  //         minAvgMarkToPass: Data.minAvgMarkToPass,
-  //         learningTeachingType: Data.learningTeachingType,
-  //         termNo: Data.termNo,
-  //         sysllabusDescription: JSON.parse(Data.sysllabusDescription),
-  //         studentTask: JSON.parse(Data.studentTask),
-  //         note: JSON.parse(Data.note),
-  //         topic: JSON.parse(Data.topic),
-  //       });
-  //     } catch (error) {
-  //       console.error("Failed to fetch programs:", error);
-  //       toast.error("Failed to load programs");
-  //     }
-  //   };
-  //   fetchSubjects();
-  // }, [subjectId, form]);
+
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
         const data = await getSubject();
         setSubjects(data);
         const Data = await getSubjectByID(subjectId!);
-        setSubject(Data); // Không gọi setFieldsValue ở đây nữa
+        setSubject(Data);
       } catch (error) {
         console.error("Failed to fetch programs:", error);
         toast.error("Failed to load programs");
