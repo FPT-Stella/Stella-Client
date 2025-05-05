@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://103.179.185.152:5678/webhook/104340ec-ab8f-4744-91e1-5f45b97edb63";
+const API_URL = "https://ai.dacoban.studio/webhook/104340ec-ab8f-4744-91e1-5f45b97edb63";
 
 export const sendChatMessage = async (input: string) => {
   try {
