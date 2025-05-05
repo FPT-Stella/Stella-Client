@@ -35,7 +35,7 @@ function ComboSubjects() {
 
         // Fetch each subject's details
         const subjectPromises = subjectIds.map((item: any) =>
-          getSubjectByID(item.subjectId),
+          getSubjectByID(item.subjectId)
         );
 
         const subjectData = await Promise.all(subjectPromises);
@@ -56,7 +56,7 @@ function ComboSubjects() {
     const filtered = subjects.filter(
       (subject) =>
         subject.subjectCode.toLowerCase().includes(value.toLowerCase()) ||
-        subject.subjectName.toLowerCase().includes(value.toLowerCase()),
+        subject.subjectName.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredSubjects(filtered);
   };
@@ -162,13 +162,13 @@ function ComboSubjects() {
       </div>
 
       {/* Subjects Table */}
-      <div className="bg-white rounded-lg  p-6">
+      <div className="bg-white rounded-lg  py-6">
         <Table
           columns={subjectColumns}
           dataSource={filteredSubjects}
           rowKey="id"
-          pagination={{ pageSize: 10 }}
-          className="border border-gray-200"
+          pagination={false}
+          className=""
           size="middle"
           locale={{ emptyText: "No subjects found in this combo" }}
         />

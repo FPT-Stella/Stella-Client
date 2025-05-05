@@ -44,7 +44,7 @@ function SubjectCombos() {
   const handleSearch = (value: string) => {
     setSearchText(value);
     const filtered = combos.filter((combo) =>
-      combo.comboName.toLowerCase().includes(value.toLowerCase()),
+      combo.comboName.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredCombos(filtered);
   };
@@ -72,7 +72,7 @@ function SubjectCombos() {
       title: "Combo Name",
       dataIndex: "comboName",
       key: "comboName",
-      width: "20%",
+      width: "15%",
       className: "font-medium",
       onHeaderCell: () => ({
         style: {
@@ -95,6 +95,7 @@ function SubjectCombos() {
       dataIndex: "description",
       key: "description",
       width: "35%",
+      align: "left",
       onHeaderCell: () => ({
         style: {
           backgroundColor: headerBg,
@@ -102,7 +103,11 @@ function SubjectCombos() {
           fontWeight: "bold",
         },
       }),
-      render: (text) => formatDescription(text),
+      onCell: () => ({
+        style: {
+          verticalAlign: "top",
+        },
+      }),
     },
     {
       title: "Program Outcome",
@@ -135,7 +140,7 @@ function SubjectCombos() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="my-12 mx-4 md:mx-8 lg:mx-16">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -152,13 +157,13 @@ function SubjectCombos() {
           placeholder="Search by combo name"
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
-          style={{ width: 300 }}
+          style={{ width: 350 }}
           className="rounded-none"
         />
       </div>
 
       {/* Combos Table */}
-      <div className="bg-white rounded-lg  p-6">
+      <div className="bg-white rounded-lg  py-6">
         <Table
           columns={comboColumns}
           dataSource={filteredCombos}
