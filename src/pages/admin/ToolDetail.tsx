@@ -120,7 +120,7 @@ function ToolDetail() {
                 <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                   ID :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black ">
                   {tool.id}
                 </td>
               </tr>
@@ -129,7 +129,7 @@ function ToolDetail() {
                 <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40  bg-[#f0f5ff] text-[#1d39c4]">
                   Curriculum Name:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {tool.toolName}
                 </td>
               </tr>
@@ -137,7 +137,7 @@ function ToolDetail() {
                 <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40  bg-[#f0f5ff] text-[#1d39c4]">
                   Description:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {JSON.parse(tool.description)
                     .split("\n")
                     .map((line: string, index: number) => (
@@ -155,7 +155,7 @@ function ToolDetail() {
                 <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40  bg-[#f0f5ff] text-[#1d39c4]">
                   Crated Date :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black ">
                   {new Date(tool.createdAt).toLocaleDateString("vi-VN")}
                 </td>
               </tr>
@@ -163,7 +163,7 @@ function ToolDetail() {
                 <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40  bg-[#f0f5ff] text-[#1d39c4]">
                   Updated Date:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {new Date(tool.updatedAt).toLocaleDateString("vi-VN")}
                 </td>
               </tr>

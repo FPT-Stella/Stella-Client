@@ -148,35 +148,35 @@ function ComboSubjectDetail() {
           <table className="min-w-full border border-gray-200">
             <tbody>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Combo Subject ID :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {comboSubject.id}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Combo Name:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {comboSubject.comboName}
                 </td>
               </tr>
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
                   Description :
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4">
+                <td className="py-3.5 border border-gray-200 px-4 text-black">
                   {comboSubject.description}
                 </td>
               </tr>
 
               <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40">
+                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
                   Program Outcome:
                 </td>
-                <td className="py-3.5 border border-gray-200 px-4 ">
+                <td className="py-3.5 border border-gray-200 px-4 text-black ">
                   {comboSubject.programOutcome}
                 </td>
               </tr>
