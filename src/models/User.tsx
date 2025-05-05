@@ -31,3 +31,13 @@ export interface Dashboard {
   totalCLOs: number;
   totalPLOs: number;
 }
+export interface StudentByMajor {
+  majorId: string;
+  majorName: string;
+  studentCount: number;
+}
+
+export interface StudentStatistics {
+  totalStudents: number;
+  studentsByMajor: StudentByMajor[];
+}
