@@ -16,7 +16,9 @@ import ManageUser from "../pages/admin/ManageUser";
 import ManageMajor from "../pages/admin/ManageMajor";
 import ManageProgram from "../pages/admin/ManageProgram";
 import ManageCurriculum from "../pages/admin/ManageCurriculum";
-import CurriculumDetail from "../pages/admin/CurriculumDetail";
+import CrurriculumDetailAD from "../pages/admin/CurriculumDetailAD";
+// import CurriculumDetail from "../pages/admin/CurriculumDetail";
+import ProgramDetailAD from "../pages/admin/ProgramDetailAD";
 import CurriculumDetailStudent from "../pages/students/CurriculumDetailStudent";
 import AddCurriculum from "../pages/admin/AddCurriculum";
 import EditCurriculum from "../pages/admin/EditCurriculum";
@@ -26,7 +28,7 @@ import POStudent from "../pages/students/POStudent";
 import DetailPO from "../pages/admin/DetailPO";
 // import SubjectDetail from "../pages/admin/SubjectDetail";
 import GoogleCallback from "../pages/Authentication/GoogleCallback";
-import ProgramDetail from "../pages/admin/ProgramDetail";
+// import ProgramDetail from "../pages/admin/ProgramDetail";
 import ComboSubjectDetail from "../pages/admin/ComboSubjectDetail";
 import AddSubject from "../pages/admin/AddSubject";
 import EditSubject from "../pages/admin/EditSubject";
@@ -153,7 +155,7 @@ function AppRouter() {
               path="/manageCurriculum/:curriculumId/"
               element={
                 <PrivateRoute
-                  element={CurriculumDetail}
+                  element={CrurriculumDetailAD}
                   allowedRoles={["Admin"]}
                 />
               }
@@ -216,7 +218,7 @@ function AppRouter() {
               path="/manageProgram/:programId"
               element={
                 <PrivateRoute
-                  element={ProgramDetail}
+                  element={ProgramDetailAD}
                   allowedRoles={["Admin"]}
                 />
               }

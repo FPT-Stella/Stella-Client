@@ -92,7 +92,7 @@ function SubjectDetail() {
         <table className="min-w-full border border-gray-200">
           <tbody>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Subject Code:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -100,7 +100,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Subject Name:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -108,7 +108,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Subject Description:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -126,7 +126,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Credits:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -134,7 +134,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Prerequisite:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -142,7 +142,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Degree Level:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -150,7 +150,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Time Allocation:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -158,7 +158,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Scoring Scale:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -166,7 +166,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Min Average Mark to Pass:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -175,7 +175,7 @@ function SubjectDetail() {
             </tr>
 
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Syllabus Description:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -193,7 +193,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Student Tasks:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -210,7 +210,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Topics:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -228,7 +228,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Notes:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -246,7 +246,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 TermNo:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -254,7 +254,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Learning Teaching Type
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -262,7 +262,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Create Date:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -270,7 +270,7 @@ function SubjectDetail() {
               </td>
             </tr>
             <tr>
-              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40">
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
                 Update Date:
               </td>
               <td className="py-3.5 border border-gray-200 px-4">
@@ -283,7 +283,7 @@ function SubjectDetail() {
 
       <div className="flex justify-end gap-5 mt-8">
         <Button
-          className="bg-[#635BFF] font-medium text-white"
+          className="bg-blue-500 font-medium text-white"
           onClick={() => navigate(`/manageSubject/update/${subjectId}`)}
         >
           Edit

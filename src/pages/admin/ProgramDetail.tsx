@@ -11,9 +11,7 @@ import { getMajorByID } from "../../services/Major";
 import { Program } from "../../models/Program";
 import "react-toastify/dist/ReactToastify.css";
 import { Major } from "../../models/Major";
-import PO from "../../components/Admin/PO";
 import EditProgram from "../../components/Admin/EditProgram";
-import SubjectCombo from "../../components/Admin/SubjectCombo";
 function ProgramDetail() {
   const { programId } = useParams<{ programId: string }>();
   const [editForm] = Form.useForm();
@@ -102,117 +100,103 @@ function ProgramDetail() {
   return (
     <div className=" flex flex-col px-10 py-5">
       <ToastContainer />
-      <div className="text-lg font-semibold h-8 flex gap-2 mb-3">
-        <span className="text-gray-500 cursor-pointer " onClick={handleBack}>
-          Program Management /
-        </span>
-        <span className="text-[#2A384D]"> {program.programCode} </span>
-      </div>
-      <div className="flex-1 bg-white shadow-md rounded-md py-5 px-10 ">
-        <h2 className="text-lg w-fit mx-auto font-bold text-gray-600 my-4 border-b-2 border-gray-600">
-          View Program: {program.programCode}
-        </h2>
-        <div className="mt-5">
-          <table className="min-w-full border border-gray-200">
-            <tbody>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
-                  Program ID :
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4 text-black">
-                  {program.id}
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
-                  Program Code :
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4 text-black">
-                  {program.programCode}
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 text-black">
-                  Program Name :
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4 text-black">
-                  {program.programName}
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
-                  Major Code:
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4 text-black">
-                  {major?.majorName || "N/A"}
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 text-black">
-                  Description:
-                </td>
-                <td className="py-3.5 border border-gray-200 px-4 text-black ">
-                  {program.description}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="flex justify-end gap-5 mt-8">
-          <Button
-            className="bg-[#635BFF] font-medium text-white"
-            onClick={showEditModal}
-          >
-            Edit Program
-          </Button>
-        </div>
-        <div>
-          <PO />
-        </div>
-        <div>
-          <SubjectCombo />
-        </div>
-        <div className="flex justify-end gap-5 mt-8">
-          <Button
-            className="bg-red-500 font-medium text-white"
-            onClick={showDeleteModal}
-          >
-            Delete
-          </Button>
-          <Button
-            className="bg-[#635BFF] font-medium text-white"
-            onClick={handleBack}
-          >
-            Back Program Management
-          </Button>
-        </div>
-        <Modal
-          title="Edit Major"
-          open={isEditModalVisible}
-          onCancel={() => {
-            setEditModalVisible(false);
-          }}
-          footer={null}
-        >
-          <EditProgram
-            form={editForm}
-            onFinish={handleEditProgram}
-            initialValues={program}
-          />
-        </Modal>
 
-        <Modal
-          title="Confirm Delete"
-          open={isDeleteModalVisible}
-          onCancel={() => setIsDeleteModalVisible(false)}
-          onOk={handleDelete}
-          okText="Delete"
-          okType="danger"
-          cancelText="Cancel"
-        >
-          <p>Are you sure you want to delete the Program?</p>
-        </Modal>
+      <h2 className="text-lg w-fit  font-bold text-gray-600 my-4 ">
+        View Program: {program.programCode}
+      </h2>
+      <div className="mt-5">
+        <table className="min-w-full border border-gray-200">
+          <tbody>
+            <tr>
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
+                Program ID :
+              </td>
+              <td className="py-3.5 border border-gray-200 px-4 text-black">
+                {program.id}
+              </td>
+            </tr>
+            <tr>
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
+                Program Code :
+              </td>
+              <td className="py-3.5 border border-gray-200 px-4 text-black">
+                {program.programCode}
+              </td>
+            </tr>
+            <tr>
+              <td className="py-3.5 border border-gray-200 px-4 font-medium w-40 bg-[#f0f5ff] text-[#1d39c4]">
+                Program Name :
+              </td>
+              <td className="py-3.5 border border-gray-200 px-4 text-black">
+                {program.programName}
+              </td>
+            </tr>
+            <tr>
+              <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 bg-[#f0f5ff] text-[#1d39c4]">
+                Major Code:
+              </td>
+              <td className="py-3.5 border border-gray-200 px-4 text-black">
+                {major?.majorName || "N/A"}
+              </td>
+            </tr>
+            <tr>
+              <td className="py-3.5 border border-gray-200 px-4 font-medium  w-40 bg-[#f0f5ff] text-[#1d39c4]">
+                Description:
+              </td>
+              <td className="py-3.5 border border-gray-200 px-4 text-black ">
+                {program.description}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <div className="flex justify-end gap-5 mt-8">
+        <Button
+          className="bg-[#635BFF] font-medium text-white"
+          onClick={showEditModal}
+        >
+          Edit Program
+        </Button>
+        <Button
+          className="bg-red-500 font-medium text-white"
+          onClick={showDeleteModal}
+        >
+          Delete
+        </Button>
+        <Button
+          className="bg-blue-500 font-medium text-white"
+          onClick={handleBack}
+        >
+          Back Program Management
+        </Button>
+      </div>
+      <Modal
+        title="Edit Major"
+        open={isEditModalVisible}
+        onCancel={() => {
+          setEditModalVisible(false);
+        }}
+        footer={null}
+      >
+        <EditProgram
+          form={editForm}
+          onFinish={handleEditProgram}
+          initialValues={program}
+        />
+      </Modal>
+
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
+        onOk={handleDelete}
+        okText="Delete"
+        okType="danger"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete the Program?</p>
+      </Modal>
     </div>
   );
 }

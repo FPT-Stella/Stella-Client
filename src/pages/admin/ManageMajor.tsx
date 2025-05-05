@@ -121,6 +121,10 @@ function ManageMajor() {
   const showEditModal = (major: Major) => {
     setEditingMajor(major);
     setIsEditModalVisible(true);
+    editForm.setFieldsValue({
+      majorName: major.majorName,
+      description: major.description,
+    });
   };
 
   const showDeleteModal = (id: string) => {
