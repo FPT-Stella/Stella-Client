@@ -421,8 +421,8 @@ function ChatBox() {
 
             {/* Input Area */}
             <div className="p-4 border-t border-gray-200 bg-white flex justify-center">
-              <div className="  mx-8">
-                <div className="relative">
+              <div className="  mx-5 w-full">
+                <div className="relative w-full">
                   <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
