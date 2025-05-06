@@ -9,6 +9,20 @@ export const getAllStudents = async () => {
     throw error;
   }
 };
+export const getMe = async (token: string) => {
+  try {
+    const response = await rootApi.get<Student>("/Student/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    throw error;
+  }
+};
+
 
 export const getStudentByUserId = async (userId: string) => {
   try {

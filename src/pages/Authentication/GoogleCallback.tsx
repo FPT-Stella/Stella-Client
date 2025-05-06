@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Spin } from "antd";
-
+import { getMe } from "../../services/user";
 const GoogleCallback = () => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
@@ -28,7 +28,21 @@ const GoogleCallback = () => {
 
         if (data.accessToken && data.refreshToken) {
           localStorage.setItem("userData", JSON.stringify(data));
-          navigate("/profile", { replace: true });
+
+          const student = await getMe(data.accessToken);
+          const majorId = student?.majorId;
+
+          if (majorId) {
+            localStorage.setItem("majorId", majorId);
+
+            if (majorId === "00000000-0000-0000-0000-000000000000") {
+              navigate("/profile", { replace: true });
+            } else {
+              navigate("/curriculum", { replace: true });
+            }
+          } else {
+            navigate("/profile", { replace: true });
+          }
         } else {
           navigate("/login", { replace: true });
         }
@@ -37,7 +51,7 @@ const GoogleCallback = () => {
       }
     };
     exchangeCode();
-  }, [code]);
+  }, [code, navigate]);
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-black bg-opacity-10">
