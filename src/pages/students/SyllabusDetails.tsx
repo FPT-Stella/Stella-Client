@@ -257,8 +257,8 @@ function SyllabusDetails() {
     },
     {
       title: "Description",
-      dataIndex: "details",
-      key: "description",
+      dataIndex: "cloDetails",
+      key: "cloDetails",
       width: "80%",
       onHeaderCell: () => ({
         style: {
