@@ -59,7 +59,7 @@ export const deleteTool = async (id: string) => {
       }
       export const getToolBySubjectIdNoName = async(id: string)=>{
         try{
-            const response = await rootApi.get(`/SubjectTool/subject/${id}`);
+            const response = await rootApi.get(`/SubjectTool/subject/${id}/tools`);
             return response.data;
         } catch(error){
             console.error("Error fetching Tool", error);
