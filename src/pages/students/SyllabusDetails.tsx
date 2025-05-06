@@ -245,6 +245,7 @@ function SyllabusDetails() {
   const cloColumns = [
     {
       title: "CLO Name",
+      dataIndex: "cloName",
       key: "cloName",
       width: "20%",
       onHeaderCell: () => ({
