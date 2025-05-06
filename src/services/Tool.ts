@@ -57,6 +57,15 @@ export const deleteTool = async (id: string) => {
             throw error;
         }
       }
+      export const getToolBySubjectIdNoName = async(id: string)=>{
+        try{
+            const response = await rootApi.get(`/SubjectTool/subject/${id}`);
+            return response.data;
+        } catch(error){
+            console.error("Error fetching Tool", error);
+            throw error;
+        }
+      }
       export const updateSubjectTool = async (id: string, data: Partial<CreateMappingTool>) => {
         try {
           const response = await rootApi.patch(`/SubjectTool/subject-tools`, data);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button, Spin, Table } from "antd";
-import { getSubjectByID, getSubjectTools } from "../../services/Subject";
+import { getSubjectByID } from "../../services/Subject";
 import { Subject } from "../../models/Subject";
 import { getCLOBySubjectId } from "../../services/CLO";
 import { CLO } from "../../models/CLO";
@@ -10,7 +10,7 @@ import { getMaterialBySubjectId } from "../../services/Material";
 import { Material } from "../../models/Material";
 import { FiLink } from "react-icons/fi";
 import { getToolById } from "../../services/Tool";
-
+import { getToolBySubjectIdNoName } from "../../services/Tool";
 function SyllabusDetails() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [subject, setSubject] = useState<Subject | null>(null);
@@ -81,11 +81,11 @@ function SyllabusDetails() {
         }
 
         // First get all tool IDs for this subject
-        const toolIds = await getSubjectTools(subjectId);
+        const toolIds = await getToolBySubjectIdNoName(subjectId);
 
         // Then fetch details for each tool
         const toolPromises = toolIds.map((toolId: string) =>
-          getToolById(toolId),
+          getToolById(toolId)
         );
         const toolsData = await Promise.all(toolPromises);
 
@@ -105,11 +105,6 @@ function SyllabusDetails() {
 
   const handleBack = () => {
     navigate("/syllabus");
-  };
-
-  // Function to format CLO ID (e.g., CLO1, CLO2, etc.)
-  const formatCLOId = (_id: string, index: number) => {
-    return `CLO${index + 1}`;
   };
 
   // Function to render JSON content with line breaks
@@ -247,8 +242,8 @@ function SyllabusDetails() {
   // CLO table columns
   const cloColumns = [
     {
-      title: "CLO ID",
-      key: "cloId",
+      title: "CLO Name",
+      key: "cloName",
       width: "20%",
       onHeaderCell: () => ({
         style: {
@@ -257,9 +252,6 @@ function SyllabusDetails() {
           fontWeight: "bold",
         },
       }),
-      render: (_: any, _record: any, index: number) => (
-        <div className="font-medium">{formatCLOId(_record.id, index)}</div>
-      ),
     },
     {
       title: "Description",

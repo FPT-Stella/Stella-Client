@@ -312,7 +312,7 @@ function ManageCLO() {
                 pattern: /^CLO\d+$/,
 
                 message:
-                  "CLO name must start with 'PO' and be at least 4 characters.",
+                  "CLO name must start with 'CLO'+ number and be at least 4 characters.",
               },
             ]}
           >

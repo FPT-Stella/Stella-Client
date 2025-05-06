@@ -227,7 +227,7 @@ function CurriculumDetailStudent() {
         <table className="min-w-full border border-gray-200">
           <tbody>
             <tr>
-              <td className="py-4 px-6 bg-gray-50 font-medium w-48 border">
+              <td className="py-4 px-6  font-medium w-48 border bg-[#f0f5ff] text-[#1d39c4]">
                 Curriculum Code
               </td>
               <td className="py-4 px-6 border">{curriculum.curriculumCode}</td>

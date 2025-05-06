@@ -218,7 +218,7 @@ function POStudent() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="my-12 mx-4 md:mx-8 lg:mx-16">
       <ToastContainer />
       <div className="text-lg font-semibold h-8 flex gap-2 mb-3">
         <span className="text-gray-500 cursor-pointer" onClick={handleBack}>
@@ -276,10 +276,10 @@ function POStudent() {
             rowKey="id"
             pagination={false}
             scroll={{ x: "max-content" }}
-            className="border border-gray-200"
+            // className="border border-gray-200"
             size="large"
             rowClassName="hover:bg-gray-50"
-            style={{ minWidth: "100%" }}
+            // style={{ minWidth: "100%" }}
           />
         </div>
       </div>
