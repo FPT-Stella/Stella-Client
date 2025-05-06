@@ -420,7 +420,7 @@ function ChatBox() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-gray-200 bg-white flex justify-center">
+            <div className="p-4 w-full border-t border-gray-200 bg-white flex justify-center">
               <div className="  mx-5 w-full">
                 <div className="relative w-full">
                   <textarea
