@@ -75,20 +75,22 @@ function SyllabusDetails() {
 
     const fetchTools = async () => {
       try {
+        setToolsLoading(true);
         if (!subjectId) {
           console.error("Subject ID is missing");
           return;
         }
 
-        // First get all tool IDs for this subject
-        const toolIds = await getToolBySubjectIdNoName(subjectId);
+        const toolIdList = await getToolBySubjectIdNoName(subjectId);
+        if (!toolIdList || toolIdList.length === 0) {
+          setTools([]);
+          return;
+        }
 
-        // Then fetch details for each tool
-        const toolPromises = toolIds.map((toolId: string) =>
-          getToolById(toolId)
+        const toolPromises = toolIdList.map((item: { toolId: string }) =>
+          getToolById(item.toolId)
         );
         const toolsData = await Promise.all(toolPromises);
-
         setTools(toolsData);
       } catch (error) {
         console.error("Failed to fetch tools:", error);
