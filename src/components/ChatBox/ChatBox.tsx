@@ -139,7 +139,7 @@ function ChatBox() {
     const newChatId = Date.now().toString();
     const newChat: ChatHistory = {
       id: newChatId,
-      title: "New Chat", // This will be updated with first message
+      title: "New Chat",
       messages: [],
     };
 
@@ -313,13 +313,13 @@ function ChatBox() {
                 onClick={createNewChat}
                 className="w-full py-2 px-3 rounded bg-[#635BFF] text-white hover:bg-[#5349FF] transition-colors text-sm font-medium flex items-center justify-center gap-2"
               >
-                <BiPlus className="text-lg" /> Cuộc trò chuyện mới
+                <BiPlus className="text-lg" /> New Chat
               </button>
             </div>
             <div className="overflow-y-auto flex-1 py-2">
               {chatHistories.length === 0 ? (
                 <div className="text-center text-gray-500 py-4 text-sm">
-                  Chưa có cuộc trò chuyện nào
+                  Not found chatchat
                 </div>
               ) : (
                 chatHistories.map((chat) => (
@@ -353,7 +353,7 @@ function ChatBox() {
                 onClick={exportPDF}
                 className="w-full py-2 px-3 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
               >
-                <FaFilePdf /> Xuất PDF
+                <FaFilePdf /> PDF
               </button>
             </div>
           </div>
@@ -369,7 +369,7 @@ function ChatBox() {
                     msg.sender === "user" ? "bg-white" : "bg-[#f9f9f9]"
                   }`}
                 >
-                  <div className="max-w-4xl mx-auto py-5 px-4">
+                  <div className=" mx-auto py-5 px-4">
                     <div className="flex items-start gap-4">
                       <div
                         className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
@@ -386,7 +386,7 @@ function ChatBox() {
                       </div>
                       <div className="flex-1">
                         <div className="font-medium text-sm mb-1">
-                          {msg.sender === "user" ? "Bạn" : "AI Assistant"}
+                          {msg.sender === "user" ? "You" : "AI Assistant"}
                         </div>
                         <div className="prose max-w-none text-sm">
                           <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -410,7 +410,7 @@ function ChatBox() {
                         <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse"></div>
                         <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse delay-150"></div>
                         <div className="w-2 h-2 bg-[#635BFF] rounded-full animate-pulse delay-300"></div>
-                        <span className="ml-1">Đang suy nghĩ...</span>
+                        <span className="ml-1">Loading...</span>
                       </div>
                     </div>
                   </div>
@@ -420,8 +420,8 @@ function ChatBox() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-gray-200 bg-white">
-              <div className="max-w-4xl mx-auto">
+            <div className="p-4 border-t border-gray-200 bg-white flex justify-center">
+              <div className="  mx-8">
                 <div className="relative">
                   <textarea
                     value={input}
@@ -432,7 +432,7 @@ function ChatBox() {
                         sendMessage();
                       }
                     }}
-                    placeholder="Nhập tin nhắn của bạn..."
+                    placeholder="Enter your question..."
                     rows={1}
                     className="w-full p-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#635BFF] focus:border-transparent resize-none text-sm bg-white"
                     style={{ minHeight: "50px", maxHeight: "150px" }}
@@ -444,9 +444,6 @@ function ChatBox() {
                   >
                     <IoSend className="text-lg" />
                   </button>
-                </div>
-                <div className="text-xs text-gray-500 mt-2 text-center">
-                  AI Có thể tạo ra thông tin không chính xác hoặc gây hiểu lầm
                 </div>
               </div>
             </div>
